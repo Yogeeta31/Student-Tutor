@@ -1,6 +1,6 @@
 # Student-Tutor
 **Name                                    E-mail ID                                                                         GitHub User-name**
-Ankit Anand
+Ankit Anand                               ankit.anand@informatik.hs-fulda.de
 Ahmad
 Afwan
 Bibek Gaihre                              bibek.gaihre@informatik.hs-fulda.de                                               bibekgaihre

@@ -4,13 +4,17 @@
 	box-sizing: border-box;
 }
 
-html {
+/* html {
 	font-size=10px;
-}
+} */
 
 body {
 	background-color: #E5E8E8;
 	font-family: 'Roboto', sans-serif;
+}
+
+.st-text {
+    text-align: right;
 }
 
 .container {

@@ -5,12 +5,16 @@
 }
 
 /* html {
-  /* font-size: 10px; */
-} */
+  font-size: 10px;
+}*/
 
 body {
   background-color: #e5e8e8;
   font-family: "Roboto", sans-serif;
+}
+
+.st-text {
+  text-align: right;
 }
 
 .container {

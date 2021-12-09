@@ -24,4 +24,4 @@ hs_err_pid*
 
 .idea
 test
-./script/node_modules
+/script/node_modules

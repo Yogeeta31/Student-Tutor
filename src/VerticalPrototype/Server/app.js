@@ -14,7 +14,7 @@ app.get('/test', (req, res) => {
 
 app.get("/api/tutors/", (req, res) => {
     const {first_name, last_name,subject_name} = req.body;
-    let sql = `SELECT * FROM tutor WHERE FIRST_NAME LIKE "%${first_name}%" OR LAST_NAME LIKE "%${last_name}%" OR SUBJECT_NAME LIKE "%${subject_name}%"`;
+    let sql = `SELECT * FROM tutor WHERE FIRST_NAME LIKE "%${first_name}%" OR LAST_NAME LIKE "%${last_name}%" `;
     dbConnection.query(sql, (err, result) => {
         if (err) throw err;
         res.send(result);

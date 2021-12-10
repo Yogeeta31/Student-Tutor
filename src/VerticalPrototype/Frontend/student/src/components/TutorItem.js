@@ -12,6 +12,7 @@ function TutorItem(props) {
           <h3>{props.name}</h3>
           <p>Subjects:- {props.subjects}</p>
           <p>Rating:- {props.ratings}</p>
+          <p>Title:- {props.title}</p>
         </div>
         <div className={classes.actions}>
           <button>View Profile</button>

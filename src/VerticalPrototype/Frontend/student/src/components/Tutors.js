@@ -12,6 +12,7 @@ function Tutors(props) {
           name={tutor.name}
           subjects={tutor.subjects}
           ratings={tutor.ratings}
+          title={tutor.title}
         />
       ))}
     </ul>

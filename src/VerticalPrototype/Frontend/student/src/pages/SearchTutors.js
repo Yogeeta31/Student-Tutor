@@ -1,4 +1,7 @@
 import Tutors from "../components/Tutors";
+import { useState, useEffect } from "react";
+import Loading from "../components/Loading";
+import axios from "axios";
 
 const DUMMY_DATA = [
   {
@@ -20,10 +23,26 @@ const DUMMY_DATA = [
 ];
 
 function SearchTutorsPage() {
+  const [todos, setTodos] = useState(null);
+  useEffect(() => {
+    axios.get("https://jsonplaceholder.typicode.com/todos").then((result) => {
+      setTodos(result.data);
+      console.log(result.data);
+      for (let i = 0 ; i < DUMMY_DATA.length ; i++) {
+        DUMMY_DATA[i].title = result.data[0].title;
+      } 
+    });
+  }, []);
   return (
     <section>
-      <h1>Search Tutors</h1>
-      <Tutors tutors={DUMMY_DATA} />
+      {todos ? (
+        <div>
+          <h1>Search Tutors</h1>
+          <Tutors tutors={DUMMY_DATA} />
+        </div>
+      ) : (
+        <Loading />
+      )}
     </section>
   );
 }

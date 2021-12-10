@@ -13,8 +13,8 @@ app.get('/test', (req, res) => {
 });
 
 app.get("/api/tutors/get", (req, res) => {
-    const {name,subject} = req.body;
-    let sql = `SELECT * FROM tutors WHERE name = "${name}" or subject = "${subject}"`
+    // const {name,subject} = req.body;
+    let sql = `SELECT * FROM tutors`
     dbConnection.query(sql, (err, result) => {
         if (err) throw err;
         res.send(result);

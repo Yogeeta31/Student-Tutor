@@ -57,3 +57,10 @@
       <td>Ankit-HS</td>
     </tr>
 </table>
+
+Please Add Env file inside the directory of server and copy and change accordingly
+
+DBHOST= localhost
+DBUSERNAME= root
+DBPASSWORD= password
+DBNAME= mentorme

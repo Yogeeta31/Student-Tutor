@@ -9,8 +9,8 @@ app.use(express.json());
 app.get("/test", (req, res) => {
   res.send("Hello World");
 });
-
 app.get("/api/tutors/", (req, res) => {
+  console.log("hello");
   const { first_name, last_name, subject_name } = req.body;
   let sql = `SELECT * FROM User INNER JOIN tutor ON (tutor.USER_ID=user.USER_ID) INNER JOIN subject ON (subject.SUBJECT_ID = tutor.SUBJECT_ID) WHERE FIRST_NAME LIKE "%${first_name}%" OR LAST_NAME LIKE "%${last_name}%" OR SUBJECT_NAME LIKE "%${subject_name}%"`;
   dbConnection.query(sql, (err, result) => {

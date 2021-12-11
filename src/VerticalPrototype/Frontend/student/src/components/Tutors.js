@@ -6,13 +6,12 @@ function Tutors(props) {
     <ul className={classes.list}>
       {props.tutors.map((tutor) => (
         <TutorItem
-          key={tutor.id}
-          id={tutor.id}
+          key={tutor.TUTOR_ID}
+          id={tutor.TUTOR_ID}
           image={tutor.image}
-          name={tutor.name}
-          subjects={tutor.subjects}
-          ratings={tutor.ratings}
-          title={tutor.title}
+          name={tutor.FIRST_NAME + " " + tutor.LAST_NAME}
+          subjects={tutor.SUBJECT_ID}
+          price={tutor.PRICE}
         />
       ))}
     </ul>

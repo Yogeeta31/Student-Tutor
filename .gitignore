@@ -29,3 +29,4 @@ test
 
 /src/VerticalPrototype/Frontend/student/node_modules
 /src/VerticalPrototype/Server/node_modules
+/src/VerticalPrototype/Server/.env

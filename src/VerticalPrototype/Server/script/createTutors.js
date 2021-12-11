@@ -1,13 +1,12 @@
 const mysql = require("mysql");
-const moment=require("moment");
-
-
+const dotenv = require("dotenv").config();
+const moment = require("moment");
 
 var con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "root",
-  database: "mentorme",
+  host: process.env.DBHOST,
+  user: process.env.DBUSERNAME,
+  password: process.env.DBPASSWORD,
+  database: process.env.DBNAME,
 });
 
 con.connect((err) => {
@@ -51,43 +50,40 @@ const last_names = [
   "Mcregor",
 ];
 
-
-
-
 const createTutors = () => {
-  let Subjects=[
+  let Subjects = [
     {
-      subjectName:"English",
-      code:"101"
+      subjectName: "English",
+      code: "101",
     },
     {
       subjectName: "Maths",
-      code: "102"
+      code: "102",
     },
     {
       subjectName: "Physics",
-      code: "103"
+      code: "103",
     },
     {
       subjectName: "Chemistry",
-      code: "104"
+      code: "104",
     },
     {
-      subjectName:"Biology",
-      code:"105"
+      subjectName: "Biology",
+      code: "105",
     },
     {
       subjectName: "Distributed Application",
-      code: "106"
+      code: "106",
     },
     {
       subjectName: "Machine Learning",
-      code: "107"
+      code: "107",
     },
     {
       subjectName: "Global Distributed Software Development",
-      code: "108"
-    }
+      code: "108",
+    },
   ];
 
   var dropUserTable = `DROP TABLE User`;
@@ -154,7 +150,7 @@ const createTutors = () => {
     });
 
     var sqlCreateTutor = `INSERT INTO Tutor (USER_ID, IS_ACTIVE, SUBJECT_ID, PRICE) 
-        VALUES (${i+1}, ${is_active},${subject.code},${price})`;
+        VALUES (${i + 1}, ${is_active},${subject.code},${price})`;
     con.query(sqlCreateTutor, (err, result) => {
       if (err) {
         console.log(err);

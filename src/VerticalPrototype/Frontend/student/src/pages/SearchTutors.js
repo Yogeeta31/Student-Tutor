@@ -14,11 +14,35 @@ function SearchTutorsPage() {
       setTutors(result);
     });
   }, []);
+  const getTutor = async (e) => {
+    let data = await axios.get(
+      `http://localhost:4000/api/tutors/?=&subjectName=${e.target.value}`
+    );
+    let result = data;
+    for (let i = 0; i < result.data.length; i++) {
+      result.data[i].image =
+        "https://www.facebeautyscience.com/wp-content/uploads/2020/04/face-beauty-skin-face2-proc.jpg";
+    }
+    setTutors(result);
+  };
   return (
     <section>
       {tutors ? (
         <div>
           <h1>Search Tutors</h1>
+          <div className="wrap">
+            <div className="search">
+              <input
+                type="text"
+                className="searchTerm"
+                placeholder="Which Subjects are you looking Tutor for?"
+                onKeyUp={getTutor}
+              />
+              {/* <button type="submit" className="searchButton">
+                <i className="fa fa-search"></i>
+              </button> */}
+            </div>
+          </div>
           <Tutors tutors={tutors.data} />
         </div>
       ) : (

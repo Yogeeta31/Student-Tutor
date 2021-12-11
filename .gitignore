@@ -25,3 +25,7 @@ hs_err_pid*
 .idea
 test
 /script/node_modules
+
+
+/src/VerticalPrototype/Frontend/student/node_modules
+/src/VerticalPrototype/Server/node_modules

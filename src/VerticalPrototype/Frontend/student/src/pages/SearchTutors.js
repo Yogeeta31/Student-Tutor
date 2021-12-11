@@ -28,9 +28,9 @@ function SearchTutorsPage() {
     axios.get("https://jsonplaceholder.typicode.com/todos").then((result) => {
       setTodos(result.data);
       console.log(result.data);
-      for (let i = 0 ; i < DUMMY_DATA.length ; i++) {
+      for (let i = 0; i < DUMMY_DATA.length; i++) {
         DUMMY_DATA[i].title = result.data[0].title;
-      } 
+      }
     });
   }, []);
   return (

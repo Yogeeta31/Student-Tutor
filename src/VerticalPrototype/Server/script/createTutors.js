@@ -11,6 +11,7 @@ var con = mysql.createConnection({
 
 con.connect((err) => {
   if (err) {
+    console.log(err);
     console.log("Error in Connection");
   } else {
     console.log("Successful Connection");
@@ -19,6 +20,7 @@ con.connect((err) => {
       if (err) {
         console.log("error:" + err.message);
       } else {
+        console.log("DB RESET");
         console.log("Connection Closed");
         process.exit();
       }
@@ -86,21 +88,21 @@ const createTutors = () => {
     },
   ];
 
-  var dropUserTable = `DROP TABLE User`;
+  var dropUserTable = `DROP TABLE IF EXISTS User`;
   con.query(dropUserTable, (err, result) => {
     if (err) {
       console.log(err);
     }
   });
 
-  var dropTutorTable = `DROP TABLE Tutor`;
+  var dropTutorTable = `DROP TABLE IF EXISTS Tutor`;
   con.query(dropTutorTable, (err, result) => {
     if (err) {
       console.log(err);
     }
   });
 
-  var dropSubjectTable = `DROP TABLE Subject`;
+  var dropSubjectTable = `DROP TABLE IF EXISTS Subject`;
   con.query(dropSubjectTable, (err, result) => {
     if (err) {
       console.log(err);
@@ -149,7 +151,7 @@ const createTutors = () => {
       }
     });
 
-    var sqlCreateTutor = `INSERT INTO Tutor (USER_ID, IS_ACTIVE, SUBJECT_ID, PRICE) 
+    var sqlCreateTutor = `INSERT INTO Tutor (USER_ID, IS_ACTIVE, SUBJECT_ID, PRICE)
         VALUES (${i + 1}, ${is_active},${subject.code},${price})`;
     con.query(sqlCreateTutor, (err, result) => {
       if (err) {
@@ -159,7 +161,7 @@ const createTutors = () => {
   }
   for (let j = 0; j < 8; j++) {
     const subject = Subjects[j];
-    var sqlCreateSubject = `INSERT INTO Subject (SUBJECT_ID, SUBJECT_NAME) 
+    var sqlCreateSubject = `INSERT INTO Subject (SUBJECT_ID, SUBJECT_NAME)
         VALUES (${subject.code},"${subject.subjectName}")`;
     con.query(sqlCreateSubject, (err, result) => {
       if (err) {
@@ -169,4 +171,4 @@ const createTutors = () => {
   }
 };
 
-createTutors();
+// createTutors();

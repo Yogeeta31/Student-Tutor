@@ -6,7 +6,7 @@ import axios from "axios";
 function SearchTutorsPage() {
   const [tutors, setTutors] = useState(null);
   useEffect(() => {
-    axios.get("http://localhost:4000/api/tutors/").then((result) => {
+    axios.get("http://52.166.194.129/api/tutors/").then((result) => {
       for (let i = 0; i < result.data.length; i++) {
         result.data[i].image =
           "https://www.facebeautyscience.com/wp-content/uploads/2020/04/face-beauty-skin-face2-proc.jpg";
@@ -16,7 +16,7 @@ function SearchTutorsPage() {
   }, []);
   const getTutor = async (e) => {
     let data = await axios.get(
-      `http://localhost:4000/api/tutors/?=&subjectName=${e.target.value}`
+      `http://52.166.194.129/api/tutors/?=&subjectName=${e.target.value}`
     );
     let result = data;
     for (let i = 0; i < result.data.length; i++) {

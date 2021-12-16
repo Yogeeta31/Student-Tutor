@@ -7,6 +7,7 @@ var con = mysql.createConnection({
   user: process.env.DBUSERNAME,
   password: process.env.DBPASSWORD,
   database: process.env.DBNAME,
+  insecureAuth: true
 });
 
 con.connect((err) => {
@@ -33,23 +34,30 @@ const first_names = [
   "Pratik",
   "Mohit",
   "John",
-  "George",
-  "Muller",
+  "Ankit",
+  "Yogeeta",
   "James",
   "Omar",
-  "Hossam",
+  "Bibek",
   "Donald",
 ];
 const last_names = [
-  "James",
-  "Bryant",
+  "Kakadiya",
+  "Dalal",
   "Anand",
-  "Trump",
+  "Sharma",
   "Statiya",
-  "Hill",
+  "Gaihre",
   "Nurmagomedov",
   "Chimaev",
   "Mcregor",
+];
+
+const randomReviews = [
+    "Average",
+    "Brilliant",
+    "Good",
+    "Not Helpful",
 ];
 
 const createTutors = () => {
@@ -109,7 +117,14 @@ const createTutors = () => {
     }
   });
 
-  var sqlCreateUserTable = `CREATE TABLE User (USER_ID INT NOT NULL AUTO_INCREMENT, FIRST_NAME VARCHAR(45), LAST_NAME VARCHAR(45), MOBILE_NO BIGINT, EMAIL VARCHAR(45), PASSWORD VARCHAR(45), ROLE_ID INT, REGISTERED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP, LAST_LOGIN TIMESTAMP DEFAULT CURRENT_TIMESTAMP, HAS_PERMISSION TINYINT NOT NULL, ROLES_ROLE_ID INT, REVIEW_ID INT, IMAGE BLOB, PRIMARY KEY (USER_ID))`;
+  var dropReviewTable = `DROP TABLE IF EXISTS Reviews`;
+  con.query(dropReviewTable, (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+  });
+
+  var sqlCreateUserTable = `CREATE TABLE User (USER_ID INT NOT NULL AUTO_INCREMENT, NAME VARCHAR(90), MOBILE_NO BIGINT, EMAIL VARCHAR(45), PASSWORD VARCHAR(45), ROLE_ID INT, REGISTERED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP, LAST_LOGIN TIMESTAMP DEFAULT CURRENT_TIMESTAMP, HAS_PERMISSION TINYINT NOT NULL, ROLES_ROLE_ID INT, REVIEW_ID INT, IMAGE BLOB, PRIMARY KEY (USER_ID))`;
   con.query(sqlCreateUserTable, (err, result) => {
     if (err) {
       console.log(err);
@@ -130,11 +145,22 @@ const createTutors = () => {
     }
   });
 
+  var sqlCreateReviewTable = `CREATE TABLE Reviews (ID INT NOT NULL AUTO_INCREMENT, REVIEW VARCHAR(400), RATING INT, FROM_USER_ID INT, TO_USER_ID INT, PRIMARY KEY (ID))`;
+  con.query(sqlCreateReviewTable, (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+  });
+
   for (let i = 0; i < 30; i++) {
     const firstname =
       first_names[Math.round(Math.random() * (first_names.length - 1))];
     const lastname =
       last_names[Math.round(Math.random() * (last_names.length - 1))];
+    const reviewValue =
+        randomReviews[Math.round(Math.random() * (randomReviews.length - 1))];
+    const name = firstname + " " + lastname
+    const rating = Math.floor( Math.random() * 5 +1);
     const is_active = Math.round(Math.random());
     const subject = Subjects[Math.round(Math.random() * (Subjects.length - 1))];
     const price = Math.round(Math.random() * 2000);
@@ -144,7 +170,7 @@ const createTutors = () => {
     const role_id = Math.round(Math.random());
     const mysqlTimestamp = new Date();
 
-    var sqlCreateUser = `INSERT INTO User ( FIRST_NAME,LAST_NAME, MOBILE_NO, EMAIL, PASSWORD, ROLE_ID, HAS_PERMISSION,ROLES_ROLE_ID,REVIEW_ID) VALUES ("${firstname}", "${lastname}", ${phone}, "${email}", "${password}", ${role_id}, ${role_id},${role_id},${role_id})`;
+    var sqlCreateUser = `INSERT INTO User ( NAME, MOBILE_NO, EMAIL, PASSWORD, ROLE_ID, HAS_PERMISSION,ROLES_ROLE_ID,REVIEW_ID) VALUES ("${name}", ${phone}, "${email}", "${password}", ${role_id}, ${role_id},${role_id},${role_id})`;
     con.query(sqlCreateUser, (err, result) => {
       if (err) {
         console.log(err);
@@ -158,6 +184,23 @@ const createTutors = () => {
         console.log(err);
       }
     });
+
+    var sqlCreateReview = `INSERT INTO Reviews (REVIEW, RATING, FROM_USER_ID, TO_USER_ID)
+        VALUES ("${reviewValue}", ${rating},${30-i},${i + 1})`;
+    con.query(sqlCreateReview, (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+
+    var sqlCreateReview = `INSERT INTO Reviews (REVIEW, RATING, FROM_USER_ID, TO_USER_ID)
+        VALUES ("${reviewValue}", ${rating},${i + 1},${30-i})`;
+    con.query(sqlCreateReview, (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+
   }
   for (let j = 0; j < 8; j++) {
     const subject = Subjects[j];

@@ -2,6 +2,7 @@ const mysql = require("mysql");
 const dotenv = require("dotenv").config();
 const moment = require("moment");
 
+
 var con = mysql.createConnection({
   host: process.env.DBHOST,
   user: process.env.DBUSERNAME,
@@ -54,10 +55,10 @@ const last_names = [
 ];
 
 const randomReviews = [
-    "Average",
-    "Brilliant",
-    "Good",
-    "Not Helpful",
+  "Average",
+  "Brilliant",
+  "Good",
+  "Not Helpful",
 ];
 
 const createTutors = () => {
@@ -158,9 +159,9 @@ const createTutors = () => {
     const lastname =
       last_names[Math.round(Math.random() * (last_names.length - 1))];
     const reviewValue =
-        randomReviews[Math.round(Math.random() * (randomReviews.length - 1))];
+      randomReviews[Math.round(Math.random() * (randomReviews.length - 1))];
     const name = firstname + " " + lastname
-    const rating = Math.floor( Math.random() * 5 +1);
+    const rating = Math.floor(Math.random() * 5 + 1);
     const is_active = Math.round(Math.random());
     const subject = Subjects[Math.round(Math.random() * (Subjects.length - 1))];
     const price = Math.round(Math.random() * 2000);
@@ -186,7 +187,7 @@ const createTutors = () => {
     });
 
     var sqlCreateReview = `INSERT INTO Reviews (REVIEW, RATING, FROM_USER_ID, TO_USER_ID)
-        VALUES ("${reviewValue}", ${rating},${30-i},${i + 1})`;
+        VALUES ("${reviewValue}", ${rating},${30 - i},${i + 1})`;
     con.query(sqlCreateReview, (err, result) => {
       if (err) {
         console.log(err);
@@ -194,7 +195,7 @@ const createTutors = () => {
     });
 
     var sqlCreateReview = `INSERT INTO Reviews (REVIEW, RATING, FROM_USER_ID, TO_USER_ID)
-        VALUES ("${reviewValue}", ${rating},${i + 1},${30-i})`;
+        VALUES ("${reviewValue}", ${rating},${i + 1},${30 - i})`;
     con.query(sqlCreateReview, (err, result) => {
       if (err) {
         console.log(err);

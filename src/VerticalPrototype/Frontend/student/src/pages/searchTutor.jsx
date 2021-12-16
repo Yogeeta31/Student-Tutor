@@ -4,7 +4,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 
 const SearchTutors = () => {
-    const [tutors, setTutors] = useState(Alltutors);
+    const [tutors, setTutors] = useState([]);
     const [searchTerm, setsearchTerm] = useState("");
     const [sortBy, setsortBy] = useState("default");
     useEffect(() => {

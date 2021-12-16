@@ -2,56 +2,6 @@ import "../css/searchTutor.css";
 import axios from "axios";
 
 import { useState, useEffect } from "react";
-const Alltutors = [
-    {
-        id: 1,
-        name: "Ankit Anand",
-        Subject: "Maths",
-        Ratings: 4.5
-    },
-    {
-        id: 2,
-        name: "Pratik Kakadiya",
-        Subject: "Maths",
-        Ratings: 4.5
-    },
-    {
-        id: 3,
-        name: "Mohit Dalal",
-        Subject: "Maths",
-        Ratings: 4.5
-    },
-    {
-        id: 4,
-        name: "Yogeeta Sharma",
-        Subject: "Maths",
-        Ratings: 4.5
-    },
-    {
-        id: 5,
-        name: "Afwan",
-        Subject: "Maths",
-        Ratings: 4.5
-    },
-    {
-        id: 6,
-        name: "Omar",
-        Subject: "Maths",
-        Ratings: 4.5
-    },
-    {
-        id: 7,
-        name: "Ahemad",
-        Subject: "Maths",
-        Ratings: 4.5
-    },
-    {
-        id: 8,
-        name: "Bibek",
-        Subject: "Maths",
-        Ratings: 4.5
-    }
-]
 
 const SearchTutors = () => {
     const [tutors, setTutors] = useState(Alltutors);

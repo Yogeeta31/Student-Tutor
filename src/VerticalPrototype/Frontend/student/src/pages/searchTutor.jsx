@@ -20,7 +20,6 @@ const SearchTutors = () => {
         axios.get(`http://localhost:4000/api/tutors?searchTerm=${sT}&sortBy=${sB}`).then((response) => {
             setTutors(response.data);
         });
-        console.log(sortBy);
     }
     return (
         <>

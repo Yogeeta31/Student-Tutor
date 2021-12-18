@@ -28,7 +28,7 @@ const SearchTutors = () => {
                     <div className="col-sm-12 col-lg-2 my-3">
                         <select onChange={(e) => { setsortBy(e.target.value) }} className="form-select">
                             <option value={"default"}> Sort By </option>
-                            <option value={"rating"}>Ratings</option>
+                            <option value={"ratings"}>Ratings</option>
                             <option value={"price"}>Price</option>
                         </select>
                     </div>

@@ -13,33 +13,30 @@ const SearchTutors = () => {
         });
     }, []);
 
-    const setData = (e) => {
+    const loadData = (e) => {
         e.preventDefault();
-        axios.get(`http://localhost:4000/api/tutors?searchTerm=${searchTerm}&sortBy=${sortBy}`).then((response) => {
+        let sB = document.getElementById("sortBy").value;
+        let sT = document.getElementById("searchTerm").value;
+        axios.get(`http://localhost:4000/api/tutors?searchTerm=${sT}&sortBy=${sB}`).then((response) => {
             setTutors(response.data);
         });
+        console.log(sortBy);
     }
-    const setSort = (e) => {
-
-        setsortBy(e.target.value);
-        setData(e);
-    }
-
     return (
         <>
             <div className="container mb-2">
                 <div className="row d-flex justify-content-center">
                     <div className="col-sm-12 col-lg-2 my-3">
-                        <select onChange={setSort} className="form-select">
+                        <select id="sortBy" onChange={(e) => { setsortBy(e.target.value); loadData(e); }} className="form-select">
                             <option value={"default"}> Sort By </option>
                             <option value={"ratings"}>Ratings</option>
                             <option value={"price"}>Price</option>
                         </select>
                     </div>
                     <div className="col-sm-12 col-lg-9 my-3">
-                        <form onSubmit={setData}>
+                        <form onSubmit={loadData}>
                             <div style={{ float: "left", width: "70%", marginRight: "2%" }}>
-                                <input type="search" className="form-control rounded" value={searchTerm} onChange={(e) => { setsearchTerm(e.target.value) }} placeholder="Search" aria-label="Search"
+                                <input id="searchTerm" type="search" className="form-control rounded" value={searchTerm} onChange={(e) => { setsearchTerm(e.target.value) }} placeholder="Search" aria-label="Search"
                                     aria-describedby="search-addon" />
                             </div>
                             <div>

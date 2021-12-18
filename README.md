@@ -57,10 +57,13 @@
       <td>Ankit-HS</td>
     </tr>
 </table>
-
+<hr/>
 Please Add Env file inside the directory of server and copy and change accordingly
-
-DBHOST= localhost
-DBUSERNAME= root
-DBPASSWORD= password
-DBNAME= mentorme
+<br/>
+DBHOST= localhost <br/>
+DBUSERNAME= root <br/>
+DBPASSWORD= password <br/>
+DBNAME= mentorme <br/>
+<br/>
+Also Add Env File inside the directory of Frontend<br/>
+REACT_APP_SERVER_URL= server url

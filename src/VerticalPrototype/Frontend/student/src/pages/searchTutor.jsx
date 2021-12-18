@@ -19,14 +19,18 @@ const SearchTutors = () => {
             setTutors(response.data);
         });
     }
+    const setSort = (e) => {
 
+        setsortBy(e.target.value);
+        setData(e);
+    }
 
     return (
         <>
             <div className="container mb-2">
                 <div className="row d-flex justify-content-center">
                     <div className="col-sm-12 col-lg-2 my-3">
-                        <select onChange={(e) => { setsortBy(e.target.value) }} className="form-select">
+                        <select onChange={setSort} className="form-select">
                             <option value={"default"}> Sort By </option>
                             <option value={"ratings"}>Ratings</option>
                             <option value={"price"}>Price</option>

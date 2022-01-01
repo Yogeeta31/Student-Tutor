@@ -16,6 +16,10 @@ const Header = () => {
                         <Link className="nav-link" to="/aboutus">About us</Link>
                         <Link className="nav-link" to="/contactus">Contact us</Link>
                     </div>
+                    <div style={{ marginLeft: "20px", color: "white" }}>
+                        Fulda University of Applied Science.<br />
+                        Engineering Project. Fall 2021 for Demonstration.
+                    </div>
                 </div>
             </div>
         </nav>

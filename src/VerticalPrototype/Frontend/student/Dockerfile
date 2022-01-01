@@ -1,17 +1,30 @@
+# FROM node:16.13.0
+
+# # Set location for the app
+# WORKDIR /usr/src/backend
+
+# # Install dependencies
+# COPY package.json .
+# RUN npm install
+
+# # Expose ports
+# EXPOSE 3001
+
+# # Copy sources
+# COPY . .
+
+# # Start the app
+# CMD ["node", "src/index.js"]
+
+
 FROM node:16.13.0
 
-# Set location for the app
-WORKDIR /usr/src/backend
+WORKDIR /mentorme/frontend
 
-# Install dependencies
-COPY package.json .
+COPY . /mentorme/frontend/
+
 RUN npm install
 
-# Expose ports
-EXPOSE 3001
+EXPOSE 3000
 
-# Copy sources
-COPY . .
-
-# Start the app
-CMD ["node", "src/index.js"]
+CMD ["npm", "start"]

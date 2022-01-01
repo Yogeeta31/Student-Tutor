@@ -1,34 +1,7 @@
 const mysql = require("mysql");
 const dotenv = require("dotenv").config();
 const moment = require("moment");
-
-
-var con = mysql.createConnection({
-  host: process.env.DBHOST,
-  user: process.env.DBUSERNAME,
-  password: process.env.DBPASSWORD,
-  database: process.env.DBNAME,
-  insecureAuth: true
-});
-
-con.connect((err) => {
-  if (err) {
-    console.log(err);
-    console.log("Error in Connection");
-  } else {
-    console.log("Successful Connection");
-    createTutors();
-    con.end(() => {
-      if (err) {
-        console.log("error:" + err.message);
-      } else {
-        console.log("DB RESET");
-        console.log("Connection Closed");
-        process.exit();
-      }
-    });
-  }
-});
+const con = require("../db");
 
 const first_names = [
   "Ahmed",
@@ -215,4 +188,4 @@ const createTutors = () => {
   }
 };
 
-// createTutors();
+//module.exports = createTutors();

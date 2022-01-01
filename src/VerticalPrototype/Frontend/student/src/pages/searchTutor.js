@@ -97,7 +97,7 @@ const SearchTutors = () => {
                     <b>Subjects :</b> {tutor.SUBJECT_NAME}
                   </p>
                   <p className="card-text m-1">
-                    <b>Price :</b> {tutor.price}
+                    <b>Price :</b> {tutor.PRICE}
                   </p>
                   <p className="card-text m-1">
                     <b>Ratings :</b> {tutor.AVERAGE_RATING}

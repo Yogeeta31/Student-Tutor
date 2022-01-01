@@ -3,25 +3,30 @@ services:
   mysql:
     platform: linux/x86_64
     image: mysql:5.6
+    restart: always
+    cap_add:
+      - SYS_NICE
     ports:
-      - "3306:3306"
+      - "3307:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: Root@123
-      MYSQL_DATABASE: mentorme  
-    volumes:
-     - ./data:/docker-entrypoint-initdb.d
+      MYSQL_DATABASE: 'mentorme'
+      MYSQL_USER: 'root'
+      MYSQL_ROOT_PASSWORD: 'Root@123'
+      MYSQL_PASSWORD: MYSQL_ROOT_PASSWORD
+      MYSQL_HOST: localhost
+
   backend:
     build: Server
     depends_on:
       - mysql
     environment:
-      DBHOST: localhost
-      DBUSERNAME: root
-      DBPASSWORD: Root@123
-      DBNAME: mentorme
+      DBNAME: "mentorme"
+      DBUSERNAME: 'root'
+      DBPASSWORD: 'Root@123'
+      DBHOST: mysql
     ports:
       - "3001:3001"
-    restart: always   
+    restart: always
   frontend:
     build: Frontend/student
     ports:
@@ -30,5 +35,5 @@ services:
   nginx:
     build: .
     ports:
-      - "80:80"
+      - "81:80"
     restart: always

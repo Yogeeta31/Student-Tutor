@@ -9,10 +9,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-app.get("/test", (req, res) => {
-  res.send("Hello World");
-});
-
 app.use("/", indexRoute);
 
 app.listen("4000", () => {

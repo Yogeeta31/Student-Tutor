@@ -145,7 +145,7 @@ const createTutors = async () => {
     }
   });
 
-  var sqlCreateTutorTable = `CREATE TABLE Tutor (TUTOR_ID INT NOT NULL AUTO_INCREMENT, USER_ID INT NOT NULL, IS_ACTIVE TINYINT NOT NULL, SUBJECT_ID INT, PRICE INT, CV BLOB, PRIMARY KEY (TUTOR_ID))`;
+  var sqlCreateTutorTable = `CREATE TABLE Tutor (TUTOR_ID INT NOT NULL AUTO_INCREMENT, USER_ID INT NOT NULL, IS_ACTIVE TINYINT NOT NULL, SUBJECT_ID INT, PRICE INT, isApproved TINYINT ,CV BLOB, PRIMARY KEY (TUTOR_ID))`;
   con.query(sqlCreateTutorTable, (err, result) => {
     if (err) {
       console.log(err);
@@ -197,6 +197,7 @@ const createTutors = async () => {
     const subject = Subjects[Math.round(Math.random() * (Subjects.length - 1))];
     const price = Math.round(Math.random() * 2000);
     const phone = 123456;
+    const isApproved = 0;
     const email = firstname+lastname+"@"+emailDomains[Math.round(Math.random() * (emailDomains.length - 1))]+emailEndings[Math.round(Math.random() * (emailEndings.length - 1))]
     const salt = await bcrypt.genSalt();
     let password = "passowrd@123";
@@ -212,8 +213,8 @@ const createTutors = async () => {
       }
     });
 
-    var sqlCreateTutor = `INSERT INTO Tutor (USER_ID, IS_ACTIVE, SUBJECT_ID, PRICE)
-        VALUES (${i + 1}, ${is_active},${subject.code},${price})`;
+    var sqlCreateTutor = `INSERT INTO Tutor (USER_ID, IS_ACTIVE, SUBJECT_ID, PRICE,isApproved)
+        VALUES (${i + 1}, ${is_active},${subject.code},${price},${isApproved})`;
     con.query(sqlCreateTutor, (err, result) => {
       if (err) {
         console.log(err);

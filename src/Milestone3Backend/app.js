@@ -11,13 +11,8 @@ app.use(express.json());
 app.use(express.static('public'));
 
 
-app.get("/test", (req, res) => {
-    res.send("Hello World");
-});
-
-
-app.use('/search',searchRoutes);
-app.use(authRoutes);
+app.use('/api'+'/search',searchRoutes);
+app.use('/api',authRoutes);
 
 app.listen("4000", () => {
     console.log("Server started");

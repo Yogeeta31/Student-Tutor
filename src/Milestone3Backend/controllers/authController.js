@@ -88,7 +88,7 @@ module.exports.login_post = async (req, res) => {
       const isSame = await bcrypt.compare(password, hashedPassword);
       if (isSame) {
         const jwt = createToken(user_id, role_id);
-        res.status(200).json({ id: user_id, token: jwt });
+        res.status(200).json({ id: user_id, token: jwt, role_id: role_id });
       } else {
         res.status(400).json({ errors: { password: "Incorrect Password" } });
       }

@@ -5,8 +5,7 @@ const secureAPI = () => {
     try {
       const tok = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(tok, process.env.JWT_SECRET);
-      req.userData = decoded;
-      console.log(req.userData);
+      res.locals.decoded = decoded;
       next();
     } catch (error) {
       return res

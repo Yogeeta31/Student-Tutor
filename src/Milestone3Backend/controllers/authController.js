@@ -10,7 +10,7 @@ const hashPassword = async (password) => {
   return hashedPassword;
 };
 
-const maxAge = 1 * 24 * 60 * 60;
+const maxAge = 7 * 24 * 60 * 60;
 const createToken = (id, role_id) => {
   return jwt.sign({ id, role_id }, process.env.JWT_SECRET, {
     expiresIn: maxAge,

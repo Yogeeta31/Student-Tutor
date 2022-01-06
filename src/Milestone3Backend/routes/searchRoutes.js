@@ -2,7 +2,13 @@ const { Router } = require("express");
 const searchController = require("../controllers/searchController");
 const router = Router();
 const SecureAPI = require("../middleware/secureAPI");
+const { roleCheck } = require("../middleware/roleChecker");
 
-router.get("/tutors", SecureAPI(), searchController.search_tutor_get);
+router.get(
+  "/tutors",
+  SecureAPI(),
+  roleCheck(["STUDENT"]),
+  searchController.search_tutor_get
+);
 
 module.exports = router;

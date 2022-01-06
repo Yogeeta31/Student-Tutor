@@ -136,7 +136,7 @@ const createTutors = async () => {
     }
   });
 
-  var sqlCreateTutorTable = `CREATE TABLE Tutor (TUTOR_ID INT NOT NULL AUTO_INCREMENT, USER_ID INT NOT NULL, IS_ACTIVE TINYINT NOT NULL, SUBJECT_ID INT, PRICE INT, CV BLOB, PRIMARY KEY (TUTOR_ID))`;
+  var sqlCreateTutorTable = `CREATE TABLE Tutor (TUTOR_ID INT NOT NULL AUTO_INCREMENT, USER_ID INT NOT NULL, IS_ACTIVE TINYINT NOT NULL, SUBJECT_ID INT, PRICE INT, isApproved TINYINT ,CV BLOB, PRIMARY KEY (TUTOR_ID))`;
   con.query(sqlCreateTutorTable, (err, result) => {
     if (err) {
       console.log(err);
@@ -164,6 +164,83 @@ const createTutors = async () => {
       console.log(err);
     }
   });
+
+  for (let j = 0; j < 8; j++) {
+    const subject = Subjects[j];
+    var sqlCreateSubject = `INSERT INTO Subject (SUBJECT_ID, SUBJECT_NAME)
+        VALUES (${subject.code},"${subject.subjectName}")`;
+    con.query(sqlCreateSubject, (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+  }
+
+  for (let i = 0; i < 30; i++) {
+    const firstname =
+      first_names[Math.round(Math.random() * (first_names.length - 1))];
+    const lastname =
+      last_names[Math.round(Math.random() * (last_names.length - 1))];
+    const reviewValue =
+      randomReviews[Math.round(Math.random() * (randomReviews.length - 1))];
+    const name = firstname + " " + lastname;
+    const rating = Math.floor(Math.random() * 5 + 1);
+    const is_active = Math.round(Math.random());
+    const subject = Subjects[Math.round(Math.random() * (Subjects.length - 1))];
+    const price = Math.round(Math.random() * 2000);
+    const phone = 123456;
+    const isApproved = 0;
+    const email =
+      firstname +
+      lastname +
+      "@" +
+      emailDomains[Math.round(Math.random() * (emailDomains.length - 1))] +
+      emailEndings[Math.round(Math.random() * (emailEndings.length - 1))];
+    const salt = await bcrypt.genSalt();
+    let password = "passowrd@123";
+    password = await bcrypt.hash(password, salt);
+    const role_id = Math.round(Math.random());
+    const mysqlTimestamp = new Date();
+
+    var sqlCreateUser = `INSERT INTO User ( NAME, MOBILE_NO, EMAIL, PASSWORD, ROLE_ID, HAS_PERMISSION,ROLES_ROLE_ID,REVIEW_ID) VALUES ("${name}", ${phone}, "${email}", "${password}", ${role_id}, ${role_id},${role_id},${role_id})`;
+    con.query(sqlCreateUser, (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+
+    var sqlCreateTutor = `INSERT INTO Tutor (USER_ID, IS_ACTIVE, SUBJECT_ID, PRICE,isApproved)
+        VALUES (${i + 1}, ${is_active},${subject.code},${price},${isApproved})`;
+    con.query(sqlCreateTutor, (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+
+    var sqlAddSubjectToTutor = `INSERT INTO Tutor_has_Subject (TUTOR_ID, SUBJECT_ID) 
+    VALUES (${i + 1}, ${subject.code})`;
+    con.query(sqlAddSubjectToTutor, (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+
+    var sqlCreateReview = `INSERT INTO Reviews (REVIEW, RATING, FROM_USER_ID, TO_USER_ID)
+        VALUES ("${reviewValue}", ${rating},${30 - i},${i + 1})`;
+    con.query(sqlCreateReview, (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+
+    var sqlCreateReview = `INSERT INTO Reviews (REVIEW, RATING, FROM_USER_ID, TO_USER_ID)
+        VALUES ("${reviewValue}", ${rating},${i + 1},${30 - i})`;
+    con.query(sqlCreateReview, (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+  }
 
   // for (let j = 0; j < 8; j++) {
   //   const subject = Subjects[j];

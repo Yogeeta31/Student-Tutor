@@ -35,8 +35,8 @@ module.exports.signup_post = async (req, res) => {
         user_id = result.insertId;
         const jwt = createToken(user_id);
         if(params.role_id==2){
-            var sqlCreateTutor = `INSERT INTO Tutor (USER_ID, IS_ACTIVE, SUBJECT_ID, PRICE, CV)
-        VALUES (${user_id}, 0,${params.subject_id},${params.price},${(params.cv != undefined) ? params.cv : null})`;
+            var sqlCreateTutor = `INSERT INTO Tutor (USER_ID, IS_ACTIVE, SUBJECT_ID, PRICE, CV,isApproved)
+        VALUES (${user_id}, 0,${params.subject_id},${params.price},${(params.cv != undefined) ? params.cv : null},0)`;
             dbConnection.query(sqlCreateTutor, (err, result) => {
                 if (err) 
                 {

@@ -80,49 +80,49 @@ app.get("/fillData", (req, res) => {
       },
     ];
 
-    var dropUserTable = `DROP TABLE IF EXISTS User`;
+    var dropUserTable = `DROP TABLE IF EXISTS USER`;
     dbConnection.query(dropUserTable, (err, result) => {
       if (err) {
         console.log(err);
       }
     });
 
-    var dropTutorTable = `DROP TABLE IF EXISTS Tutor`;
+    var dropTutorTable = `DROP TABLE IF EXISTS TUTOR`;
     dbConnection.query(dropTutorTable, (err, result) => {
       if (err) {
         console.log(err);
       }
     });
 
-    var dropSubjectTable = `DROP TABLE IF EXISTS Subject`;
+    var dropSubjectTable = `DROP TABLE IF EXISTS SUBJECT`;
     dbConnection.query(dropSubjectTable, (err, result) => {
       if (err) {
         console.log(err);
       }
     });
 
-    var dropReviewTable = `DROP TABLE IF EXISTS Reviews`;
+    var dropReviewTable = `DROP TABLE IF EXISTS REVIEWS`;
     dbConnection.query(dropReviewTable, (err, result) => {
       if (err) {
         console.log(err);
       }
     });
 
-    var sqlCreateUserTable = `CREATE TABLE User (USER_ID INT NOT NULL AUTO_INCREMENT, NAME VARCHAR(90), MOBILE_NO BIGINT, EMAIL VARCHAR(45), PASSWORD VARCHAR(45), ROLE_ID INT, REGISTERED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP, LAST_LOGIN TIMESTAMP DEFAULT CURRENT_TIMESTAMP, HAS_PERMISSION TINYINT NOT NULL, ROLES_ROLE_ID INT, REVIEW_ID INT, IMAGE BLOB, PRIMARY KEY (USER_ID))`;
+    var sqlCreateUserTable = `CREATE TABLE USER (USER_ID INT NOT NULL AUTO_INCREMENT, NAME VARCHAR(90), MOBILE_NO BIGINT, EMAIL VARCHAR(45), PASSWORD VARCHAR(45), ROLE_ID INT, REGISTERED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP, LAST_LOGIN TIMESTAMP DEFAULT CURRENT_TIMESTAMP, HAS_PERMISSION TINYINT NOT NULL, ROLES_ROLE_ID INT, REVIEW_ID INT, IMAGE BLOB, PRIMARY KEY (USER_ID))`;
     dbConnection.query(sqlCreateUserTable, (err, result) => {
       if (err) {
         console.log(err);
       }
     });
 
-    var sqlCreateTutorTable = `CREATE TABLE Tutor (TUTOR_ID INT NOT NULL AUTO_INCREMENT, USER_ID INT NOT NULL, IS_ACTIVE TINYINT NOT NULL, SUBJECT_ID INT, PRICE INT, CV BLOB, PRIMARY KEY (TUTOR_ID))`;
+    var sqlCreateTutorTable = `CREATE TABLE TUTOR (TUTOR_ID INT NOT NULL AUTO_INCREMENT, USER_ID INT NOT NULL, IS_ACTIVE TINYINT NOT NULL, SUBJECT_ID INT, PRICE INT, CV BLOB, PRIMARY KEY (TUTOR_ID))`;
     dbConnection.query(sqlCreateTutorTable, (err, result) => {
       if (err) {
         console.log(err);
       }
     });
 
-    var sqlCreateSubjectTable = `CREATE TABLE Subject (SUBJECT_ID INT NOT NULL, SUBJECT_NAME VARCHAR(45), PRIMARY KEY (SUBJECT_ID))`;
+    var sqlCreateSubjectTable = `CREATE TABLE SUBJECT (SUBJECT_ID INT NOT NULL, SUBJECT_NAME VARCHAR(45), PRIMARY KEY (SUBJECT_ID))`;
     dbConnection.query(sqlCreateSubjectTable, (err, result) => {
       if (err) {
         console.log(err);
@@ -130,7 +130,7 @@ app.get("/fillData", (req, res) => {
       console.log(result);
     });
 
-    var sqlCreateReviewTable = `CREATE TABLE Reviews (ID INT NOT NULL AUTO_INCREMENT, REVIEW VARCHAR(400), RATING INT, FROM_USER_ID INT, TO_USER_ID INT, PRIMARY KEY (ID))`;
+    var sqlCreateReviewTable = `CREATE TABLE REVIEWS (ID INT NOT NULL AUTO_INCREMENT, REVIEW VARCHAR(400), RATING INT, FROM_USER_ID INT, TO_USER_ID INT, PRIMARY KEY (ID))`;
     dbConnection.query(sqlCreateReviewTable, (err, result) => {
       if (err) {
         console.log(err);
@@ -139,11 +139,11 @@ app.get("/fillData", (req, res) => {
 
     for (let i = 0; i < 30; i++) {
       const firstname =
-        first_names[Math.round(Math.random() * (first_names.length - 1))];
+          first_names[Math.round(Math.random() * (first_names.length - 1))];
       const lastname =
-        last_names[Math.round(Math.random() * (last_names.length - 1))];
+          last_names[Math.round(Math.random() * (last_names.length - 1))];
       const reviewValue =
-        randomReviews[Math.round(Math.random() * (randomReviews.length - 1))];
+          randomReviews[Math.round(Math.random() * (randomReviews.length - 1))];
       const name = firstname + " " + lastname
       const rating = Math.floor(Math.random() * 5 + 1);
       const is_active = Math.round(Math.random());
@@ -155,14 +155,14 @@ app.get("/fillData", (req, res) => {
       const role_id = Math.round(Math.random());
       const mysqlTimestamp = new Date();
 
-      var sqlCreateUser = `INSERT INTO User ( NAME, MOBILE_NO, EMAIL, PASSWORD, ROLE_ID, HAS_PERMISSION,ROLES_ROLE_ID,REVIEW_ID) VALUES ("${name}", ${phone}, "${email}", "${password}", ${role_id}, ${role_id},${role_id},${role_id})`;
+      var sqlCreateUser = `INSERT INTO USER ( NAME, MOBILE_NO, EMAIL, PASSWORD, ROLE_ID, HAS_PERMISSION,ROLES_ROLE_ID,REVIEW_ID) VALUES ("${name}", ${phone}, "${email}", "${password}", ${role_id}, ${role_id},${role_id},${role_id})`;
       dbConnection.query(sqlCreateUser, (err, result) => {
         if (err) {
           console.log(err);
         }
       });
 
-      var sqlCreateTutor = `INSERT INTO Tutor (USER_ID, IS_ACTIVE, SUBJECT_ID, PRICE)
+      var sqlCreateTutor = `INSERT INTO TUTOR (USER_ID, IS_ACTIVE, SUBJECT_ID, PRICE)
           VALUES (${i + 1}, ${is_active},${subject.code},${price})`;
       dbConnection.query(sqlCreateTutor, (err, result) => {
         if (err) {
@@ -170,7 +170,7 @@ app.get("/fillData", (req, res) => {
         }
       });
 
-      var sqlCreateReview = `INSERT INTO Reviews (REVIEW, RATING, FROM_USER_ID, TO_USER_ID)
+      var sqlCreateReview = `INSERT INTO REVIEWS (REVIEW, RATING, FROM_USER_ID, TO_USER_ID)
           VALUES ("${reviewValue}", ${rating},${30 - i},${i + 1})`;
       dbConnection.query(sqlCreateReview, (err, result) => {
         if (err) {
@@ -178,7 +178,7 @@ app.get("/fillData", (req, res) => {
         }
       });
 
-      var sqlCreateReview = `INSERT INTO Reviews (REVIEW, RATING, FROM_USER_ID, TO_USER_ID)
+      var sqlCreateReview = `INSERT INTO REVIEWS (REVIEW, RATING, FROM_USER_ID, TO_USER_ID)
           VALUES ("${reviewValue}", ${rating},${i + 1},${30 - i})`;
       dbConnection.query(sqlCreateReview, (err, result) => {
         if (err) {
@@ -189,7 +189,7 @@ app.get("/fillData", (req, res) => {
     }
     for (let j = 0; j < 8; j++) {
       const subject = Subjects[j];
-      var sqlCreateSubject = `INSERT INTO Subject (SUBJECT_ID, SUBJECT_NAME)
+      var sqlCreateSubject = `INSERT INTO SUBJECT (SUBJECT_ID, SUBJECT_NAME)
           VALUES (${subject.code},"${subject.subjectName}")`;
       dbConnection.query(sqlCreateSubject, (err, result) => {
         if (err) {
@@ -200,7 +200,7 @@ app.get("/fillData", (req, res) => {
   };
   createTutors();
 
-  dbConnection.query("SELECT * FROM Tutor", (err, result) => {
+  dbConnection.query("SELECT * FROM TUTOR", (err, result) => {
     if (err) {
       console.log(err);
     }
@@ -214,37 +214,37 @@ app.get("/api/tutors", (req, res) => {
     searchTerm = "";
   }
   if (Object.keys(req.query).length === 0) {
-    let sql = `SELECT User.USER_ID, User.NAME, Subject.SUBJECT_NAME,AVG(Reviews.RATING) AS AVERAGE_RATING, Tutor.PRICE FROM User INNER JOIN Tutor ON (Tutor.USER_ID=User.USER_ID) INNER JOIN Subject ON (Subject.SUBJECT_ID = Tutor.SUBJECT_ID) INNER JOIN Reviews ON (Tutor.USER_ID=Reviews.TO_USER_ID) GROUP BY Tutor.USER_ID`;
+    let sql = `SELECT USER.USER_ID, USER.NAME, SUBJECT.SUBJECT_NAME,AVG(REVIEWS.RATING) AS AVERAGE_RATING, TUTOR.PRICE FROM USER INNER JOIN TUTOR ON (TUTOR.USER_ID=USER.USER_ID) INNER JOIN SUBJECT ON (SUBJECT.SUBJECT_ID = TUTOR.SUBJECT_ID) INNER JOIN REVIEWS ON (TUTOR.USER_ID=REVIEWS.TO_USER_ID) GROUP BY TUTOR.USER_ID`;
     dbConnection.query(sql, (err, result) => {
       if (err) throw err;
       res.send(result);
     });
   } else if (sortBy === "ratings") {
-    let sql = `SELECT User.USER_ID, User.NAME, Subject.SUBJECT_NAME,AVG(Reviews.RATING) AS AVERAGE_RATING, Tutor.PRICE FROM User INNER JOIN Tutor ON (Tutor.USER_ID=User.USER_ID) INNER JOIN Subject ON (Subject.SUBJECT_ID = Tutor.SUBJECT_ID) INNER JOIN Reviews ON (Tutor.USER_ID=Reviews.TO_USER_ID) WHERE NAME LIKE "%${searchTerm}%" OR SUBJECT_NAME LIKE "%${searchTerm}%" GROUP BY Tutor.USER_ID ORDER BY AVERAGE_RATING DESC;`;
+    let sql = `SELECT USER.USER_ID, USER.NAME, SUBJECT.SUBJECT_NAME,AVG(REVIEWS.RATING) AS AVERAGE_RATING, TUTOR.PRICE FROM USER INNER JOIN TUTOR ON (TUTOR.USER_ID=USER.USER_ID) INNER JOIN SUBJECT ON (SUBJECT.SUBJECT_ID = TUTOR.SUBJECT_ID) INNER JOIN REVIEWS ON (TUTOR.USER_ID=REVIEWS.TO_USER_ID) WHERE NAME LIKE "%${searchTerm}%" OR SUBJECT_NAME LIKE "%${searchTerm}%" GROUP BY TUTOR.USER_ID ORDER BY AVERAGE_RATING DESC;`;
     dbConnection.query(sql, (err, result) => {
       if (err) throw err;
       res.send(result);
     });
   } else if (sortBy === "price") {
-    let sql = `SELECT user.USER_ID, user.NAME, subject.SUBJECT_NAME,AVG(reviews.rating) AS AVERAGE_RATING, tutor.price FROM User INNER JOIN tutor ON (tutor.USER_ID=user.USER_ID) INNER JOIN subject ON (subject.SUBJECT_ID = tutor.SUBJECT_ID) INNER JOIN reviews ON (tutor.USER_ID=reviews.TO_USER_ID) WHERE NAME LIKE "%${searchTerm}%" OR SUBJECT_NAME LIKE "%${searchTerm}%" GROUP BY tutor.USER_ID ORDER BY price;`;
+    let sql = `SELECT USER.USER_ID, USER.NAME, SUBJECT.SUBJECT_NAME,AVG(REVIEWS.RATING) AS AVERAGE_RATING, TUTOR.PRICE FROM USER INNER JOIN TUTOR ON (TUTOR.USER_ID=USER.USER_ID) INNER JOIN SUBJECT ON (SUBJECT.SUBJECT_ID = TUTOR.SUBJECT_ID) INNER JOIN REVIEWS ON (TUTOR.USER_ID=REVIEWS.TO_USER_ID) WHERE NAME LIKE "%${searchTerm}%" OR SUBJECT_NAME LIKE "%${searchTerm}%" GROUP BY TUTOR.USER_ID ORDER BY PRICE;`;
     dbConnection.query(sql, (err, result) => {
       if (err) throw err;
       res.send(result);
     });
   } else if (sortBy === "ratings" && searchTerm == "") {
-    let sql = `SELECT user.USER_ID, user.NAME, subject.SUBJECT_NAME,AVG(reviews.rating) AS AVERAGE_RATING, tutor.price FROM User INNER JOIN tutor ON (tutor.USER_ID=user.USER_ID) INNER JOIN subject ON (subject.SUBJECT_ID = tutor.SUBJECT_ID) INNER JOIN reviews ON (tutor.USER_ID=reviews.TO_USER_ID) GROUP BY tutor.USER_ID ORDER BY AVERAGE_RATING DESC;`;
+    let sql = `SELECT USER.USER_ID, USER.NAME, SUBJECT.SUBJECT_NAME,AVG(REVIEWS.RATING) AS AVERAGE_RATING, TUTOR.PRICE FROM USER INNER JOIN TUTOR ON (TUTOR.USER_ID=USER.USER_ID) INNER JOIN SUBJECT ON (SUBJECT.SUBJECT_ID = TUTOR.SUBJECT_ID) INNER JOIN REVIEWS ON (TUTOR.USER_ID=REVIEWS.TO_USER_ID) GROUP BY TUTOR.USER_ID ORDER BY AVERAGE_RATING DESC;`;
     dbConnection.query(sql, (err, result) => {
       if (err) throw err;
       res.send(result);
     });
   } else if (sortBy === "price" && searchTerm == "") {
-    let sql = `SELECT user.USER_ID, user.NAME, subject.SUBJECT_NAME,AVG(reviews.rating) AS AVERAGE_RATING, tutor.price FROM User INNER JOIN tutor ON (tutor.USER_ID=user.USER_ID) INNER JOIN subject ON (subject.SUBJECT_ID = tutor.SUBJECT_ID) INNER JOIN reviews ON (tutor.USER_ID=reviews.TO_USER_ID) GROUP BY tutor.USER_ID ORDER BY price;`;
+    let sql = `SELECT USER.USER_ID, USER.NAME, SUBJECT.SUBJECT_NAME,AVG(REVIEWS.RATING) AS AVERAGE_RATING, TUTOR.PRICE FROM USER INNER JOIN TUTOR ON (TUTOR.USER_ID=USER.USER_ID) INNER JOIN SUBJECT ON (SUBJECT.SUBJECT_ID = TUTOR.SUBJECT_ID) INNER JOIN REVIEWS ON (TUTOR.USER_ID=REVIEWS.TO_USER_ID) GROUP BY TUTOR.USER_ID ORDER BY PRICE;`;
     dbConnection.query(sql, (err, result) => {
       if (err) throw err;
       res.send(result);
     });
   } else {
-    let sql = `SELECT user.USER_ID, user.NAME, subject.SUBJECT_NAME,AVG(reviews.rating) AS AVERAGE_RATING, tutor.price FROM User INNER JOIN tutor ON (tutor.USER_ID=user.USER_ID) INNER JOIN subject ON (subject.SUBJECT_ID = tutor.SUBJECT_ID) INNER JOIN reviews ON (tutor.USER_ID=reviews.TO_USER_ID) WHERE NAME LIKE "%${searchTerm}%" OR SUBJECT_NAME LIKE "%${searchTerm}%" GROUP BY tutor.USER_ID ;`;
+    let sql = `SELECT USER.USER_ID, USER.NAME, SUBJECT.SUBJECT_NAME,AVG(REVIEWS.RATING) AS AVERAGE_RATING, TUTOR.PRICE FROM USER INNER JOIN TUTOR ON (TUTOR.USER_ID=USER.USER_ID) INNER JOIN SUBJECT ON (SUBJECT.SUBJECT_ID = TUTOR.SUBJECT_ID) INNER JOIN REVIEWS ON (TUTOR.USER_ID=REVIEWS.TO_USER_ID) WHERE NAME LIKE "%${searchTerm}%" OR SUBJECT_NAME LIKE "%${searchTerm}%" GROUP BY TUTOR.USER_ID ;`;
     dbConnection.query(sql, (err, result) => {
       if (err) throw err;
       res.send(result);

@@ -70,56 +70,56 @@ const createTutors = () => {
     },
   ];
 
-  var dropUserTable = `DROP TABLE IF EXISTS User`;
+  var dropUserTable = `DROP TABLE IF EXISTS USER`;
   con.query(dropUserTable, (err, result) => {
     if (err) {
       console.log(err);
     }
   });
 
-  var dropTutorTable = `DROP TABLE IF EXISTS Tutor`;
+  var dropTutorTable = `DROP TABLE IF EXISTS TUTOR`;
   con.query(dropTutorTable, (err, result) => {
     if (err) {
       console.log(err);
     }
   });
 
-  var dropSubjectTable = `DROP TABLE IF EXISTS Subject`;
+  var dropSubjectTable = `DROP TABLE IF EXISTS SUBJECT`;
   con.query(dropSubjectTable, (err, result) => {
     if (err) {
       console.log(err);
     }
   });
 
-  var dropReviewTable = `DROP TABLE IF EXISTS Reviews`;
+  var dropReviewTable = `DROP TABLE IF EXISTS REVIEWS`;
   con.query(dropReviewTable, (err, result) => {
     if (err) {
       console.log(err);
     }
   });
 
-  var sqlCreateUserTable = `CREATE TABLE User (USER_ID INT NOT NULL AUTO_INCREMENT, NAME VARCHAR(90), MOBILE_NO BIGINT, EMAIL VARCHAR(45), PASSWORD VARCHAR(45), ROLE_ID INT, REGISTERED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP, LAST_LOGIN TIMESTAMP DEFAULT CURRENT_TIMESTAMP, HAS_PERMISSION TINYINT NOT NULL, ROLES_ROLE_ID INT, REVIEW_ID INT, IMAGE BLOB, PRIMARY KEY (USER_ID))`;
+  var sqlCreateUserTable = `CREATE TABLE USER (USER_ID INT NOT NULL AUTO_INCREMENT, NAME VARCHAR(90), MOBILE_NO BIGINT, EMAIL VARCHAR(45), PASSWORD VARCHAR(45), ROLE_ID INT, REGISTERED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP, LAST_LOGIN TIMESTAMP DEFAULT CURRENT_TIMESTAMP, HAS_PERMISSION TINYINT NOT NULL, ROLES_ROLE_ID INT, REVIEW_ID INT, IMAGE BLOB, PRIMARY KEY (USER_ID))`;
   con.query(sqlCreateUserTable, (err, result) => {
     if (err) {
       console.log(err);
     }
   });
 
-  var sqlCreateTutorTable = `CREATE TABLE Tutor (TUTOR_ID INT NOT NULL AUTO_INCREMENT, USER_ID INT NOT NULL, IS_ACTIVE TINYINT NOT NULL, SUBJECT_ID INT, PRICE INT, CV BLOB, PRIMARY KEY (TUTOR_ID))`;
+  var sqlCreateTutorTable = `CREATE TABLE TUTOR (TUTOR_ID INT NOT NULL AUTO_INCREMENT, USER_ID INT NOT NULL, IS_ACTIVE TINYINT NOT NULL, SUBJECT_ID INT, PRICE INT, CV BLOB, PRIMARY KEY (TUTOR_ID))`;
   con.query(sqlCreateTutorTable, (err, result) => {
     if (err) {
       console.log(err);
     }
   });
 
-  var sqlCreateSubjectTable = `CREATE TABLE Subject (SUBJECT_ID INT NOT NULL, SUBJECT_NAME VARCHAR(45), PRIMARY KEY (SUBJECT_ID))`;
+  var sqlCreateSubjectTable = `CREATE TABLE SUBJECT (SUBJECT_ID INT NOT NULL, SUBJECT_NAME VARCHAR(45), PRIMARY KEY (SUBJECT_ID))`;
   con.query(sqlCreateSubjectTable, (err, result) => {
     if (err) {
       console.log(err);
     }
   });
 
-  var sqlCreateReviewTable = `CREATE TABLE Reviews (ID INT NOT NULL AUTO_INCREMENT, REVIEW VARCHAR(400), RATING INT, FROM_USER_ID INT, TO_USER_ID INT, PRIMARY KEY (ID))`;
+  var sqlCreateReviewTable = `CREATE TABLE REVIEWS (ID INT NOT NULL AUTO_INCREMENT, REVIEW VARCHAR(400), RATING INT, FROM_USER_ID INT, TO_USER_ID INT, PRIMARY KEY (ID))`;
   con.query(sqlCreateReviewTable, (err, result) => {
     if (err) {
       console.log(err);
@@ -128,11 +128,11 @@ const createTutors = () => {
 
   for (let i = 0; i < 30; i++) {
     const firstname =
-      first_names[Math.round(Math.random() * (first_names.length - 1))];
+        first_names[Math.round(Math.random() * (first_names.length - 1))];
     const lastname =
-      last_names[Math.round(Math.random() * (last_names.length - 1))];
+        last_names[Math.round(Math.random() * (last_names.length - 1))];
     const reviewValue =
-      randomReviews[Math.round(Math.random() * (randomReviews.length - 1))];
+        randomReviews[Math.round(Math.random() * (randomReviews.length - 1))];
     const name = firstname + " " + lastname
     const rating = Math.floor(Math.random() * 5 + 1);
     const is_active = Math.round(Math.random());
@@ -144,14 +144,14 @@ const createTutors = () => {
     const role_id = Math.round(Math.random());
     const mysqlTimestamp = new Date();
 
-    var sqlCreateUser = `INSERT INTO User ( NAME, MOBILE_NO, EMAIL, PASSWORD, ROLE_ID, HAS_PERMISSION,ROLES_ROLE_ID,REVIEW_ID) VALUES ("${name}", ${phone}, "${email}", "${password}", ${role_id}, ${role_id},${role_id},${role_id})`;
+    var sqlCreateUser = `INSERT INTO USER ( NAME, MOBILE_NO, EMAIL, PASSWORD, ROLE_ID, HAS_PERMISSION,ROLES_ROLE_ID,REVIEW_ID) VALUES ("${name}", ${phone}, "${email}", "${password}", ${role_id}, ${role_id},${role_id},${role_id})`;
     con.query(sqlCreateUser, (err, result) => {
       if (err) {
         console.log(err);
       }
     });
 
-    var sqlCreateTutor = `INSERT INTO Tutor (USER_ID, IS_ACTIVE, SUBJECT_ID, PRICE)
+    var sqlCreateTutor = `INSERT INTO TUTOR (USER_ID, IS_ACTIVE, SUBJECT_ID, PRICE)
         VALUES (${i + 1}, ${is_active},${subject.code},${price})`;
     con.query(sqlCreateTutor, (err, result) => {
       if (err) {
@@ -159,7 +159,7 @@ const createTutors = () => {
       }
     });
 
-    var sqlCreateReview = `INSERT INTO Reviews (REVIEW, RATING, FROM_USER_ID, TO_USER_ID)
+    var sqlCreateReview = `INSERT INTO REVIEWS (REVIEW, RATING, FROM_USER_ID, TO_USER_ID)
         VALUES ("${reviewValue}", ${rating},${30 - i},${i + 1})`;
     con.query(sqlCreateReview, (err, result) => {
       if (err) {
@@ -167,7 +167,7 @@ const createTutors = () => {
       }
     });
 
-    var sqlCreateReview = `INSERT INTO Reviews (REVIEW, RATING, FROM_USER_ID, TO_USER_ID)
+    var sqlCreateReview = `INSERT INTO REVIEWS (REVIEW, RATING, FROM_USER_ID, TO_USER_ID)
         VALUES ("${reviewValue}", ${rating},${i + 1},${30 - i})`;
     con.query(sqlCreateReview, (err, result) => {
       if (err) {
@@ -178,7 +178,7 @@ const createTutors = () => {
   }
   for (let j = 0; j < 8; j++) {
     const subject = Subjects[j];
-    var sqlCreateSubject = `INSERT INTO Subject (SUBJECT_ID, SUBJECT_NAME)
+    var sqlCreateSubject = `INSERT INTO SUBJECT (SUBJECT_ID, SUBJECT_NAME)
         VALUES (${subject.code},"${subject.subjectName}")`;
     con.query(sqlCreateSubject, (err, result) => {
       if (err) {

@@ -1,7 +1,6 @@
 const roleCheck = (roles) => {
   return (req, res, next) => {
     const { decoded } = res.locals;
-    console.log(decoded);
     const userRole = decoded.role_id;
     let roleName;
     if (userRole === 1) {

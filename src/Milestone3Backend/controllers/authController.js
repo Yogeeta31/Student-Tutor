@@ -33,7 +33,7 @@ module.exports.signup_post = async (req, res) => {
 
   let user_id;
   let tutor_id;
-  var sqlCreateUser = `INSERT INTO User ( NAME, MOBILE_NO, EMAIL, PASSWORD, ROLE_ID, HAS_PERMISSION,IMAGE) VALUES ("${
+  var sqlCreateUser = `INSERT INTO USER ( NAME, MOBILE_NO, EMAIL, PASSWORD, ROLE_ID, HAS_PERMISSION,IMAGE) VALUES ("${
     params.name
   }", ${params.phone}, "${params.email}", "${hashedPassword}", ${
     params.role_id
@@ -51,7 +51,7 @@ module.exports.signup_post = async (req, res) => {
     user_id = result.insertId;
     const jwt = createToken(user_id);
     if (params.role_id == 2) {
-      var sqlCreateTutor = `INSERT INTO Tutor (USER_ID, IS_ACTIVE, SUBJECT_ID, PRICE, CV,isApproved)
+      var sqlCreateTutor = `INSERT INTO TUTOR (USER_ID, IS_ACTIVE, SUBJECT_ID, PRICE, CV,isApproved)
         VALUES (${user_id}, 0,${params.subject_id},${params.price},${
         params.cv != undefined ? params.cv : null
       },0)`;
@@ -70,7 +70,7 @@ module.exports.login_post = async (req, res) => {
   const { email, password } = req.body;
 
   const loginUser = `SELECT u.PASSWORD, u.USER_ID, u.ROLE_ID
-    FROM User u
+    FROM USER u
     WHERE u.EMAIL = "${email}"`;
 
   dbConnection.query(loginUser, async (err, result) => {

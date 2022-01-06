@@ -62,7 +62,7 @@ module.exports.signup_post = async (req, res) => {
         tutor_id = result.insertId;
       });
     }
-    res.status(200).json({ id: user_id, token: jwt });
+    res.status(200).json({ id: user_id, token: jwt, role_id: params.role_id });
   });
 };
 

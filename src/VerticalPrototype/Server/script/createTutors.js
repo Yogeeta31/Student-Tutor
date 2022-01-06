@@ -1,7 +1,7 @@
 const mysql = require("mysql");
 const dotenv = require("dotenv").config({ path: `${__dirname}/../.env` });
 const moment = require("moment");
-// const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 
 var con = mysql.createConnection({
   host: process.env.DBHOST,
@@ -136,7 +136,7 @@ const createTutors = async () => {
     }
   });
 
-  var sqlCreateTutorTable = `CREATE TABLE Tutor (TUTOR_ID INT NOT NULL AUTO_INCREMENT, USER_ID INT NOT NULL, IS_ACTIVE TINYINT NOT NULL, SUBJECT_ID INT, PRICE INT, isApproved TINYINT ,CV BLOB, PRIMARY KEY (TUTOR_ID))`;
+  var sqlCreateTutorTable = `CREATE TABLE Tutor (TUTOR_ID INT NOT NULL AUTO_INCREMENT, USER_ID INT NOT NULL, IS_ACTIVE TINYINT NOT NULL, SUBJECT_ID INT, PRICE INT, IS_APPROVED TINYINT ,CV BLOB, PRIMARY KEY (TUTOR_ID))`;
   con.query(sqlCreateTutorTable, (err, result) => {
     if (err) {
       console.log(err);
@@ -209,7 +209,7 @@ const createTutors = async () => {
       }
     });
 
-    var sqlCreateTutor = `INSERT INTO Tutor (USER_ID, IS_ACTIVE, SUBJECT_ID, PRICE,isApproved)
+    var sqlCreateTutor = `INSERT INTO Tutor (USER_ID, IS_ACTIVE, SUBJECT_ID, PRICE,IS_APPROVED)
         VALUES (${i + 1}, ${is_active},${subject.code},${price},${isApproved})`;
     con.query(sqlCreateTutor, (err, result) => {
       if (err) {

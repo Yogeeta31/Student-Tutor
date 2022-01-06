@@ -63,6 +63,20 @@ const createTutors = async () => {
     }
   });
 
+  var dropMessagingTable = `DROP TABLE IF EXISTS MESSAGING`;
+  con.query(dropMessagingTable, (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+  });
+
+  var dropConnectionsTable = `DROP TABLE IF EXISTS CONNECTIONS`
+  con.query(dropConnectionsTable, (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+  });
+
   var sqlCreateUserTable = `CREATE TABLE USER (USER_ID INT NOT NULL AUTO_INCREMENT, NAME VARCHAR(90), MOBILE_NO BIGINT, EMAIL VARCHAR(45), PASSWORD VARCHAR(100), ROLE_ID INT, REGISTERED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP, LAST_LOGIN TIMESTAMP DEFAULT CURRENT_TIMESTAMP, HAS_PERMISSION TINYINT NOT NULL, ROLES_ROLE_ID INT, REVIEW_ID INT, IMAGE BLOB, PRIMARY KEY (USER_ID), UNIQUE(EMAIL))`;
   con.query(sqlCreateUserTable, (err, result) => {
     if (err) {
@@ -98,4 +112,19 @@ const createTutors = async () => {
       console.log(err);
     }
   });
+
+  var sqlCreateMessagingTable = `CREATE TABLE MESSAGING ( SENDER_ID INT NOT NULL ,RECIEVER_ID INT NOT NULL ,MESSAGE VARCHAR(255) ,SENT_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`
+  con.query(sqlCreateMessagingTable, (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+  });
+
+  var sqlCreateConnectionsTable = `CREATE TABLE CONNECTIONS(STUDENT_ID INT,TUTOR_ID INT,REMARK TINYINT,MESSAGE VARCHAR(255), PRIMARY KEY(STUDENT_ID,TUTOR_ID))`;
+  con.query(sqlCreateConnectionsTable, (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+  });
+
 };

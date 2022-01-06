@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-module.exports.secureAPI = () => {
+const secureAPI = () => {
   return function (req, res, next) {
     try {
       const tok = req.headers.authorization.split(" ")[1];
@@ -15,3 +15,5 @@ module.exports.secureAPI = () => {
     }
   };
 };
+
+module.exports = secureAPI;

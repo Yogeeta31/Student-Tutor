@@ -53,34 +53,31 @@ module.exports.signup_post = async (req, res) => {
     const jwt = createToken(user_id, params.role_id);
     if (params.role_id == 2) {
       var sqlCreateTutor = `INSERT INTO TUTOR (USER_ID, IS_ACTIVE, CV,IS_APPROVED)
-        VALUES (${user_id}, 0,${
-        params.cv != undefined ? params.cv : null
-      },0)`;
-      dbConnection.query(sqlCreateTutor, (err, result) => {
+        VALUES (${user_id}, 0,${params.cv != undefined ? params.cv : null},0)`;
+      dbConnection.query(sqlCreateTutor, async (err, result) => {
         if (err) {
           return res.status(400).json(err);
         }
 
         tutor_id = result.insertId;
-        for await(let subject of params.subjects){
-           var sqlCreateSubject=`INSERT INTO SUBJECT (SUBJECT_NAME, USER_ID, PRICE) VALUES (${subject.subject_name},${user_id},${subject.price})`
-          dbConnection.query(sqlCreateSubject,(err,result)=>{
-            if(err){
+        for await (let subject of params.subjects) {
+          var sqlCreateSubject = `INSERT INTO SUBJECT (SUBJECT_NAME, USER_ID, PRICE) VALUES ("${subject.subject_name}",${user_id},${subject.price})`;
+          dbConnection.query(sqlCreateSubject, (err, result) => {
+            if (err) {
               console.log(err);
             }
-            subject_id=result.insertId;
+            console.log(result);
+            subject_id = result.insertId;
             //[15:08] Mohammed AfwanREVIEW VARCHAR(400), RATING INT, FROM_USER_ID INT, TO_USER_ID INT, SUBJECT_ID INT,
 
-
-            var sqlCreateReview=`INSERT INTO REVIEWS (TO_USER_ID, SUBJECT_ID, RATING) VALUES (${user_id},${subject_id},0)`;
-            dbConnection.query(sqlCreateReview,(err,result)=>{
-              if(err){
+            var sqlCreateReview = `INSERT INTO REVIEWS (TO_USER_ID, SUBJECT_ID, RATING) VALUES (${user_id},${subject_id},0)`;
+            dbConnection.query(sqlCreateReview, (err, result) => {
+              if (err) {
                 console.log(err);
               }
-            })
-          })
+            });
+          });
         }
-
       });
     }
     res.status(200).json({ id: user_id, token: jwt, role_id: params.role_id });

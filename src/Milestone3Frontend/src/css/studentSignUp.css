@@ -1,0 +1,58 @@
+.form-control:focus {
+    box-shadow: none;
+    border-color: black;
+}
+
+.profile-button {
+    background: black;
+    box-shadow: none;
+    border: none
+}
+
+.profile-button:hover {
+    background: white;
+    color: black;
+    border: 1px solid black;
+}
+
+
+
+.labels {
+    font-size: 15px
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 8px;
+    cursor: pointer;
+    font-size: small;
+    background-color: #f1f7ef;
+    border-radius: 10px;
+}
+.upload:hover {
+    background-color: #e1f7da;
+}
+.upload:active {
+    background-color: #cbf0bf;
+}
+
+.remove {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 8px;
+    cursor: pointer;
+    font-size: small;
+    background-color: #f7efef;
+    border-radius: 10px;
+}
+.remove:hover {
+    background-color: #f7dada;
+}
+.remove:active {
+    background-color: #f1c7c7;
+}

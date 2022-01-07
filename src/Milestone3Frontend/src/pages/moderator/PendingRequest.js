@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useCookies } from "react-cookie";
+
 const Data = [
     {
         id: 1,
@@ -34,6 +37,22 @@ const Data = [
 
 const PendingRequest = () => {
     const [tutors, setTutors] = useState(Data);
+    const [cookies, setCookie] = useCookies(['user']);
+
+    const loadData = () => {
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/notVerifiedTutors`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
+            .then((response) => {
+                setTutors(response.data);
+                console.log(response.data);
+            })
+            .catch((error) => {
+                console.log(console.error);
+            });
+    }
+
+    useEffect(() => {
+        loadData();
+    }, []);
 
     return (
         <>
@@ -58,15 +77,15 @@ const PendingRequest = () => {
                         {
                             tutors.map(tutor => (
 
-                                <tr key={tutor.id}>
+                                <tr key={tutor.USER_ID}>
                                     <td>
-                                        <img src={tutor.img} style={{ maxWidth: "65px", borderRadius: "50%" }} alt="avatar" />
+                                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" style={{ maxWidth: "65px", borderRadius: "50%" }} alt="avatar" />
                                     </td>
                                     <td>
-                                        {tutor.name}
+                                        {tutor.NAME}
                                     </td>
                                     <td>
-                                        {tutor.timestame}
+                                        Timestamp
                                     </td>
                                     <td>
                                         <button className="btn btn-outline-dark" id={tutor.id}>View Profile</button>

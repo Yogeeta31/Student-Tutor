@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 const Messgaes = [
     {
         id: 1,
@@ -33,19 +34,17 @@ const Messgaes = [
 ];
 const ViewMessageRequest = () => {
     const [messages, setMessages] = useState(Messgaes);
+
     return (
         <div className="container my-3 shadow" style={{ backgroundColor: "white" }}>
             <div className="row">
                 <h3 className="mt-3">&nbsp;&nbsp;Message Request</h3>
             </div>
             <hr />
-
-
-
             {
                 messages.map(message => (
 
-                    <div class="card mb-3 shadow" key={message.id}>
+                    <div class="card my-3 shadow" key={message.id}>
                         <div class="row g-0">
                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 col-xl-2 offset-xs-2 offset-sm-4 offset-md-0">
                                 <img
@@ -67,10 +66,8 @@ const ViewMessageRequest = () => {
                             </div>
                         </div>
                     </div>
-
                 ))
             }
-
         </div>
     )
 }

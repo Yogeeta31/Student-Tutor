@@ -14,7 +14,7 @@ module.exports.approve_tutor_patch = (req, res) => {
 };
 
 module.exports.listOfNotVerifiedTutors = (req, res) => {
-  const list = `SELECT USER.NAME, USER.IMAGE, TUTOR.IS_APPROVED, USER.USER_ID FROM TUTOR, USER WHERE IS_APPROVED=0`;
+  const list = `SELECT USER.NAME, USER.IMAGE, TUTOR.IS_APPROVED, USER.USER_ID, TUTOR.UPDATED_DATE FROM TUTOR, USER WHERE IS_APPROVED=0`;
   dbConnection.query(list, async (err, result) => {
     if (err) {
       return res.status(400).json(err);

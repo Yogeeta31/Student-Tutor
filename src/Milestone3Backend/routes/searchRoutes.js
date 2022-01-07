@@ -6,8 +6,6 @@ const { roleCheck } = require("../middleware/roleChecker");
 
 router.get(
   "/tutors",
-  SecureAPI(),
-  roleCheck(["STUDENT"]),
   searchController.search_tutor_get
 );
 

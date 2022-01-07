@@ -12,4 +12,18 @@ router.patch(
   moderatorController.approve_tutor_patch
 );
 
+router.get(
+  "/approvedTutors",
+  SecureAPI(),
+  roleCheck(["MODERATOR"]),
+  moderatorController.listOfApprovedTutors
+);
+
+router.get(
+  "/notVerifiedTutors",
+  SecureAPI(),
+  roleCheck(["MODERATOR"]),
+  moderatorController.listOfNotVerifiedTutors
+);
+
 module.exports = router;

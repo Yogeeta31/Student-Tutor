@@ -22,6 +22,7 @@ const Header = () => {
         else if (role === "tutor") {
             return (
                 <>
+                    <li className="nav-item"><Link className="nav-link" to="/viewmessagerequest">Message Requests</Link></li>
                     <li className="nav-item"><Link className="nav-link" to="/chats"><i className="bi bi-chat"></i></Link></li>
                 </>
             )

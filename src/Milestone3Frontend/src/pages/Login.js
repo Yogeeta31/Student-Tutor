@@ -20,44 +20,49 @@ const Login = () => {
   const submit = (e) => {
     e.preventDefault();
 
-    let user = {
-      email: formData.emailID,
-      password: formData.pass
+    if (formData.emailID === "" || formData.pass === "")
+      setError("Please Enter All Fields");
+    else {
+      let user = {
+        email: formData.emailID,
+        password: formData.pass
+      }
+
+      axios.post(`${process.env.REACT_APP_SERVER_URL}/api/login`, user)
+        .then((response) => {
+          if (response.status === 200) {
+            let role;
+            if (response.data.role_id === 3)
+              role = "student";
+            else if (response.data.role_id === 2)
+              role = "tutor";
+            else if (response.data.role_id === 1)
+              role = "moderator"
+
+            setUser({
+              userID: response.data.id,
+              role: role,
+              isAuth: true
+            })
+
+            setCookie('userid', response.data.id, { path: '/', maxAge: 1 * 60 * 60 * 24 });
+            setCookie('role', role, { path: '/', maxAge: 1 * 60 * 60 * 24 });
+            setCookie('token', response.data.token, { path: '/', maxAge: 1 * 60 * 60 * 24 });
+
+            if (role === "tutor")
+              navigate("/viewmessagerequest");
+            else if (role === "moderator")
+              navigate("/pendingrequests")
+            else
+              navigate("/")
+          }
+        })
+        .catch((error) => {
+          if (error.response.status === 400)
+            setError("Incorrect Email ID or Password");
+
+        });
     }
-
-    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/login`, user)
-      .then((response) => {
-        if (response.status === 200) {
-          let role;
-          if (response.data.role_id === 3)
-            role = "student";
-          else if (response.data.role_id === 2)
-            role = "tutor";
-          else if (response.data.role_id === 1)
-            role = "moderator"
-
-          setUser({
-            userID: response.data.id,
-            role: role,
-            isAuth: true
-          })
-          setCookie('userid', response.data.id, { path: '/', maxAge: 1 * 60 * 60 * 24 });
-          setCookie('role', role, { path: '/', maxAge: 1 * 60 * 60 * 24 });
-          setCookie('token', response.data.token, { path: '/', maxAge: 1 * 60 * 60 * 24 });
-
-          if (role === "tutor")
-            navigate("/chats");
-          else if (role === "moderator")
-            navigate("/pendingrequests")
-          else
-            navigate("/")
-        }
-      })
-      .catch((error) => {
-        if (error.response.status === 400)
-          setError("Incorrect Email ID or Password");
-
-      });
   };
 
   return (

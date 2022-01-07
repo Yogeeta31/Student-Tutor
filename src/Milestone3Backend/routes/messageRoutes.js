@@ -20,5 +20,10 @@ router.get(
   SecureAPI(),
   MessageController.getAllConnections
 );
+router.patch(
+  "/changeMessageStatus",
+  SecureAPI(),
+  MessageController.changeMessageRequestStatus
+);
 
 module.exports = router;

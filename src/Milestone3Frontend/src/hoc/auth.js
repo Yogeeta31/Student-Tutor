@@ -3,6 +3,7 @@ import { useCookies } from "react-cookie";
 
 const PrivateRoute = (props) => {
     const [cookies, setCookie] = useCookies(['user']);
+
     function authentication() {
         let role = cookies.role;
         let loginStatus = cookies.role ? true : false;
@@ -17,6 +18,6 @@ const PrivateRoute = (props) => {
     if (loginInfo.loginStatus && loginInfo.role === props.role)
         return <props.component></props.component>
     else
-        return <Navigate to="/" />
+        return <Navigate to="/errorpage" />
 }
 export default PrivateRoute

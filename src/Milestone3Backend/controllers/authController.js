@@ -19,6 +19,7 @@ const createToken = (id, role_id) => {
 
 module.exports.signup_post = async (req, res) => {
   const params = req.body;
+  console.log(params);
   if (params.role_id === 3) {
     let chkEmail = await checkEmail(params.email);
     if (chkEmail === 0) {
@@ -48,14 +49,39 @@ module.exports.signup_post = async (req, res) => {
     user_id = result.insertId;
     const jwt = createToken(user_id, params.role_id);
     if (params.role_id == 2) {
+<<<<<<< HEAD
       var sqlCreateTutor = `INSERT INTO TUTOR (USER_ID, IS_ACTIVE, SUBJECT_ID, PRICE, CV,IS_APPROVED)
         VALUES (${user_id}, 0,${params.subject_id},${params.price},${params.cv != undefined ? params.cv : null
         },0)`;
       dbConnection.query(sqlCreateTutor, (err, result) => {
+=======
+      var sqlCreateTutor = `INSERT INTO TUTOR (USER_ID, IS_ACTIVE, CV,IS_APPROVED)
+        VALUES (${user_id}, 0,${params.cv != undefined ? params.cv : null},0)`;
+      dbConnection.query(sqlCreateTutor, async (err, result) => {
+>>>>>>> 1db82f252ae89962b3aa0372ebfcb924c75c3e0b
         if (err) {
           return res.status(400).json(err);
         }
+
         tutor_id = result.insertId;
+        for await (let subject of params.subjects) {
+          var sqlCreateSubject = `INSERT INTO SUBJECT (SUBJECT_NAME, USER_ID, PRICE) VALUES ("${subject.subject_name}",${user_id},${subject.price})`;
+          dbConnection.query(sqlCreateSubject, (err, result) => {
+            if (err) {
+              console.log(err);
+            }
+            console.log(result);
+            subject_id = result.insertId;
+            //[15:08] Mohammed AfwanREVIEW VARCHAR(400), RATING INT, FROM_USER_ID INT, TO_USER_ID INT, SUBJECT_ID INT,
+
+            var sqlCreateReview = `INSERT INTO REVIEWS (TO_USER_ID, SUBJECT_ID, RATING) VALUES (${user_id},${subject_id},0)`;
+            dbConnection.query(sqlCreateReview, (err, result) => {
+              if (err) {
+                console.log(err);
+              }
+            });
+          });
+        }
       });
     }
     res.status(200).json({ id: user_id, token: jwt, role_id: params.role_id });
@@ -75,7 +101,7 @@ module.exports.login_post = async (req, res) => {
     }
     const data = JSON.parse(JSON.stringify(result));
     if (_.isEmpty(data)) {
-      res.status(400).json({ errors: { email: "Email Does not exist" } });
+      res.status(200).json({ errors: { email: "Email Does not exist" } });
     } else {
       const hashedPassword = data[0].PASSWORD;
       const user_id = data[0].USER_ID;
@@ -86,7 +112,7 @@ module.exports.login_post = async (req, res) => {
         const jwt = createToken(user_id, role_id);
         res.status(200).json({ id: user_id, token: jwt, role_id: role_id });
       } else {
-        res.status(400).json({ errors: { password: "Incorrect Password" } });
+        res.status(200).json({ errors: { password: "Incorrect Password" } });
       }
     }
   });

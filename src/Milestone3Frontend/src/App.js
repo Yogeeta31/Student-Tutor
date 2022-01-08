@@ -13,6 +13,7 @@ import ViewMessageRequest from './pages/tutor/ViewMessageRequest';
 import Login from './pages/Login';
 import Logout from './components/Logout';
 import StudentSignUp from './pages/StudentSignUp';
+import TutorSignUp from './pages/tutor/TutorSignUp';
 import SignUpChoice from './pages/SignUpChoice';
 import ErrorPage from './pages/ErrorPage';
 
@@ -44,6 +45,7 @@ function App() {
             <Route path="/logout" exact element={<Logout />} />
             <Route path="/errorpage" exact element={<ErrorPage />} />
             <Route path="/signUp/student" exact element={<StudentSignUp />} />
+            <Route path="/signUp/tutor" exact element={<TutorSignUp />} />
 
           </Routes>
         </Layout>

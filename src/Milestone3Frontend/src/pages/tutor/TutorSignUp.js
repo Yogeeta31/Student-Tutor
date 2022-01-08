@@ -1,9 +1,9 @@
-import "../css/studentSignUp.css";
+import "../../css/tutorSignUp.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const StudentSignUp = () => {
+const TutorSignUp = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -13,13 +13,18 @@ const StudentSignUp = () => {
     pass: "",
     confirmPass: "",
     gender: "",
+    bio: "",
   });
-
-  const defaultImg = "../images/profileIMG.jpg";
 
   const [selectedImage, setSelectedImage] = useState(null);
 
   const [removeSelectedImg, setRemoveSelectedImg] = useState("");
+
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const [removeSelectedFile, setRemoveSelectedFile] = useState("");
+
+  const [bioError, setBioError] = useState("");
 
   const [nameError, setNameError] = useState("");
 
@@ -33,6 +38,50 @@ const StudentSignUp = () => {
   const [confirmPassError, setConfirmPassError] = useState("");
 
   const [genderSelect, setGenderSelect] = useState("");
+
+  const [subPriceError, setSubPriceError] = useState([""]);
+
+  const [fileName, setFileName] = useState("");
+
+  const [subPrice, setSubPrice] = useState([{ subject: "", price: "" }]);
+
+  const chkSubPrice = () => {
+    for (let i = 0; i < subPrice.length; i++) {
+      if (!subPrice[i].subject || !subPrice[i].price) {
+        setSubPriceError("Subject and Prices are inconsistently written");
+        return false;
+      }
+    }
+    setSubPriceError("");
+    return true;
+  };
+
+  const updatedSubPrice = (index, subject, price) => {
+    let newSubPrice = [...subPrice];
+    newSubPrice[index] = {
+      subject: subject,
+      price: price,
+    };
+    setSubPrice(newSubPrice);
+  };
+
+  const addSub = () => {
+    if (chkSubPrice()) {
+      let newSubPrice = [...subPrice];
+      newSubPrice.push({ subject: "", price: "" });
+      setSubPrice(newSubPrice);
+    }
+  };
+
+  const remSub = () => {
+    if (subPrice.length > 1) {
+      let newSubPrice = [...subPrice];
+      newSubPrice.pop();
+      setSubPrice(newSubPrice);
+    }
+  };
+
+  const defaultImg = "../images/profileIMG.jpg";
 
   const removeImg = () => {
     setRemoveSelectedImg("");
@@ -48,9 +97,31 @@ const StudentSignUp = () => {
     }
   };
 
+  const removeFile = () => {
+    setRemoveSelectedFile("");
+    setSelectedFile(null);
+    setFileName("");
+  };
+
+  const setFile = (file) => {
+    setSelectedFile(file);
+    if (file) {
+      setRemoveSelectedFile("Set");
+      setFileName(file.name);
+    } else {
+      removeFile();
+    }
+  };
+
   const submit = (e) => {
     e.preventDefault();
     let flag = true;
+    if (!formData.bio) {
+      flag = false;
+      setBioError("Please Write something about yourself");
+    } else {
+      setBioError("");
+    }
     if (!formData.fullName) {
       flag = false;
       setNameError("Please Enter Your Name");
@@ -97,15 +168,18 @@ const StudentSignUp = () => {
     } else {
       setConfirmPassError("");
     }
-    if (flag) {
+    if (flag && chkSubPrice() && selectedFile) {
       let user = {
         name: formData.fullName,
         phone: formData.mobileNum,
         email: formData.emailID,
         password: formData.pass,
         gender: formData.gender,
-        role_id: 3,
+        role_id: 2,
+        about: formData.bio,
         photo: selectedImage ? selectedImage : defaultImg,
+        cv: selectedFile,
+        subjects: subPrice,
       };
 
       axios
@@ -139,7 +213,7 @@ const StudentSignUp = () => {
             </div>
             <div>
               <p className="offset-6" style={{ marginBottom: 0 }}>
-                -As a student
+                -As a tutor
               </p>
             </div>
             <div className="col-md-5 border-right">
@@ -151,7 +225,7 @@ const StudentSignUp = () => {
                     height="180px"
                     style={{ objectFit: "contain" }}
                     src={URL.createObjectURL(selectedImage)}
-                    alt="SelectedImage"
+                    alt="ProfileImage"
                   />
                 ) : (
                   <img
@@ -159,11 +233,11 @@ const StudentSignUp = () => {
                     width="180px"
                     height="180px"
                     style={{ objectFit: "cover" }}
-                    src={defaultImg}
-                    alt="DefaultImage"
+                    src="../images/profileIMG.jpg"
+                    alt="ProfileImage"
                   />
                 )}
-                <label className="font-weight-bold text-blue-70 upload mt-3">
+                <label className="font-weight-bold text-blue-70 upload mt-2">
                   <input
                     type="file"
                     name="myImage"
@@ -176,10 +250,51 @@ const StudentSignUp = () => {
                   Recent Image
                 </label>
                 {removeSelectedImg && (
-                  <label className="remove mt-3" onClick={removeImg}>
+                  <label className="remove mt-1" onClick={removeImg}>
                     Remove Image
                   </label>
                 )}
+                <label className="font-weight-bold text-blue-70 upload mt-3">
+                  <input
+                    type="file"
+                    name="myFile"
+                    onChange={(event) => {
+                      setFile(event.target.files[0]);
+                    }}
+                  />
+                  Upload Your CV<span style={{ color: "Red" }}>*</span>
+                </label>
+                {fileName ? <p style={{ margin: 0 }}>{fileName}</p> : <></>}
+                {removeSelectedFile && (
+                  <label className="remove" onClick={removeFile}>
+                    X
+                  </label>
+                )}
+              </div>
+              <div className="mt-3">
+                <div className="col-md-12">
+                  <label className="labels">
+                    About Yourself <span style={{ color: "Red" }}>*</span>
+                  </label>
+                  <textarea
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter Full Name"
+                    value={formData.bio}
+                    onInput={(e) =>
+                      setFormData({ ...formData, bio: e.target.value })
+                    }
+                  />
+                  <span
+                    style={{
+                      fontWeight: "bold",
+                      color: "red",
+                      fontSize: "13px",
+                    }}
+                  >
+                    {bioError}
+                  </span>
+                </div>
               </div>
             </div>
             <div className="col-md-7 border-right">
@@ -324,6 +439,64 @@ const StudentSignUp = () => {
                       {emailError}
                     </span>
                   </div>
+                  {subPrice.map((subP, i) => (
+                    <div className="row mt-2" key={i}>
+                      <div className="col-md-6">
+                        <label className="labels">
+                          Subject <span style={{ color: "Red" }}>*</span>
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Enter a Subject"
+                          value={subP.subject}
+                          onInput={(e) =>
+                            updatedSubPrice(i, e.target.value, subP.price)
+                          }
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="labels">
+                          Price <span style={{ color: "Red" }}>*</span>
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Enter Hourly Rate"
+                          value={subP.price}
+                          onInput={(e) =>
+                            updatedSubPrice(i, subP.subject, e.target.value)
+                          }
+                        />
+                      </div>
+                    </div>
+                  ))}
+                  <span
+                    style={{
+                      fontWeight: "bold",
+                      color: "red",
+                      fontSize: "13px",
+                    }}
+                  >
+                    {subPriceError}
+                  </span>
+                  <div>
+                    <label
+                      onClick={addSub}
+                      className="font-weight-bold text-blue-70 upload mt-2"
+                    >
+                      Add Subject
+                    </label>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    {subPrice.length > 1 ? (
+                      <label
+                        onClick={remSub}
+                        className="font-weight-bold text-blue-70 remove mt-2"
+                      >
+                        Remove Subject
+                      </label>
+                    ) : null}
+                  </div>
                   <div className="col-md-12 mt-2">
                     <label className="labels">
                       Password <span style={{ color: "Red" }}>*</span>
@@ -400,4 +573,4 @@ const StudentSignUp = () => {
     </>
   );
 };
-export default StudentSignUp;
+export default TutorSignUp;

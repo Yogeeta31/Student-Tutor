@@ -1,6 +1,7 @@
 import "../css/searchTutor.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 
 
 const Alltutors = [
@@ -57,12 +58,45 @@ const Alltutors = [
 const SearchTutors = () => {
 
     const [tutors, setTutors] = useState(Alltutors);
+    const [searchTerm, setsearchTerm] = useState("");
+    const [sortBy, setsortBy] = useState("default");
     let navigate = useNavigate();
+
+    useEffect(() => {
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/search/tutors`)
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }, []);
+
+    const onSelectChange = (e) => {
+        setsortBy(e.target.value);
+        console.log(sortBy);
+    }
+
+    const loadData = (e) => {
+        e.preventDefault();
+        console.log(searchTerm + "  " + sortBy);
+    }
 
     const onViewTutor = (e) => {
         navigate(`/viewtutor/1`);
     }
     const renderRating = (n) => {
+        if (n === 0) {
+            return (
+                <div className="small-ratings">
+                    <i className="fa fa-star rating-color"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                </div>
+            )
+        }
         if (n === 1) {
             return (
                 <div className="small-ratings">
@@ -123,39 +157,32 @@ const SearchTutors = () => {
     return (
         <>
             <div className="container mb-2">
-                <div className="row d-flex justify-content-center">
-                    <div className="col-sm-12 col-lg-2 my-3">
-                        <select className="form-select">
-                            <option> Sort By </option>
-                            <option>Ratings</option>
-                            <option>Price</option>
-                        </select>
-                    </div>
-                    <div className="col-sm-12 col-lg-9 my-3">
-                        <form>
+                <form onSubmit={loadData}>
+                    <div className="row d-flex justify-content-center">
+                        <div className="col-sm-12 col-lg-2 my-3">
+                            <select className="form-select" onChange={onSelectChange}>
+                                <option> Sort By </option>
+                                <option>Ratings</option>
+                                <option>Price</option>
+                            </select>
+                        </div>
+                        <div className="col-sm-12 col-lg-9 my-3">
+
                             <div style={{ float: "left", width: "70%", marginRight: "2%" }}>
-                                <input type="search" className="form-control rounded" placeholder="Search" aria-label="Search"
+                                <input type="search" className="form-control rounded"
+                                    value={searchTerm}
+                                    onChange={(e) => { setsearchTerm(e.target.value) }}
+                                    placeholder="Search" aria-label="Search"
                                     aria-describedby="search-addon" />
                             </div>
                             <div>
                                 <button className="btn btn-outline-dark" style={{ backgroundColor: "white", color: "black" }}>Search</button>
                             </div>
-                        </form>
+
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
-
-            {/* <div className="card m-2 tutorCards" key={tutor.id} style={{ width: "18rem" }}>
-                <img src="./tutorImage.jpg" className="card-img-top" alt="..." />
-                <div className="card-body">
-                    <h5 className="card-title">{tutor.name}</h5>
-                    <p className="card-text m-1"><b>Subjects :</b> {tutor.Subject}</p>
-                    <p className="card-text m-1"><b>Price :</b> 20</p>
-                    <p className="card-text m-1"><b>Ratings :</b> {tutor.Ratings}</p>
-                </div>
-                <button className="btn btn-outline-primary mb-3" onClick={onViewTutor}>Book Now</button>
-            </div> */}
-
             <div className="container">
                 <div className="row">
 

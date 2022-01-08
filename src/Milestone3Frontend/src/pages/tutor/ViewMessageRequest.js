@@ -44,20 +44,20 @@ const ViewMessageRequest = () => {
             {
                 messages.map(message => (
 
-                    <div class="card my-3 shadow" key={message.id}>
-                        <div class="row g-0">
-                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 col-xl-2 offset-xs-2 offset-sm-4 offset-md-0">
+                    <div className="card my-3 shadow" key={message.id}>
+                        <div className="row g-0">
+                            <div className="col-xs-12 col-sm-12 col-md-4 col-lg-3 col-xl-2 offset-xs-2 offset-sm-4 offset-md-0">
                                 <img
                                     src={message.img}
                                     alt="StudentImage"
-                                    class="img-fluid rounded-start"
+                                    className="img-fluid rounded-start"
                                     style={{ maxWidth: "170px", maxHeight: "170p" }}
                                 />
                             </div>
-                            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-9 col-xl-10 offset-xs-2 offset-sm-4 offset-md-0">
-                                <div class="card-body">
-                                    <h5 class="card-title">{message.name}</h5>
-                                    <p class="card-text" style={{ color: "black" }}>
+                            <div className="col-xs-12 col-sm-8 col-md-8 col-lg-9 col-xl-10 offset-xs-2 offset-sm-4 offset-md-0">
+                                <div className="card-body">
+                                    <h5 className="card-title">{message.name}</h5>
+                                    <p className="card-text" style={{ color: "black" }}>
                                         I really don't want to study from you beacuse you are annyoing with yor ringtones. Bye Don't take care.
                                     </p>
                                     <button className="btn btn-outline-success" id={message.id}>Approve</button>&nbsp;&nbsp;

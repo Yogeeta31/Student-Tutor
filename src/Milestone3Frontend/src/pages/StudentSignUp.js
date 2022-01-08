@@ -103,9 +103,10 @@ const StudentSignUp = () => {
         phone: formData.mobileNum,
         email: formData.emailID,
         password: formData.pass,
-        gender: formData.gender,
         role_id: 3,
-        photo: selectedImage ? selectedImage : defaultImg,
+        // gender: formData.gender,
+        // photo: selectedImage ? selectedImage : defaultImg,
+        //UNCOMMENT ABOVE 2 LINES ONCE BACKEND COMPLETE
       };
 
       axios

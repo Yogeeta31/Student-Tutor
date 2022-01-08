@@ -24,6 +24,8 @@ const TutorSignUp = () => {
 
   const [removeSelectedFile, setRemoveSelectedFile] = useState("");
 
+  const [fileError, setFileError] = useState("");
+
   const [bioError, setBioError] = useState("");
 
   const [nameError, setNameError] = useState("");
@@ -108,6 +110,7 @@ const TutorSignUp = () => {
     if (file) {
       setRemoveSelectedFile("Set");
       setFileName(file.name);
+      setFileError("");
     } else {
       removeFile();
     }
@@ -116,6 +119,12 @@ const TutorSignUp = () => {
   const submit = (e) => {
     e.preventDefault();
     let flag = true;
+    if (!selectedFile) {
+      flag = false;
+      setFileError("Please Upload CV");
+    } else {
+      setFileError("");
+    }
     if (!formData.bio) {
       flag = false;
       setBioError("Please Write something about yourself");
@@ -148,6 +157,7 @@ const TutorSignUp = () => {
     } else {
       setEmailError("");
     }
+    chkSubPrice();
     if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,20}$/.test(formData.pass)) {
       flag = false;
       setPassError("Please Enter a Strong Password");
@@ -168,17 +178,27 @@ const TutorSignUp = () => {
     } else {
       setConfirmPassError("");
     }
-    if (flag && chkSubPrice() && selectedFile) {
+    if (flag && chkSubPrice()) {
+      // let user = {
+      //   name: formData.fullName,
+      //   phone: formData.mobileNum,
+      //   email: formData.emailID,
+      //   password: formData.pass,
+      //   role_id: 2,
+      //   gender: formData.gender,
+      //   about: formData.bio,
+      //   photo: selectedImage ? selectedImage : defaultImg,
+      //   cv: selectedFile,
+      //   subjects: subPrice,
+      // };
+
+      //WHEN BACKEND IS COMPLETE, DELETE THE FOLLOWING user AND UNCOMMENT ABOVE
       let user = {
         name: formData.fullName,
         phone: formData.mobileNum,
         email: formData.emailID,
         password: formData.pass,
-        gender: formData.gender,
         role_id: 2,
-        about: formData.bio,
-        photo: selectedImage ? selectedImage : defaultImg,
-        cv: selectedFile,
         subjects: subPrice,
       };
 
@@ -264,6 +284,15 @@ const TutorSignUp = () => {
                   />
                   Upload Your CV<span style={{ color: "Red" }}>*</span>
                 </label>
+                <span
+                  style={{
+                    fontWeight: "bold",
+                    color: "red",
+                    fontSize: "13px",
+                  }}
+                >
+                  {fileError}
+                </span>
                 {fileName ? <p style={{ margin: 0 }}>{fileName}</p> : <></>}
                 {removeSelectedFile && (
                   <label className="remove" onClick={removeFile}>

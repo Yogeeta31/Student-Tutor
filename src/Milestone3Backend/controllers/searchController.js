@@ -17,7 +17,15 @@ module.exports.search_tutor_get = async (req, res) => {
 
       const dbPromise = util.promisify(dbConnection.query).bind(dbConnection);
     
-      const result = await dbPromise(sql);
+      try
+      {
+        const result = await dbPromise(sql);
+      }
+      catch(err)
+      {
+        throw err;
+      }
+      
 
       var tutors = JSON.parse(JSON.stringify(result))
 
@@ -26,7 +34,14 @@ module.exports.search_tutor_get = async (req, res) => {
         tutor["subjects"] = [];
         const user_id = tutor.USER_ID;
         let sqlSubectQuery = `SELECT s.SUBJECT_NAME, s.PRICE , AVG(r.RATING) AS AVERAGE_RATING FROM TUTOR t  INNER JOIN SUBJECT s  ON (t.USER_ID = s.USER_ID) INNER JOIN REVIEWS r ON (t.USER_ID = r.TO_USER_ID AND r.SUBJECT_ID = s.SUBJECT_ID) WHERE t.USER_ID = ${user_id} GROUP BY s.SUBJECT_NAME`
-        const subjects = await dbPromise(sqlSubectQuery)
+        try
+        {
+          const subjects = await dbPromise(sqlSubectQuery);
+        }
+        catch(err)
+        {
+          throw err;
+        }
         console.log( JSON.parse(JSON.stringify(subjects)));
         tutor["subjects"] = JSON.parse(JSON.stringify(subjects));
       }

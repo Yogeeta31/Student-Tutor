@@ -85,7 +85,7 @@ const PendingRequest = () => {
                                         {tutor.NAME}
                                     </td>
                                     <td>
-                                        Timestamp
+                                        {tutor.UPDATED_DATE}
                                     </td>
                                     <td>
                                         <button className="btn btn-outline-dark" id={tutor.id}>View Profile</button>

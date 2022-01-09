@@ -20,7 +20,7 @@ import ErrorPage from './pages/ErrorPage';
 import { LoginStateProvider } from './context/LoginContext';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-function App() {
+function App(props) {
   return (
 
     <BrowserRouter>

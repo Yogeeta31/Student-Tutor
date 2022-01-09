@@ -4,60 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 
 
-const Alltutors = [
-    {
-        id: 1,
-        name: "Ankit Anand",
-        Subject: "Maths",
-        Ratings: 1
-    },
-    {
-        id: 2,
-        name: "Pratik Kakadiya",
-        Subject: "Maths",
-        Ratings: 2
-    },
-    {
-        id: 3,
-        name: "Mohit Dalal",
-        Subject: "Maths",
-        Ratings: 3
-    },
-    {
-        id: 4,
-        name: "Yogeeta Sharma",
-        Subject: "Maths",
-        Ratings: 4
-    },
-    {
-        id: 5,
-        name: "Afwan",
-        Subject: "Maths",
-        Ratings: 5
-    },
-    {
-        id: 6,
-        name: "Omar",
-        Subject: "Maths",
-        Ratings: 3
-    },
-    {
-        id: 7,
-        name: "Ahemad",
-        Subject: "Maths",
-        Ratings: 4
-    },
-    {
-        id: 8,
-        name: "Bibek",
-        Subject: "Maths",
-        Ratings: 2
-    }
-]
-
 const SearchTutors = () => {
 
-    const [tutors, setTutors] = useState(Alltutors);
+    const [tutors, setTutors] = useState([]);
     const [searchTerm, setsearchTerm] = useState("");
     const [sortBy, setsortBy] = useState("default");
     let navigate = useNavigate();
@@ -73,18 +22,30 @@ const SearchTutors = () => {
             })
     }, []);
 
+    const loadData = (sT, sB) => {
+        console.log(sT, sB);
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/search/tutors?searchTerm=${sT}&sortBy=${sB}`)
+            .then(response => {
+                setTutors(response.data);
+
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
     const onSelectChange = (e) => {
         setsortBy(e.target.value);
-        console.log(sortBy);
+        loadData(searchTerm, e.target.value);
     }
 
-    const loadData = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(searchTerm + "  " + sortBy);
+        loadData(searchTerm, sortBy)
     }
-
     const onViewTutor = (e) => {
-        navigate(`/viewtutor/1`);
+
+        navigate(`/viewtutor/${e.currentTarget.id}`);
     }
     const renderRating = (n) => {
         if (n === 0) {
@@ -158,13 +119,13 @@ const SearchTutors = () => {
     return (
         <>
             <div className="container mb-2">
-                <form onSubmit={loadData}>
+                <form onSubmit={handleSubmit}>
                     <div className="row d-flex justify-content-center">
                         <div className="col-sm-12 col-lg-2 my-3">
                             <select className="form-select" onChange={onSelectChange}>
-                                <option> Sort By </option>
-                                <option>Ratings</option>
-                                <option>Price</option>
+                                <option value="default"> Sort By </option>
+                                <option value="ratings">Ratings</option>
+                                <option value="price">Price</option>
                             </select>
                         </div>
                         <div className="col-sm-12 col-lg-9 my-3">
@@ -188,9 +149,10 @@ const SearchTutors = () => {
                 <div className="row">
 
                     {
+
                         tutors.map(tutor => {
                             return (
-                                <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3" key={tutor.USER_ID}>
+                                <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3" key={tutor.SUBJECT_ID}>
                                     <div className="card sl">
                                         <div className="card-image">
                                             <img src="./tutorImage.jpg" alt="Nothing" />
@@ -207,7 +169,7 @@ const SearchTutors = () => {
                                         <div className="card-text mb-2">
                                             {renderRating(tutor.AVERAGE_RATING)}
                                         </div>
-                                        <button className="card-button" onClick={onViewTutor}>View Tutor</button>
+                                        <button className="card-button" id={tutor.USER_ID} onClick={onViewTutor}>View Tutor</button>
                                     </div>
                                 </div>
                             );

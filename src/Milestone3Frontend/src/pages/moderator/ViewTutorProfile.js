@@ -5,37 +5,17 @@ import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 
-const FeedbackList = [
-    {
-        id: 1,
-        subject: "Maths",
-        text: "He is not teaching good maths",
-        by: "Pratik Kakadiya"
-    },
-    {
-        id: 2,
-        subject: "Maths",
-        text: "He is not teaching good maths",
-        by: "Mohit Dalal"
-    },
-    {
-        id: 3,
-        subject: "Maths",
-        text: "He is not teaching good maths",
-        by: "Yogeeta Sharma"
-    }
-]
-
-const ViewTutor = (props) => {
+const ViewTutorProfile = (props) => {
     let navigate = useNavigate();
-    const [tutor, setTutor] = useState({});
+    const [user, setUser] = useState({});
     const [cookies, setCookie] = useCookies(['user']);
 
     useEffect(() => {
-        if (cookies.token !== undefined) {
+
+        if (cookies.token === "") {
             axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getTutorDetails?userID=${window.location.href.toString().split("/")[4]}`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
                 .then(response => {
-                    setTutor(response.data);
+                    setUser(response.data);
                 })
                 .catch(err => {
                     console.log(err);
@@ -129,9 +109,9 @@ const ViewTutor = (props) => {
                                     <div className="d-flex flex-column align-items-center text-center">
                                         <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" className="rounded-circle" width="150" />
                                         <div className="mt-3">
-                                            <h4>{tutor.NAME}</h4>
-                                            <p className="text-secondary mb-1">{tutor.BIO}</p>
-                                            <p className="text-secondary mb-1">{tutor.REGISTERED_AT}</p>
+                                            <h4>{user.NAME}</h4>
+                                            <p className="text-secondary mb-1">{user.BIO}</p>
+                                            <p className="text-secondary mb-1">{user.REGISTERED_AT}</p>
                                             <button className="btn btn-outline-primary mt-1" onClick={onMessageClick}>Message</button>
                                         </div>
                                     </div>
@@ -147,8 +127,8 @@ const ViewTutor = (props) => {
                                     </div>
                                     <hr />
                                     {
-                                        tutor.subjects ?
-                                            tutor.subjects.map((s, i) => (
+                                        user.subjects ?
+                                            user.subjects.map((s, i) => (
                                                 <div key={i}>
                                                     <div className="row">
                                                         <div className="col-sm-3">
@@ -166,33 +146,6 @@ const ViewTutor = (props) => {
                                             )) :
                                             null
                                     }
-                                    {/* <div className="row">
-                                        <div className="col-sm-3">
-                                            <h6 className="mb-0">Full Name</h6>
-                                        </div>
-                                        <div className="col-sm-9 text-secondary">
-                                            Kenneth Valdez
-                                        </div>
-                                    </div>
-                                    <hr />
-                                    <div className="row">
-                                        <div className="col-sm-3">
-                                            <h6 className="mb-0">About</h6>
-                                        </div>
-                                        <div className="col-sm-9 text-secondary">
-                                            I am not so good tutor.
-                                        </div>
-                                    </div>
-                                    <hr />
-                                    <div className="row">
-                                        <div className="col-sm-3">
-                                            <h6 className="mb-0">Subjects</h6>
-                                        </div>
-                                        <div className="col-sm-9 text-secondary">
-                                            Maths, Science, Python
-                                        </div>
-                                    </div>
-                                    <hr /> */}
                                 </div>
                             </div>
                             <div className="card mb-3 rounded">
@@ -201,8 +154,8 @@ const ViewTutor = (props) => {
                                         <h5 className="d-flex align-items-center mb-3">Recent Reviews</h5>
                                     </div>
                                     {
-                                        tutor.reviews ?
-                                            tutor.reviews.map((review, i) => (
+                                        user.reviews ?
+                                            user.reviews.map((review, i) => (
                                                 <div className="card shadow rounded" key={i}>
                                                     <div className="card-body">
                                                         <blockquote className="blockquote mb-0">
@@ -226,4 +179,4 @@ const ViewTutor = (props) => {
         </>
     )
 }
-export default ViewTutor;
+export default ViewTutorProfile;

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-const Home = () => {
+const Home = (props) => {
   const navigate = useNavigate();
 
   const searchTutors = () => {

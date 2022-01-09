@@ -1,4 +1,5 @@
 const dbConnection = require("../db");
+const util = require('util');
 var _ = require("underscore");
 module.exports.sendMessageRequest = async (req, res) => {
   let { studentId, tutorId, message } = req.body;
@@ -15,15 +16,78 @@ module.exports.sendMessageRequest = async (req, res) => {
 
 //pending= 0, accept=1, reject=2
 module.exports.changeMessageRequestStatus = async (req, res) => {
-  let { status, studentId, tutorId } = req.query;
+
+  let { status, studentId, tutorId } = req.body;
+  const dbPromise = util.promisify(dbConnection.query).bind(dbConnection);
+
+  let sqlGetCurrentStatus = `SELECT c.REMARK FROM CONNECTIONS c WHERE c.STUDENT_ID = ${studentId} AND c.TUTOR_ID = ${tutorId}`;
+  let currentStatus = null;
+    try
+    {
+        currentStatus = await dbPromise(sqlGetCurrentStatus);
+    }
+    catch(err)
+    {
+        throw err;
+    }
+    if(_.isEmpty(currentStatus))
+    {
+        res.status(400).json({message : "Connection not found"});
+        return;
+    }
+    else
+    {
+      if(currentStatus[0].REMARK===1)
+      {
+        res.status(400).json({message : "Connection Already Accepted"});
+        return;
+      } 
+    }
+
 
   const changeStatus = `UPDATE CONNECTIONS SET REMARK=${status} WHERE STUDENT_ID=${studentId} AND TUTOR_ID=${tutorId}`;
-  dbConnection.query(changeStatus, async (err, result) => {
-    if (err) {
-      console.log(err);
+  try
+  {
+      await dbPromise(changeStatus);
+  }
+  catch(err)
+  {
+      throw err;
+  }
+
+  if(status == 1){
+    const getMessageFromConn = `Select * FROM CONNECTIONS  WHERE STUDENT_ID=${studentId} AND TUTOR_ID=${tutorId}`;
+    let result = null;
+    try
+    {
+        result = await dbPromise(getMessageFromConn);
     }
-    res.status(200).json({ message: "Remark Changed" });
-  });
+    catch(err)
+    {
+        throw err;
+    }
+    if(_.isEmpty(result))
+    {
+        res.status(400).json({message : "Connection not found"});
+        return;
+    }
+    var connection = JSON.parse(JSON.stringify(result[0]));
+    console.log("Connection receieved", connection);
+    const pushInMessageTable = `INSERT INTO MESSAGING (SENDER_ID,RECIEVER_ID,MESSAGE) VALUES (${studentId},${tutorId},'${connection.MESSAGE}')`;
+    try
+    {
+       await dbPromise(pushInMessageTable);
+    }
+    catch(err)
+    {
+        throw err;
+    }
+    res.status(201).json({message : "Connection Established"})
+  }
+  else
+  {
+    res.status(200).json({message : "Connection Not Established"})
+  }
 };
 
 module.exports.getAllMessages = async (req, res) => {

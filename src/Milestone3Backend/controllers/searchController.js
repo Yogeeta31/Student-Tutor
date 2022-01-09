@@ -16,42 +16,6 @@ module.exports.search_tutor_get = async (req, res) => {
     });
 
 
-      // let sql = `SELECT u.NAME,t.*FROM TUTOR t INNER JOIN USER u ON (u.USER_ID = t.USER_ID)`;
-
-      // const dbPromise = util.promisify(dbConnection.query).bind(dbConnection);
-
-      // let result = null;
-      // try
-      // {
-      //   result = await dbPromise(sql);
-      // }
-      // catch(err)
-      // {
-      //   throw err;
-      // }
-      
-
-      // var tutors = JSON.parse(JSON.stringify(result))
-
-      // for (tutor of tutors)
-      // {
-      //   tutor["subjects"] = [];
-      //   const user_id = tutor.USER_ID;
-      //   let sqlSubectQuery = `SELECT s.SUBJECT_NAME, s.PRICE , AVG(r.RATING) AS AVERAGE_RATING FROM TUTOR t  INNER JOIN SUBJECT s  ON (t.USER_ID = s.USER_ID) INNER JOIN REVIEWS r ON (t.USER_ID = r.TO_USER_ID AND r.SUBJECT_ID = s.SUBJECT_ID) WHERE t.USER_ID = ${user_id} GROUP BY s.SUBJECT_NAME`
-      //   let subjects = null
-      //   try
-      //   {
-      //     subjects = await dbPromise(sqlSubectQuery);
-      //   }
-      //   catch(err)
-      //   {
-      //     throw err;
-      //   }
-      //   console.log( JSON.parse(JSON.stringify(subjects)));
-      //   tutor["subjects"] = JSON.parse(JSON.stringify(subjects));
-      // }
-      // res.json(tutors)
-    
   } else if (sortBy === "ratings") {
     let sql = `SELECT u.NAME,t.USER_ID , s.SUBJECT_NAME, s.PRICE , AVG(r.RATING) AS AVERAGE_RATING, s.SUBJECT_ID FROM TUTOR t INNER JOIN  SUBJECT s ON (t.USER_ID = s.USER_ID) INNER JOIN USER u ON (t.USER_ID = u.USER_ID) INNER JOIN REVIEWS r ON (u.USER_ID = r.TO_USER_ID AND r.SUBJECT_ID = s.SUBJECT_ID) WHERE u.NAME LIKE "%${searchTerm}%" OR s.SUBJECT_NAME LIKE "%${searchTerm}%" GROUP BY s.SUBJECT_NAME,u.NAME ORDER BY AVERAGE_RATING DESC`
     dbConnection.query(sql, (err, result) => {

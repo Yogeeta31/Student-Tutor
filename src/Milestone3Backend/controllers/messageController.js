@@ -1,4 +1,5 @@
 const dbConnection = require("../db");
+const util = require('util');
 var _ = require("underscore");
 module.exports.sendMessageRequest = async (req, res) => {
   let { studentId, tutorId, message } = req.body;
@@ -16,7 +17,7 @@ module.exports.sendMessageRequest = async (req, res) => {
 //pending= 0, accept=1, reject=2
 module.exports.changeMessageRequestStatus = async (req, res) => {
   let { status, studentId, tutorId } = req.query;
-
+  const dbPromise = util.promisify(dbConnection.query).bind(dbConnection);
   const changeStatus = `UPDATE CONNECTIONS SET REMARK=${status} WHERE STUDENT_ID=${studentId} AND TUTOR_ID=${tutorId}`;
   dbConnection.query(changeStatus, async (err, result) => {
     if (err) {
@@ -24,6 +25,35 @@ module.exports.changeMessageRequestStatus = async (req, res) => {
     }
     res.status(200).json({ message: "Remark Changed" });
   });
+
+  if(status == 1){
+    const getMessageFromConn = `Select * FROM CONNECTIONS  WHERE STUDENT_ID=${studentId} AND TUTOR_ID=${tutorId}`;
+    let result = null;
+    try
+    {
+        result = await dbPromise(getMessageFromConn);
+    }
+    catch(err)
+    {
+        throw err;
+    }
+    if(_.isEmpty(result))
+    {
+        res.status(400).json({message : "Connection not found"});
+        return;
+    }
+    var connection = JSON.parse(JSON.stringify(result[0]));
+    console.log("Connection receieved", connection);
+    const pushInMessageTable = `INSERT INTO MESSAGE (SENDER_ID,RECIEVER_ID,MESSAGE) VALUES (${studentId},${tutorId},0,'${connection.MESSAGE}')`;
+    try
+    {
+       await dbPromise(pushInMessageTable);
+    }
+    catch(err)
+    {
+        throw err;
+    }
+  }
 };
 
 module.exports.getAllMessages = async (req, res) => {

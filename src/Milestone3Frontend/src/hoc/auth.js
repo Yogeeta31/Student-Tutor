@@ -6,7 +6,7 @@ const PrivateRoute = (props) => {
 
     function authentication() {
         let role = cookies.role;
-        let loginStatus = cookies.role ? true : false;
+        let loginStatus = cookies.role !== undefined ? true : false;
         return {
             role: role,
             loginStatus: loginStatus

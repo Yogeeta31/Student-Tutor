@@ -16,6 +16,7 @@ import StudentSignUp from './pages/StudentSignUp';
 import TutorSignUp from './pages/tutor/TutorSignUp';
 import SignUpChoice from './pages/SignUpChoice';
 import ErrorPage from './pages/ErrorPage';
+import ViewTutorProfile from './pages/moderator/ViewTutorProfile';
 
 import { LoginStateProvider } from './context/LoginContext';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -38,6 +39,7 @@ function App(props) {
 
             <Route path="/pendingrequests" exact element={<PrivateRoute component={PendingRequest} role="moderator" />} />
             <Route path="/changerequests" exact element={<PrivateRoute component={ChangeRequests} role="moderator" />} />
+            <Route path="/viewTutorProfile/:id" exact element={<PrivateRoute component={ViewTutorProfile} role="moderator" />} />
 
             <Route path="/signupchoice" exact element={<SignUpChoice />} />
             <Route path="/viewtutor/:id" exact element={<ViewTutor />} />

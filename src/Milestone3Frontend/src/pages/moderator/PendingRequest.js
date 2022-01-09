@@ -1,49 +1,17 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useCookies } from "react-cookie";
-
-const Data = [
-    {
-        id: 1,
-        img: "https://bootdey.com/img/Content/avatar/avatar1.png",
-        name: "Pratik Kakadiya",
-        timestame: "20/12/21"
-    },
-    {
-        id: 2,
-        img: "https://bootdey.com/img/Content/avatar/avatar2.png",
-        name: "Yogeeta Sharma",
-        timestame: "20/12/21"
-    },
-    {
-        id: 3,
-        img: "https://bootdey.com/img/Content/avatar/avatar3.png",
-        name: "Mohit Dalal",
-        timestame: "20/12/21"
-    },
-    {
-        id: 4,
-        img: "https://bootdey.com/img/Content/avatar/avatar1.png",
-        name: "Mohammad Afwan",
-        timestame: "20/12/21"
-    },
-    {
-        id: 6,
-        name: "Ankit Anand",
-        img: "https://bootdey.com/img/Content/avatar/avatar2.png",
-        timestame: "20/12/21"
-    },
-];
+import { useNavigate } from "react-router-dom";
 
 const PendingRequest = () => {
-    const [tutors, setTutors] = useState(Data);
+    const [tutors, setTutors] = useState([]);
     const [cookies, setCookie] = useCookies(['user']);
+    const navigate = useNavigate();
 
     const loadData = () => {
         axios.get(`${process.env.REACT_APP_SERVER_URL}/api/notVerifiedTutors`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
             .then((response) => {
                 setTutors(response.data);
-                console.log(response.data);
             })
             .catch((error) => {
                 console.log(console.error);
@@ -53,6 +21,12 @@ const PendingRequest = () => {
     useEffect(() => {
         loadData();
     }, []);
+
+    const handleClick = (e) => {
+        e.preventDefault();
+        navigate(`/viewTutorProfile/${e.currentTarget.id}`)
+        console.log(e.currentTarget.id);
+    }
 
     return (
         <>
@@ -88,7 +62,7 @@ const PendingRequest = () => {
                                         {tutor.UPDATED_DATE}
                                     </td>
                                     <td>
-                                        <button className="btn btn-outline-dark" id={tutor.id}>View Profile</button>
+                                        <button className="btn btn-outline-dark" onClick={handleClick} id={tutor.USER_ID}>View Profile</button>
                                     </td>
                                 </tr>
 

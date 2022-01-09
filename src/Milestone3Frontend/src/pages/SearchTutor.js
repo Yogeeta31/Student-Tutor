@@ -65,6 +65,7 @@ const SearchTutors = () => {
     useEffect(() => {
         axios.get(`${process.env.REACT_APP_SERVER_URL}/api/search/tutors`)
             .then(response => {
+                setTutors(response.data);
                 console.log(response.data);
             })
             .catch(err => {
@@ -89,7 +90,7 @@ const SearchTutors = () => {
         if (n === 0) {
             return (
                 <div className="small-ratings">
-                    <i className="fa fa-star rating-color"></i>
+                    <i className="fa fa-star"></i>
                     <i className="fa fa-star"></i>
                     <i className="fa fa-star"></i>
                     <i className="fa fa-star"></i>
@@ -189,22 +190,22 @@ const SearchTutors = () => {
                     {
                         tutors.map(tutor => {
                             return (
-                                <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3" key={tutor.id}>
+                                <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3" key={tutor.USER_ID}>
                                     <div className="card sl">
                                         <div className="card-image">
                                             <img src="./tutorImage.jpg" alt="Nothing" />
                                         </div>
                                         <div className="card-heading">
-                                            {tutor.name}
+                                            {tutor.NAME}
                                         </div>
                                         <div className="card-text">
-                                            <b style={{ color: "black" }}>Subjects</b> - {tutor.Subject}
+                                            <b style={{ color: "black" }}>Subject</b> - {tutor.SUBJECT_NAME}
                                         </div>
                                         <div className="card-text">
-                                            €15/hour
+                                            € {tutor.PRICE}/hour
                                         </div>
                                         <div className="card-text mb-2">
-                                            {renderRating(tutor.Ratings)}
+                                            {renderRating(tutor.AVERAGE_RATING)}
                                         </div>
                                         <button className="card-button" onClick={onViewTutor}>View Tutor</button>
                                     </div>

@@ -45,11 +45,11 @@ const TutorSignUp = () => {
 
   const [fileName, setFileName] = useState("");
 
-  const [subPrice, setSubPrice] = useState([{ subject: "", price: "" }]);
+  const [subPrice, setSubPrice] = useState([{ subject_name: "", price: "" }]);
 
   const chkSubPrice = () => {
     for (let i = 0; i < subPrice.length; i++) {
-      if (!subPrice[i].subject || !subPrice[i].price) {
+      if (!subPrice[i].subject_name || !subPrice[i].price) {
         setSubPriceError("Subject and Prices are inconsistently written");
         return false;
       }
@@ -58,10 +58,10 @@ const TutorSignUp = () => {
     return true;
   };
 
-  const updatedSubPrice = (index, subject, price) => {
+  const updatedSubPrice = (index, subject_name, price) => {
     let newSubPrice = [...subPrice];
     newSubPrice[index] = {
-      subject: subject,
+      subject_name: subject_name,
       price: price,
     };
     setSubPrice(newSubPrice);
@@ -70,7 +70,7 @@ const TutorSignUp = () => {
   const addSub = () => {
     if (chkSubPrice()) {
       let newSubPrice = [...subPrice];
-      newSubPrice.push({ subject: "", price: "" });
+      newSubPrice.push({ subject_name: "", price: "" });
       setSubPrice(newSubPrice);
     }
   };
@@ -198,6 +198,7 @@ const TutorSignUp = () => {
         phone: formData.mobileNum,
         email: formData.emailID,
         password: formData.pass,
+        bio: formData.bio,
         role_id: 2,
         subjects: subPrice,
       };
@@ -478,7 +479,7 @@ const TutorSignUp = () => {
                           type="text"
                           className="form-control"
                           placeholder="Enter a Subject"
-                          value={subP.subject}
+                          value={subP.subject_name}
                           onInput={(e) =>
                             updatedSubPrice(i, e.target.value, subP.price)
                           }
@@ -494,7 +495,7 @@ const TutorSignUp = () => {
                           placeholder="Enter Hourly Rate"
                           value={subP.price}
                           onInput={(e) =>
-                            updatedSubPrice(i, subP.subject, e.target.value)
+                            updatedSubPrice(i, subP.subject_name, e.target.value)
                           }
                         />
                       </div>

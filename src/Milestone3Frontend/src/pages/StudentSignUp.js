@@ -103,6 +103,7 @@ const StudentSignUp = () => {
         phone: formData.mobileNum,
         email: formData.emailID,
         password: formData.pass,
+        bio: "",
         role_id: 3,
         // gender: formData.gender,
         // photo: selectedImage ? selectedImage : defaultImg,

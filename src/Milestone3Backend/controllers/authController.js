@@ -35,14 +35,7 @@ module.exports.signup_post = async (req, res) => {
   let user_id;
   let tutor_id;
   var sqlCreateUser = `INSERT INTO USER ( NAME, MOBILE_NO, EMAIL, PASSWORD, ROLE_ID,HAS_PERMISSION, BIO,IMAGE) VALUES 
-  ("${params.name}"
-  , ${params.phone}
-  , "${params.email}"
-  , "${hashedPassword}"
-  , ${params.role_id}
-  , ${params.role_id == 1}
-  , ${(params.bio == undefined) ? "" : "\"" + params.bio + "\""}
-  ,${params.image != undefined ? params.image : null})`;
+  ("${params.name}",${params.phone},"${params.email}","${hashedPassword}",${params.role_id},${params.role_id == 1},${(params.bio == undefined) ? "" : "\"" + params.bio + "\""},${params.image != undefined ? params.image : null})`;
   dbConnection.query(sqlCreateUser, (err, result) => {
     if (err) {
       if (err.sqlMessage.includes("Duplicate entry")) {

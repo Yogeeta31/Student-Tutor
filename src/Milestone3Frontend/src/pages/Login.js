@@ -30,7 +30,8 @@ const Login = () => {
 
       axios.post(`${process.env.REACT_APP_SERVER_URL}/api/login`, user)
         .then((response) => {
-          if (response.status === 200) {
+
+          if (!response.data.errors) {
             let role;
             if (response.data.role_id === 3)
               role = "student";
@@ -56,11 +57,13 @@ const Login = () => {
             else
               navigate("/")
           }
+          else if (response.data.errors.email)
+            setError(response.data.errors.email);
+          else if (response.data.errors.password)
+            setError(response.data.errors.password);
         })
         .catch((error) => {
-          if (error.response.status === 400)
-            setError("Incorrect Email ID or Password");
-
+          console.log(error);
         });
     }
   };

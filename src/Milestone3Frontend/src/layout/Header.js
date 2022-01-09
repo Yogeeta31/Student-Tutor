@@ -47,6 +47,10 @@ const Header = () => {
                     <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                    <div style={{ marginLeft: "20px", color: "white", fontSize: "10px" }}>
+                        Fulda University of Applied Science.<br />
+                        Engineering Project, Year 2022 for Demonstration.
+                    </div>
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                         {renderMenue(user.role)}
                         {

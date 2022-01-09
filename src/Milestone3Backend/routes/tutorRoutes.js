@@ -8,7 +8,7 @@ const router = Router();
 router.get(
     "/getTutorDetails",
     SecureAPI(),
-    roleCheck(["TUTOR"]),
+    roleCheck(["MODERATOR","STUDENT","TUTOR"]),
     tutorController.getTutorDetails
 );
 

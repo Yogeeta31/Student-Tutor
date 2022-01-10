@@ -10,7 +10,7 @@ router.post(
   roleCheck(["STUDENT"]),
   MessageController.sendMessageRequest
 );
-router.get(
+router.post(
   "/checkConnections",
   SecureAPI(),
   MessageController.checkConnections

@@ -1,6 +1,6 @@
 import "../css/home.css"
 import { useNavigate } from 'react-router-dom';
-import React from "react";
+import { React, useRef } from "react";
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import axios from "axios";
@@ -8,18 +8,34 @@ import axios from "axios";
 const ViewTutor = (props) => {
     let navigate = useNavigate();
     const [tutor, setTutor] = useState({});
+    const [msg, setMsg] = useState("");
+    const [viewBtn, setViewBtn] = useState(false);
     const [cookies, setCookie] = useCookies(['user']);
 
     useEffect(() => {
-        console.log(cookies.token);
+
+        let tutorId;
+
         if (cookies.token !== undefined) {
             axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getTutorDetails?userID=${window.location.href.toString().split("/")[4]}`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
                 .then(response => {
                     setTutor(response.data);
+                    tutorId = response.data.USER_ID;
+                    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/message/checkConnections`,
+                        { studentId: cookies.userid, tutorId: tutorId }, { headers: { "Authorization": `Bearer ${cookies.token}` } })
+                        .then(response => {
+                            if (response.status === 200)
+                                setViewBtn(false);
+                        })
+                        .catch(err => {
+                            if (err.response.status === 404)
+                                setViewBtn(true);
+                        });
                 })
                 .catch(err => {
                     console.log(err);
-                })
+                });
+
         } else
             navigate('/login');
 
@@ -104,8 +120,21 @@ const ViewTutor = (props) => {
             registrationDate.getFullYear().toString()
         );
     }
-    const onMessageClick = () => {
-        navigate(`/chat/1`);
+    const onMessageSend = () => {
+        const data = {
+            studentId: cookies.userid,
+            tutorId: tutor.USER_ID,
+            message: msg
+        }
+        axios.post(`${process.env.REACT_APP_SERVER_URL}/api/message/sendMessageRequest`,
+            data,
+            { headers: { "Authorization": `Bearer ${cookies.token}` } })
+            .then(response => {
+                setViewBtn(false);
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
     return (
         <>
@@ -123,7 +152,14 @@ const ViewTutor = (props) => {
                                             <p className="text-secondary mb-1">
                                                 Teaching Since {renderDate()}
                                             </p>
-                                            <button className="btn btn-outline-primary mt-1" onClick={onMessageClick}>Message</button>
+                                            {
+                                                viewBtn ?
+                                                    <button type="button" className="btn btn-outline-primary mt-1"
+                                                        data-bs-toggle="modal" data-bs-target="#messageModal">
+                                                        Message
+                                                    </button> :
+                                                    null
+                                            }
                                         </div>
                                     </div>
                                 </div>
@@ -157,33 +193,6 @@ const ViewTutor = (props) => {
                                             )) :
                                             null
                                     }
-                                    {/* <div className="row">
-                                        <div className="col-sm-3">
-                                            <h6 className="mb-0">Full Name</h6>
-                                        </div>
-                                        <div className="col-sm-9 text-secondary">
-                                            Kenneth Valdez
-                                        </div>
-                                    </div>
-                                    <hr />
-                                    <div className="row">
-                                        <div className="col-sm-3">
-                                            <h6 className="mb-0">About</h6>
-                                        </div>
-                                        <div className="col-sm-9 text-secondary">
-                                            I am not so good tutor.
-                                        </div>
-                                    </div>
-                                    <hr />
-                                    <div className="row">
-                                        <div className="col-sm-3">
-                                            <h6 className="mb-0">Subjects</h6>
-                                        </div>
-                                        <div className="col-sm-9 text-secondary">
-                                            Maths, Science, Python
-                                        </div>
-                                    </div>
-                                    <hr /> */}
                                 </div>
                             </div>
                             {tutor.reviews ?
@@ -216,7 +225,30 @@ const ViewTutor = (props) => {
 
                 </div>
             </div>
+            <div className="modal fade" id="messageModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="exampleModalLabel">Type Your Message ...</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <div className="mb-3">
+                                <label htmlFor="message-text" className="col-form-label">Message:</label>
+                                <textarea className="form-control"
+                                    value={msg}
+                                    onChange={(e) => { setMsg(e.currentTarget.value) }} id="messageText"></textarea>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={onMessageSend}>Send message</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </>
     )
 }
+
 export default ViewTutor;

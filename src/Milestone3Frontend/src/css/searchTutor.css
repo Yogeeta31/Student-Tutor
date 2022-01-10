@@ -69,14 +69,14 @@
     justify-content: center;
     padding: 10px 0;
     width: 100%;
-    background-color: #1F487E;
+    background-color: #212529;
     color: #fff;
     border-radius: 0 0 8px 8px;
 }
 
 .card-button:hover {
     text-decoration: none;
-    background-color: #1D3461;
+    background-color: gray;
     color: #fff;
 
 }

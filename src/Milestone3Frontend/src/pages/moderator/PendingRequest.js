@@ -27,6 +27,14 @@ const PendingRequest = () => {
         navigate(`/viewTutorProfile/${e.currentTarget.id}`)
         console.log(e.currentTarget.id);
     }
+    const renderDate = (d) => {
+        const registrationDate = new Date(d);
+        return (
+            registrationDate.getDate().toString() + "." +
+            (registrationDate.getMonth() + 1).toString() + "." +
+            registrationDate.getFullYear().toString()
+        );
+    }
 
     return (
         <>
@@ -59,7 +67,7 @@ const PendingRequest = () => {
                                         {tutor.NAME}
                                     </td>
                                     <td>
-                                        {tutor.UPDATED_DATE}
+                                        &nbsp;{renderDate(tutor.UPDATED_DATE)}
                                     </td>
                                     <td>
                                         <button className="btn btn-outline-dark" onClick={handleClick} id={tutor.USER_ID}>View Profile</button>

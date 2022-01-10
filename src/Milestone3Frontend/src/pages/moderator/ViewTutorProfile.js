@@ -23,6 +23,14 @@ const ViewTutorProfile = (props) => {
             navigate('/login');
 
     }, []);
+    const renderDate = (d) => {
+        const registrationDate = new Date(d);
+        return (
+            registrationDate.getDate().toString() + "." +
+            (registrationDate.getMonth() + 1).toString() + "." +
+            registrationDate.getFullYear().toString()
+        );
+    }
     const handleDecision = (e) => {
         const decision = {
             tutorId: user.TUTOR_ID,
@@ -52,7 +60,7 @@ const ViewTutorProfile = (props) => {
                                         <div className="mt-3">
                                             <h4>{user.NAME}</h4>
                                             <p className="text-secondary mb-1">{user.BIO}</p>
-                                            <p className="text-secondary mb-1">{user.REGISTERED_AT}</p>
+                                            <p className="text-secondary mb-1">Requested At - {renderDate(user.REGISTERED_AT)}</p>
                                             <button className='btn btn-outline-primary'>Download CV</button>&nbsp;
                                         </div>
                                     </div>

@@ -5,33 +5,13 @@ import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 
-const FeedbackList = [
-    {
-        id: 1,
-        subject: "Maths",
-        text: "He is not teaching good maths",
-        by: "Pratik Kakadiya"
-    },
-    {
-        id: 2,
-        subject: "Maths",
-        text: "He is not teaching good maths",
-        by: "Mohit Dalal"
-    },
-    {
-        id: 3,
-        subject: "Maths",
-        text: "He is not teaching good maths",
-        by: "Yogeeta Sharma"
-    }
-]
-
 const ViewTutor = (props) => {
     let navigate = useNavigate();
     const [tutor, setTutor] = useState({});
     const [cookies, setCookie] = useCookies(['user']);
 
     useEffect(() => {
+        console.log(cookies.token);
         if (cookies.token !== undefined) {
             axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getTutorDetails?userID=${window.location.href.toString().split("/")[4]}`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
                 .then(response => {
@@ -44,6 +24,8 @@ const ViewTutor = (props) => {
             navigate('/login');
 
     }, [])
+
+
 
     const renderRating = (n) => {
         if (n === 0) {
@@ -114,10 +96,17 @@ const ViewTutor = (props) => {
         }
     }
 
+    const renderDate = () => {
+        const registrationDate = new Date(tutor.REGISTERED_AT);
+        return (
+            registrationDate.getDate().toString() + "." +
+            (registrationDate.getMonth() + 1).toString() + "." +
+            registrationDate.getFullYear().toString()
+        );
+    }
     const onMessageClick = () => {
         navigate(`/chat/1`);
     }
-    console.log();
     return (
         <>
             <div className="container mt-4">
@@ -131,7 +120,9 @@ const ViewTutor = (props) => {
                                         <div className="mt-3">
                                             <h4>{tutor.NAME}</h4>
                                             <p className="text-secondary mb-1">{tutor.BIO}</p>
-                                            <p className="text-secondary mb-1">{tutor.REGISTERED_AT}</p>
+                                            <p className="text-secondary mb-1">
+                                                Teaching Since {renderDate()}
+                                            </p>
                                             <button className="btn btn-outline-primary mt-1" onClick={onMessageClick}>Message</button>
                                         </div>
                                     </div>
@@ -195,28 +186,30 @@ const ViewTutor = (props) => {
                                     <hr /> */}
                                 </div>
                             </div>
-                            <div className="card mb-3 rounded">
-                                <div className="card-body">
-                                    <div className="d-flex justify-content-center">
-                                        <h5 className="d-flex align-items-center mb-3">Recent Reviews</h5>
-                                    </div>
-                                    {
-                                        tutor.reviews ?
-                                            tutor.reviews.map((review, i) => (
-                                                <div className="card shadow rounded" key={i}>
-                                                    <div className="card-body">
-                                                        <blockquote className="blockquote mb-0">
-                                                            {renderRating(review.RATING)}
-                                                            <p style={{ fontSize: "18px" }}>{review.REVIEW}</p>
-                                                            <footer className="blockquote-footer">Admin</footer>
-                                                        </blockquote>
+                            {tutor.reviews ?
+                                <div className="card mb-3 rounded">
+                                    <div className="card-body">
+                                        <div className="d-flex justify-content-center">
+                                            <h5 className="d-flex align-items-center mb-3">Recent Reviews</h5>
+                                        </div>
+                                        {
+                                            tutor.reviews ?
+                                                tutor.reviews.map((review, i) => (
+                                                    <div className="card shadow rounded" key={i}>
+                                                        <div className="card-body">
+                                                            <blockquote className="blockquote mb-0">
+                                                                {renderRating(review.RATING)}
+                                                                <p style={{ fontSize: "18px" }}>{review.REVIEW}</p>
+                                                                <footer className="blockquote-footer">Admin</footer>
+                                                            </blockquote>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            )) :
-                                            null
-                                    }
-                                </div>
-                            </div>
+                                                )) :
+                                                null
+                                        }
+                                    </div>
+                                </div> : null
+                            }
                         </div>
 
                     </div>

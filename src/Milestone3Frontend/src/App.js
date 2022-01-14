@@ -32,10 +32,18 @@ function App(props) {
           <Routes>
             <Route path="/" exact element={<Home />} />
             <Route path="/searchTutors" exact element={<SearchTutors />} />
-            <Route path="/aboutus" exact element={<PrivateRoute component={AboutUs} role="student" />} />
+            <Route path="/aboutus" exact element={<AboutUs />} />
             <Route path="/contactus" exact element={<ContactUs />} />
             <Route path="/chats" exact element={<ChatList />} />
             <Route path="/chat/:id" exact element={<ChatScreen />} />
+            <Route path="/signupchoice" exact element={<SignUpChoice />} />
+            <Route path="/login" exact element={<Login />} />
+            <Route path="/logout" exact element={<Logout />} />
+            <Route path="/errorpage" exact element={<ErrorPage />} />
+            <Route path="/signUp/student" exact element={<StudentSignUp />} />
+            <Route path="/signUp/tutor" exact element={<TutorSignUp />} />
+
+            <Route path="/viewtutor/:id" exact element={<PrivateRoute component={ViewTutor} role="student" />} />
 
             <Route path="/viewmessagerequest" exact element={<ViewMessageRequest />} />
 
@@ -43,15 +51,6 @@ function App(props) {
             <Route path="/changerequests" exact element={<PrivateRoute component={ChangeRequests} role="moderator" />} />
             <Route path="/viewTutorProfile/:id" exact element={<PrivateRoute component={ViewTutorProfile} role="moderator" />} />
             <Route path="/approvedtutors" exact element={<PrivateRoute component={ApprovedTutors} role="moderator" />} />
-
-            <Route path="/signupchoice" exact element={<SignUpChoice />} />
-            {/* <Route path="/viewtutor/:id" exact element={<ViewTutor />} /> */}
-            <Route path="/viewtutor/:id" exact element={<PrivateRoute component={ViewTutor} role="student" />} />
-            <Route path="/login" exact element={<Login />} />
-            <Route path="/logout" exact element={<Logout />} />
-            <Route path="/errorpage" exact element={<ErrorPage />} />
-            <Route path="/signUp/student" exact element={<StudentSignUp />} />
-            <Route path="/signUp/tutor" exact element={<TutorSignUp />} />
 
           </Routes>
         </Layout>

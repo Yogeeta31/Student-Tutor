@@ -8,7 +8,8 @@ import ChatList from './components/ChatList';
 import ChatScreen from './components/ChatScreen';
 import PendingRequest from './pages/moderator/PendingRequest';
 import ChangeRequests from './pages/moderator/ChangeRequests';
-import ViewTutor from './components/ViewTutor';
+//import ViewTutor from './components/ViewTutor';
+import ViewTutor from './pages/ViewTutor';
 import ViewMessageRequest from './pages/tutor/ViewMessageRequest';
 import Login from './pages/Login';
 import Logout from './components/Logout';
@@ -17,6 +18,7 @@ import TutorSignUp from './pages/tutor/TutorSignUp';
 import SignUpChoice from './pages/SignUpChoice';
 import ErrorPage from './pages/ErrorPage';
 import ViewTutorProfile from './pages/moderator/ViewTutorProfile';
+import ApprovedTutors from './pages/moderator/ApprovedTutors';
 
 import { LoginStateProvider } from './context/LoginContext';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -40,9 +42,11 @@ function App(props) {
             <Route path="/pendingrequests" exact element={<PrivateRoute component={PendingRequest} role="moderator" />} />
             <Route path="/changerequests" exact element={<PrivateRoute component={ChangeRequests} role="moderator" />} />
             <Route path="/viewTutorProfile/:id" exact element={<PrivateRoute component={ViewTutorProfile} role="moderator" />} />
+            <Route path="/approvedtutors" exact element={<PrivateRoute component={ApprovedTutors} role="moderator" />} />
 
             <Route path="/signupchoice" exact element={<SignUpChoice />} />
-            <Route path="/viewtutor/:id" exact element={<ViewTutor />} />
+            {/* <Route path="/viewtutor/:id" exact element={<ViewTutor />} /> */}
+            <Route path="/viewtutor/:id" exact element={<PrivateRoute component={ViewTutor} role="student" />} />
             <Route path="/login" exact element={<Login />} />
             <Route path="/logout" exact element={<Logout />} />
             <Route path="/errorpage" exact element={<ErrorPage />} />

@@ -17,7 +17,9 @@ const PrivateRoute = (props) => {
 
     if (loginInfo.loginStatus && loginInfo.role === props.role)
         return <props.component></props.component>
-    else
+    else if (loginInfo.loginStatus && loginInfo.role !== props.role)
         return <Navigate to="/errorpage" />
+    else
+        return <Navigate to="/login" />
 }
 export default PrivateRoute

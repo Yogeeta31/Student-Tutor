@@ -1,6 +1,6 @@
 import "../css/home.css"
 import { useNavigate } from 'react-router-dom';
-import { React, useRef } from "react";
+import { React } from "react";
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import axios from "axios";
@@ -13,31 +13,25 @@ const ViewTutor = (props) => {
     const [cookies, setCookie] = useCookies(['user']);
 
     useEffect(() => {
-
         let tutorId;
-
-        if (cookies.token !== undefined) {
-            axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getTutorDetails?userID=${window.location.href.toString().split("/")[4]}`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
-                .then(response => {
-                    setTutor(response.data);
-                    tutorId = response.data.USER_ID;
-                    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/message/checkConnections`,
-                        { studentId: cookies.userid, tutorId: tutorId }, { headers: { "Authorization": `Bearer ${cookies.token}` } })
-                        .then(response => {
-                            if (response.status === 200)
-                                setViewBtn(false);
-                        })
-                        .catch(err => {
-                            if (err.response.status === 404)
-                                setViewBtn(true);
-                        });
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-
-        } else
-            navigate('/login');
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getTutorDetails?userID=${window.location.href.toString().split("/")[4]}`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
+            .then(response => {
+                setTutor(response.data);
+                tutorId = response.data.USER_ID;
+                axios.post(`${process.env.REACT_APP_SERVER_URL}/api/message/checkConnections`,
+                    { studentId: cookies.userid, tutorId: tutorId }, { headers: { "Authorization": `Bearer ${cookies.token}` } })
+                    .then(response => {
+                        if (response.status === 200)
+                            setViewBtn(false);
+                    })
+                    .catch(err => {
+                        if (err.response.status === 404)
+                            setViewBtn(true);
+                    });
+            })
+            .catch(err => {
+                console.log(err);
+            });
 
     }, [])
 

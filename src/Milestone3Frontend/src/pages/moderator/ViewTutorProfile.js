@@ -14,6 +14,7 @@ const ViewTutorProfile = (props) => {
         if (cookies.token !== undefined) {
             axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getTutorDetails?userID=${window.location.href.toString().split("/")[4]}`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
                 .then(response => {
+                    console.log(response.data);
                     setUser(response.data);
                 })
                 .catch(err => {
@@ -97,8 +98,12 @@ const ViewTutorProfile = (props) => {
                             <div className="card mb-3 rounded">
                                 <div className="card-body">
                                     <div className="d-flex justify-content-center">
-                                        <button className='btn btn-outline-success' id="1" onClick={e => { handleDecision(1) }}>Approve</button>&nbsp;
-                                        <button className='btn btn-outline-danger' id="0" onClick={e => { handleDecision(0) }}>Disapprove</button>
+                                        {
+                                            user.IS_APPROVED ? null :
+                                                <button className='btn btn-outline-success' id="1" onClick={e => { handleDecision(1) }}>Approve</button>
+                                        }
+                                        {/* <button className='btn btn-outline-success' id="1" onClick={e => { handleDecision(1) }}>Approve</button>&nbsp; */}
+                                        &nbsp;<button className='btn btn-outline-danger' id="0" onClick={e => { handleDecision(0) }}>Disapprove</button>
                                     </div>
                                 </div>
                             </div>

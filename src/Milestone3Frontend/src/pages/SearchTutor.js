@@ -15,7 +15,6 @@ const SearchTutors = () => {
         axios.get(`${process.env.REACT_APP_SERVER_URL}/api/search/tutors`)
             .then(response => {
                 setTutors(response.data);
-                console.log(response.data);
             })
             .catch(err => {
                 console.log(err);

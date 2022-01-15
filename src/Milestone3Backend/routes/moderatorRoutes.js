@@ -26,4 +26,11 @@ router.get(
   moderatorController.listOfNotVerifiedTutors
 );
 
+router.post(
+  "/rejectProfileWithReason",
+  // SecureAPI(),
+  // roleCheck(["MODERATOR"]),
+  tutorController.getRejectionReason
+);
+
 module.exports = router;

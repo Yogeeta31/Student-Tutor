@@ -12,4 +12,19 @@ router.get(
     tutorController.getTutorDetails
 );
 
+
+router.post(
+    "/getRejectionReason",
+    // SecureAPI(),
+    // roleCheck(["MODERATOR"]),
+    tutorController.getRejectionReason
+  );
+
+router.post(
+    "/getMessageFromConn",
+    // SecureAPI(),
+    // roleCheck(["MODERATOR"]),
+    tutorController.getRejectionReason
+  );
+
 module.exports = router;

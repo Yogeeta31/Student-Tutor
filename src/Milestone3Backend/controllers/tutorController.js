@@ -52,3 +52,26 @@ module.exports.getTutorDetails = async (req, res) => {
 
     res.json(tutor)
 };
+
+module.exports.getRejectionReason = (req, res) => {
+    let { tutorId } = req.body;
+    const reasonMessage = `SELECT * FROM REJECT_REASON WHERE RECEIVER_ID = ${tutorId}`;
+    dbConnection.query(reasonMessage, async (err, result) => {
+      if (err) {
+        return res.status(400).json(err);
+      }
+      res.status(200).json(result);
+    });
+  };  
+
+
+module.exports.getMessageFromConn = (req, res) => {
+    let { tutorId } = req.body;
+    const reasonMessage = `Select * FROM CONNECTIONS  WHERE  TUTOR_ID=${tutorId}`;
+    dbConnection.query(reasonMessage, async (err, result) => {
+      if (err) {
+        return res.status(400).json(err);
+      }
+      res.status(200).json(result);
+    });
+};  

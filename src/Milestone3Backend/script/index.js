@@ -120,4 +120,17 @@ const createTutors = async () => {
     }
   });
 
+  var sqlCreateRejectionReasonTable = `CREATE TABLE REJECT_REASON (
+    REASON_ID INT AUTO_INCREMENT PRIMARY KEY,
+    REASON VARCHAR(400) NOT NULL,
+    SENDER_ID INT NOT NULL,
+    RECEIVER_ID INT NOT NULL,
+    TIME_SENT datetime
+    )`;
+  con.query(sqlCreateRejectionReasonTable, (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+  });
+
 };

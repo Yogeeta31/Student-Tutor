@@ -90,9 +90,9 @@ module.exports.changeMessageRequestStatus = async (req, res) => {
   }
 };
 
-module.exports.getAllMessages = async (req, res) => {
+module.exports.getAllMessages = (req, res) => {
   let { studentId, tutorId } = req.query;
-  const getMessage = `SELECT MESSAGE FROM MESSAGING WHERE (SENDER_ID = ${studentId} AND RECIEVER_ID = ${tutorId}) OR (SENDER_ID = ${tutorId} AND RECIEVER_ID = ${studentId}) ORDER BY SENT_AT ASC`;
+  const getMessage = `SELECT MESSAGE,SENT_AT FROM MESSAGING WHERE (SENDER_ID = ${studentId} AND RECIEVER_ID = ${tutorId}) OR (SENDER_ID = ${tutorId} AND RECIEVER_ID = ${studentId}) ORDER BY SENT_AT ASC`;
   dbConnection.query(getMessage, async (err, result) => {
     if (err) {
       console.log(err);
@@ -120,3 +120,46 @@ module.exports.checkConnections = async (req, res) => {
     }
   });
 };
+
+module.exports.getMessagingList = async (req,res) =>{
+  let { userId } = req.query;
+  const dbPromise = util.promisify(dbConnection.query).bind(dbConnection);
+
+  let sqlGetContacts = `SELECT SENDER_ID,RECIEVER_ID
+  FROM MESSAGING
+  WHERE SENDER_ID = ${userId} OR RECIEVER_ID = ${userId}
+  GROUP BY SENDER_ID,RECIEVER_ID
+  ORDER BY SENT_AT DESC`
+
+  let contacts = null;
+  let contactedIds = [];
+  try
+  {
+    contacts = await dbPromise(sqlGetContacts);
+  }
+  catch(err)
+  {
+    throw err;
+  }
+
+  contacts.forEach((contact)=>
+  {
+    let itemtoPush = null
+    if(contact.SENDER_ID != userId)
+    {
+      itemtoPush = contact.SENDER_ID
+    }
+    else if(contact.RECIEVER_ID != userId)
+    {
+      itemtoPush = contact.RECIEVER_ID
+    }
+    if(!contactedIds.includes(itemtoPush))
+    {
+      contactedIds.push(itemtoPush);
+    }
+    
+  })
+
+
+  res.json(contactedIds);
+}

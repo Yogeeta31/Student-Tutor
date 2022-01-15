@@ -130,6 +130,13 @@ const ViewTutor = (props) => {
                 console.log(err);
             });
     }
+    const handleDownload = (l) => {
+        const link = document.createElement('a');
+        link.href = l;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
     return (
         <>
             <div className="container mt-4">
@@ -139,13 +146,14 @@ const ViewTutor = (props) => {
                             <div className="card rounded">
                                 <div className="card-body">
                                     <div className="d-flex flex-column align-items-center text-center">
-                                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" className="rounded-circle" width="150" />
+                                        <img src={`${process.env.REACT_APP_PROFILE_URL}${tutor.IMAGE}`} alt="Admin" style={{ objectFit: "cover", height: "170px", width: "170px" }} className="rounded-circle" />
                                         <div className="mt-3">
                                             <h4>{tutor.NAME}</h4>
                                             <p className="text-secondary mb-1">{tutor.BIO}</p>
                                             <p className="text-secondary mb-1">
                                                 Teaching Since {renderDate()}
                                             </p>
+                                            <button className='btn btn-outline-primary mt-1' onClick={() => { handleDownload(`${process.env.REACT_APP_RESUME_URL}${tutor.CV}`) }}>Download CV</button>&nbsp;
                                             {
                                                 viewBtn ?
                                                     <button type="button" className="btn btn-outline-primary mt-1"

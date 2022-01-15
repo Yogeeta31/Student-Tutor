@@ -45,38 +45,48 @@ const PendingRequest = () => {
                     </div>
                 </div>
                 <hr />
-                <table className="table table-hover mt-1">
-                    <tbody>
-                        <tr>
-                            <th scope="col"></th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Requested Date</th>
-                            <th></th>
-                        </tr>
+                <div className="card">
+                    <div className="card-body">
+                        {tutors.length > 0 ?
+                            <table className="table table-hover mt-1">
+                                <tbody>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Requested Date</th>
+                                        <th></th>
+                                    </tr>
+                                    {
+                                        tutors.map(tutor => (
 
+                                            <tr key={tutor.USER_ID}>
+                                                <td>
+                                                    <img src={`${process.env.REACT_APP_PROFILE_URL}${tutor.IMAGE}`} style={{ maxWidth: "65px", borderRadius: "50%" }} alt="avatar" />
+                                                </td>
+                                                <td>
+                                                    {tutor.NAME}
+                                                </td>
+                                                <td>
+                                                    &nbsp;{renderDate(tutor.UPDATED_DATE)}
+                                                </td>
+                                                <td>
+                                                    <button className="btn btn-outline-dark" onClick={handleClick} id={tutor.USER_ID}>View Profile</button>
+                                                </td>
+                                            </tr>
 
-                        {
-                            tutors.map(tutor => (
-
-                                <tr key={tutor.USER_ID}>
-                                    <td>
-                                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" style={{ maxWidth: "65px", borderRadius: "50%" }} alt="avatar" />
-                                    </td>
-                                    <td>
-                                        {tutor.NAME}
-                                    </td>
-                                    <td>
-                                        &nbsp;{renderDate(tutor.UPDATED_DATE)}
-                                    </td>
-                                    <td>
-                                        <button className="btn btn-outline-dark" onClick={handleClick} id={tutor.USER_ID}>View Profile</button>
-                                    </td>
-                                </tr>
-
-                            ))
+                                        ))
+                                    }
+                                </tbody>
+                            </table> :
+                            <div className="card-body">
+                                <div className="container d-flex justify-content-center my-5">
+                                    <h3>No Pending Requests</h3>
+                                </div>
+                            </div>
                         }
-                    </tbody>
-                </table>
+                    </div>
+                </div>
+
             </div>
         </>
     )

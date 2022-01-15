@@ -28,36 +28,47 @@ const ApprovedTutors = () => {
             <div className="container mt-3">
                 <div className="row">
                     <div className="container mt-1 mb-3">
-                        <h3>Change in Information</h3>
+                        <h3>Approved Tutors</h3>
                     </div>
                 </div>
                 <hr />
-                <table className="table table-hover mt-1">
-                    <tbody>
-                        <tr>
-                            <th scope="col"></th>
-                            <th scope="col">Name</th>
-                            <th></th>
-                        </tr>
-                        {
-                            tutors.map(tutor => (
+                <div className="card">
+                    <div className="card-body">
+                        {tutors.length > 0 ?
+                            <table className="table table-hover mt-1">
+                                <tbody>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">Name</th>
+                                        <th></th>
+                                    </tr>
+                                    {
+                                        tutors.map(tutor => (
 
-                                <tr key={tutor.USER_ID}>
-                                    <td>
-                                        <img src="https://bootdey.com/img/Content/avatar/avatar2.png" style={{ maxWidth: "65px", borderRadius: "50%" }} alt="avatar" />
-                                    </td>
-                                    <td>
-                                        {tutor.NAME}
-                                    </td>
-                                    <td>
-                                        <button className="btn btn-outline-dark" onClick={handleClick} id={tutor.USER_ID}>View Profile</button>
-                                    </td>
-                                </tr>
+                                            <tr key={tutor.USER_ID}>
+                                                <td>
+                                                    <img src={`${process.env.REACT_APP_PROFILE_URL}${tutor.IMAGE}`} style={{ maxWidth: "65px", borderRadius: "50%" }} alt="avatar" />
+                                                </td>
+                                                <td>
+                                                    {tutor.NAME}
+                                                </td>
+                                                <td>
+                                                    <button className="btn btn-outline-dark" onClick={handleClick} id={tutor.USER_ID}>View Profile</button>
+                                                </td>
+                                            </tr>
 
-                            ))
+                                        ))
+                                    }
+                                </tbody>
+                            </table> :
+                            <div className="card-body">
+                                <div className="container d-flex justify-content-center my-5">
+                                    <h3>No approved tutors available</h3>
+                                </div>
+                            </div>
                         }
-                    </tbody>
-                </table>
+                    </div>
+                </div>
             </div>
         </>
     )

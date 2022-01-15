@@ -1,5 +1,5 @@
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import React from "react";
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
@@ -48,6 +48,13 @@ const ViewTutorProfile = (props) => {
                 console.log(err);
             })
     }
+    const handleDownload = (l) => {
+        const link = document.createElement('a');
+        link.href = l;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
     return (
         <>
             <div className="container mt-4">
@@ -57,12 +64,12 @@ const ViewTutorProfile = (props) => {
                             <div className="card rounded">
                                 <div className="card-body">
                                     <div className="d-flex flex-column align-items-center text-center">
-                                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" className="rounded-circle" width="150" />
+                                        <img src={`${process.env.REACT_APP_PROFILE_URL}${user.IMAGE}`} alt="Admin" className="rounded-circle" width="150" />
                                         <div className="mt-3">
                                             <h4>{user.NAME}</h4>
                                             <p className="text-secondary mb-1">{user.BIO}</p>
                                             <p className="text-secondary mb-1">Requested At - {renderDate(user.REGISTERED_AT)}</p>
-                                            <button className='btn btn-outline-primary'>Download CV</button>&nbsp;
+                                            <button className='btn btn-outline-primary' onClick={() => { handleDownload(`${process.env.REACT_APP_RESUME_URL}${user.CV}`) }}>Download CV</button>&nbsp;
                                         </div>
                                     </div>
                                 </div>
@@ -102,7 +109,6 @@ const ViewTutorProfile = (props) => {
                                             user.IS_APPROVED ? null :
                                                 <button className='btn btn-outline-success' id="1" onClick={e => { handleDecision(1) }}>Approve</button>
                                         }
-                                        {/* <button className='btn btn-outline-success' id="1" onClick={e => { handleDecision(1) }}>Approve</button>&nbsp; */}
                                         &nbsp;<button className='btn btn-outline-danger' id="0" onClick={e => { handleDecision(0) }}>Disapprove</button>
                                     </div>
                                 </div>

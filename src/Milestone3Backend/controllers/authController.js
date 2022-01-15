@@ -35,9 +35,11 @@ module.exports.signup_post = async (req, res) => {
   let user_id;
   let tutor_id;
   var sqlCreateUser = `INSERT INTO USER ( NAME, MOBILE_NO, EMAIL, PASSWORD, ROLE_ID,HAS_PERMISSION, BIO,IMAGE) VALUES 
-  ("${params.name}",${params.phone},"${params.email}","${hashedPassword}",${params.role_id
-    },${params.role_id == 1},${params.bio == undefined ? "" : '"' + params.bio + '"'
-    },${params.image != undefined ? params.image : null})`;
+  ("${params.name}",${params.phone},"${params.email}","${hashedPassword}",${
+    params.role_id
+  },${params.role_id == 1},${
+    params.bio == undefined ? "" : '"' + params.bio + '"'
+  },${params.image != undefined ? '"' + params.image + '"' : null})`;
   dbConnection.query(sqlCreateUser, (err, result) => {
     if (err) {
       if (err.sqlMessage.includes("Duplicate entry")) {
@@ -52,7 +54,9 @@ module.exports.signup_post = async (req, res) => {
     const jwt = createToken(user_id, params.role_id);
     if (params.role_id == 2) {
       var sqlCreateTutor = `INSERT INTO TUTOR (USER_ID, IS_ACTIVE, CV,IS_APPROVED)
-        VALUES (${user_id}, 0,${params.cv != undefined ? params.cv : null},0)`;
+        VALUES (${user_id}, 0,${
+        params.cv != undefined ? '"' + params.cv + '"' : null
+      },0)`;
       dbConnection.query(sqlCreateTutor, async (err, result) => {
         if (err) {
           return res.status(400).json(err);

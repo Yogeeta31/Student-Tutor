@@ -6,10 +6,10 @@ const { roleCheck } = require("../middleware/roleChecker");
 const router = Router();
 
 router.get(
-    "/getTutorDetails",
-    SecureAPI(),
-    roleCheck(["MODERATOR", "STUDENT", "TUTOR"]),
-    tutorController.getTutorDetails
+  "/getTutorDetails",
+  //   SecureAPI(),
+  //   roleCheck(["MODERATOR", "STUDENT", "TUTOR"]),
+  tutorController.getTutorDetails
 );
 
 module.exports = router;

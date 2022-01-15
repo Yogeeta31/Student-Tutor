@@ -1,6 +1,7 @@
 const dbConnection = require("../db");
 const util = require('util');
 var _ = require("underscore");
+
 module.exports.sendMessageRequest = async (req, res) => {
   let { studentId, tutorId, message } = req.body;
 
@@ -122,17 +123,24 @@ module.exports.checkConnections = async (req, res) => {
 };
 
 module.exports.getMessagingList = async (req,res) =>{
-  let { userId } = req.query;
+  let { userId , roleId } = req.query;
   const dbPromise = util.promisify(dbConnection.query).bind(dbConnection);
 
-  let sqlGetContacts = `SELECT SENDER_ID,RECIEVER_ID
-  FROM MESSAGING
-  WHERE SENDER_ID = ${userId} OR RECIEVER_ID = ${userId}
-  GROUP BY SENDER_ID,RECIEVER_ID
-  ORDER BY SENT_AT DESC`
 
   let contacts = null;
-  let contactedIds = [];
+  let sqlGetContacts = null;
+
+  if(roleId == 2)
+  {
+    sqlGetContacts = `SELECT STUDENT_ID FROM CONNECTIONS WHERE TUTOR_ID = ${userId} AND REMARK = 1`;
+  }
+  else if(roleId == 3)
+  {
+    sqlGetContacts = `SELECT TUTOR_ID FROM CONNECTIONS WHERE STUDENT_ID = ${userId} AND REMARK = 1`;
+  }
+  
+  
+
   try
   {
     contacts = await dbPromise(sqlGetContacts);
@@ -141,24 +149,19 @@ module.exports.getMessagingList = async (req,res) =>{
   {
     throw err;
   }
-
-  for (contact of contacts)
+  let contactedIds = [];
+  for(contact of contacts)
   {
-    let itemtoPush = null
-    if(contact.SENDER_ID != userId)
+    if(roleId == 2)
     {
-      itemtoPush = contact.SENDER_ID
+      contactedIds.push(contact.STUDENT_ID);
     }
-    else if(contact.RECIEVER_ID != userId)
+    else if(roleId == 3)
     {
-      itemtoPush = contact.RECIEVER_ID
+      contactedIds.push(contact.TUTOR_ID);
     }
-    if(!contactedIds.includes(itemtoPush))
-    {
-      contactedIds.push(itemtoPush);
-    }    
   }
-
+  
   let response = []
   for(contactedId of contactedIds)
   {

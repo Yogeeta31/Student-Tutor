@@ -24,7 +24,7 @@ router.post(
     "/getMessageFromConn",
     // SecureAPI(),
     // roleCheck(["MODERATOR"]),
-    tutorController.getRejectionReason
+    tutorController.getMessageFromConn
   );
 
 module.exports = router;

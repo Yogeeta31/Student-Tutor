@@ -1,6 +1,5 @@
 const { Router } = require("express");
 const moderatorController = require("../controllers/moderatorController");
-const tutorController = require("../controllers/tutorController");
 const SecureAPI = require("../middleware/secureAPI");
 const { roleCheck } = require("../middleware/roleChecker");
 
@@ -31,7 +30,7 @@ router.post(
   "/rejectProfileWithReason",
   // SecureAPI(),
   // roleCheck(["MODERATOR"]),
-  tutorController.getRejectionReason
+  moderatorController.rejectProfileWithReason
 );
 
 module.exports = router;

@@ -36,7 +36,7 @@ module.exports.listOfApprovedTutors = (req, res) => {
 
 module.exports.rejectProfileWithReason = (req, res) => {
   let {reason, senderId, receiverId } = req.body;
-  const postRejectMessage = `INSERT INTO REJECT_REASON ( REASON, SENDER_ID,RECEIVER_ID,TIME_SENT ) VALUES (${reason},${senderId},${receiverId},${new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')})`;
+  const postRejectMessage = `INSERT INTO REJECT_REASON ( REASON, SENDER_ID,RECEIVER_ID,TIME_SENT ) VALUES ("${reason}",${senderId},${receiverId},"${new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')}")`;
   dbConnection.query(postRejectMessage, async (err, result) => {
     if (err) {
       return res.status(400).json(err);

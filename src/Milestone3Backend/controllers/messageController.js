@@ -142,7 +142,7 @@ module.exports.getMessagingList = async (req,res) =>{
     throw err;
   }
 
-  contacts.forEach((contact)=>
+  for (contact of contacts)
   {
     let itemtoPush = null
     if(contact.SENDER_ID != userId)
@@ -156,10 +156,48 @@ module.exports.getMessagingList = async (req,res) =>{
     if(!contactedIds.includes(itemtoPush))
     {
       contactedIds.push(itemtoPush);
+    }    
+  }
+
+  let response = []
+  for(contactedId of contactedIds)
+  {
+    let sqlGetContactDetails = `SELECT u.NAME,u.IMAGE FROM USER u WHERE u.USER_ID = ${contactedId} `;
+    let sqlGetLastMessage = `SELECT MESSAGE,SENT_AT FROM MESSAGING WHERE (SENDER_ID = ${userId} AND RECIEVER_ID = ${contactedId}) OR (SENDER_ID = ${contactedId}  AND RECIEVER_ID = ${userId}) ORDER BY SENT_AT DESC LIMIT 1`;
+    let contactDetails = null;
+    let lastMessageDetails = null;
+    try
+    {
+      contactDetails = await dbPromise(sqlGetContactDetails)
     }
-    
-  })
+    catch(err)
+    {
+      throw err
+    }
+
+    try
+    {
+      lastMessageDetails = await dbPromise(sqlGetLastMessage)
+    }
+    catch(err)
+    {
+      throw err
+    }
+
+    console.log(contactDetails);
+    console.log(lastMessageDetails);
+    let userDetail = {
+      userId : contactedId,
+      userName : contactDetails[0].NAME,
+      profilePicture : contactDetails[0].IMAGE,
+      timestamp : lastMessageDetails[0].SENT_AT,
+      lastMessage : lastMessageDetails[0].MESSAGE
+    }
 
 
-  res.json(contactedIds);
+    response.push(userDetail);
+  }
+
+
+  res.json(response);
 }

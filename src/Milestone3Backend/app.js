@@ -4,6 +4,7 @@ const app = express();
 const dbConnection = require("./db");
 const db = require("./db");
 const indexRoute = require("./routes/index");
+const messageController = require("./controllers/messageController");
 const http = require("http");
 
 app.use(cors());
@@ -15,7 +16,7 @@ app.use("/", indexRoute);
 let Server = http.createServer(app);
 const io = require("socket.io")(Server, {
   cors: {
-    origin: `http://localhost:${process.env.FRONTEND_PORT}`,
+    origin: `${process.env.FRONTEND_PORT}`,
     methods: ["GET", "POST"],
     credentials: true,
     transports: ["websocket", "polling"],
@@ -24,7 +25,16 @@ const io = require("socket.io")(Server, {
 });
 
 io.on("connection", (socket) => {
-  socket.on("sendmessage", async (data) => {});
+  socket.on("sendmessage", async (data) => {
+    messageController.sendMessageSocket(data, (result) => {
+      io.emit("output", [result]);
+    });
+  });
+  socket.on("findmessage", async (data) => {
+    messageController.getMessageScoket(data, (result) => {
+      socket.emit("output", result);
+    });
+  });
 });
 
 Server.listen(4000, () => {

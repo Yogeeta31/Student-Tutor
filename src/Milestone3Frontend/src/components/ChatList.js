@@ -1,80 +1,77 @@
-import { useState } from "react"
-import { Link } from "react-router-dom"
-import "../css/chatList.css"
-const Data = () => [
-    {
-        id: 1,
-        name: "Pratik Kakadiya",
-        img: "https://bootdey.com/img/Content/avatar/avatar1.png"
-    },
-    {
-        id: 2,
-        name: "Mohit Dalal",
-        img: "https://bootdey.com/img/Content/avatar/avatar2.png"
-    },
-    {
-        id: 3,
-        name: "Yogeeta Sharma",
-        img: "https://bootdey.com/img/Content/avatar/avatar3.png"
-    },
-    {
-        id: 4,
-        name: "Ankit Anand",
-        img: "https://bootdey.com/img/Content/avatar/avatar2.png"
-    },
-    {
-        id: 5,
-        name: "Bibek Gahire",
-        img: "https://bootdey.com/img/Content/avatar/avatar1.png"
-    },
-    {
-        id: 6,
-        name: "Ahmed Estaitia",
-        img: "https://bootdey.com/img/Content/avatar/avatar7.png"
-    },
-    {
-        id: 7,
-        name: "Omar Essam",
-        img: "https://bootdey.com/img/Content/avatar/avatar1.png"
-    },
-]
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import "../css/chatList.css";
 
 const ChatList = () => {
-    const [ListOfPeople, SetListOfPeople] = useState(Data);
+  const [listOfPeople, setListOfPeople] = useState([]);
+  const [cookies, setCookie] = useCookies(["user"]);
 
-    return (
+  useEffect(() => {
+    let role;
+    if (cookies.role === "student") {
+      role = 3;
+    } else if (cookies.role === "tutor") {
+      role = 2;
+    } else {
+      role = 1;
+    }
 
-        <>
+    axios
+      .get(
+        `${process.env.REACT_APP_SERVER_URL}/api/message/getMessagingList/?userId=${cookies.userid}&roleId=${role}`,
+        { headers: { Authorization: `Bearer ${cookies.token}` } }
+      )
+      .then((response) => {
+        setListOfPeople(response.data);
+      })
+      .catch((err) => {
+        if (err.response.status === 404) console.log("Error");
+      });
+  }, []);
 
-
-            <div className="container mt-4">
-                <div className="row clearfix">
-                    <div className="col-lg-12">
-                        <div className="card">
-                            <div id="plist" className="people-list">
-                                <ul className="list-unstyled chat-list mt-2 mb-0">
-                                    {
-                                        ListOfPeople.map(person => (
-                                            <Link to={`/chat/${person.id}`} key={person.id} style={{ color: "black" }}>
-                                                <li className="clearfix">
-                                                    <img src={person.img} alt="avatar" />
-                                                    <div className="about">
-                                                        <div className="name">{person.name}</div>
-                                                    </div>
-                                                </li>
-                                            </Link>
-                                        ))
-                                    }
-                                </ul>
-                            </div>
+  return (
+    <>
+      <div className="container mt-4">
+        <div className="row clearfix">
+          <div className="col-lg-12">
+            <div className="card">
+              <div id="plist" className="people-list">
+                <ul className="list-unstyled chat-list mt-2 mb-0">
+                  {listOfPeople.map((person) => (
+                    <Link
+                      to={`/chat/${person.userId}`}
+                      key={person.userId}
+                      style={{ color: "black" }}
+                    >
+                      <li className="clearfix">
+                        <img
+                          src={
+                            process.env.REACT_APP_PROFILE_URL +
+                            person.profilePicture
+                          }
+                          alt="Profile Pic"
+                          style={{
+                            objectFit: "cover",
+                            width: "60px",
+                            height: "60px",
+                          }}
+                        />
+                        <div className="about">
+                          <div className="name mt-3">{person.userName}</div>
                         </div>
-                    </div>
-                </div>
+                      </li>
+                    </Link>
+                  ))}
+                </ul>
+              </div>
             </div>
-
-        </>
-    )
-
-}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
 
 export default ChatList;

@@ -24,27 +24,31 @@ const ChatScreen = () => {
         setMsg("");
     }
 
-    socket.on("output", (messages) => {
-        setChats(messages);
-        // console.log(messages);
-    });
+    useEffect(() => {
+        socket.on("output", (messages) => {
+            setChats(messages);
+            // console.log(messages);
+        });
+    
+        socket.on("singleOutput", (message) => {
+            // console.log("HEREERERE");
+            let temp = [...msg];
+            let newMessage = {
+                MESSAGE: message.message,
+                RECEIVER_ID: message.receiverId,
+                SENDER_ID: message.senderId,
+                SENT_AT: message.timestamp.SENT_AT,
+                UPDATED_DATE: message.timestamp.UPDATED_DATE
+            }
+            // console.log(newMessage);
+            temp.push(newMessage);
+            setChats(temp);
+            console.log("+++++++========++++++ZZZZZZZzzzzzzzzZZZZZZZZ");
+            console.log(chats);
+        });
+        return(() => socket.close());
+    }, []);
 
-    socket.on("singleOutput", (message) => {
-        // console.log("HEREERERE");
-        let temp = [...msg];
-        let newMessage = {
-            MESSAGE: message.message,
-            RECEIVER_ID: message.receiverId,
-            SENDER_ID: message.senderId,
-            SENT_AT: message.timestamp.SENT_AT,
-            UPDATED_DATE: message.timestamp.UPDATED_DATE
-        }
-        // console.log(newMessage);
-        temp.push(newMessage);
-        setChats(temp);
-        console.log("+++++++========++++++ZZZZZZZzzzzzzzzZZZZZZZZ");
-        console.log(chats);
-    });
 
 
     useEffect(() => {

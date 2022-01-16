@@ -3,7 +3,7 @@ const util = require("util");
 var _ = require("underscore");
 module.exports.getTutorDetails = async (req, res) => {
   let { userID } = req.query;
-  let sql = `SELECT u.NAME,u.IMAGE,u.BIO,u.REGISTERED_AT,t.*FROM TUTOR t INNER JOIN USER u ON (u.USER_ID = t.USER_ID) WHERE u.USER_ID = ${userID}`;
+  let sql = `SELECT u.NAME,u.IMAGE,u.EMAIL,u.MOBILE_NO,u.BIO,u.REGISTERED_AT,t.*FROM TUTOR t INNER JOIN USER u ON (u.USER_ID = t.USER_ID) WHERE u.USER_ID = ${userID}`;
 
   const dbPromise = util.promisify(dbConnection.query).bind(dbConnection);
 
@@ -48,4 +48,26 @@ module.exports.getTutorDetails = async (req, res) => {
   tutor["reviews"] = JSON.parse(JSON.stringify(reviews));
 
   res.json(tutor);
+};
+
+module.exports.getRejectionReason = (req, res) => {
+  let { tutorId } = req.body;
+  const reasonMessage = `SELECT * FROM REJECT_REASON WHERE RECEIVER_ID = ${tutorId}`;
+  dbConnection.query(reasonMessage, async (err, result) => {
+    if (err) {
+      return res.status(400).json(err);
+    }
+    res.status(200).json(result);
+  });
+};
+
+module.exports.getMessageFromConn = (req, res) => {
+  let { tutorId } = req.body;
+  const reasonMessage = `Select * FROM CONNECTIONS  WHERE  TUTOR_ID=${tutorId}`;
+  dbConnection.query(reasonMessage, async (err, result) => {
+    if (err) {
+      return res.status(400).json(err);
+    }
+    res.status(200).json(result);
+  });
 };

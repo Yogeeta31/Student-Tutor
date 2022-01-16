@@ -71,7 +71,7 @@ module.exports.changeMessageRequestStatus = async (req, res) => {
 
 module.exports.getAllMessages = async (req, res) => {
   let { studentId, tutorId } = req.query;
-  const getMessage = `SELECT MESSAGE FROM MESSAGING WHERE (SENDER_ID = ${studentId} AND RECIEVER_ID = ${tutorId}) OR (SENDER_ID = ${tutorId} AND RECIEVER_ID = ${studentId}) ORDER BY SENT_AT ASC`;
+  const getMessage = `SELECT * FROM MESSAGING WHERE (SENDER_ID = ${studentId} AND RECIEVER_ID = ${tutorId}) OR (SENDER_ID = ${tutorId} AND RECIEVER_ID = ${studentId}) ORDER BY SENT_AT ASC`;
   dbConnection.query(getMessage, async (err, result) => {
     if (err) {
       console.log(err);
@@ -107,7 +107,7 @@ module.exports.sendMessageSocket = (data, callback) => {
     if (err) {
       console.log(err);
     }
-    let fetchMessage = `SELECT SENT_AT, UPDATED_DATE FROM MESSAGING WHERE SENDER_ID=${senderId} AND RECIEVER_ID=${receiverId} ORDER BY SENT_AT DESC LIMIT 1`;
+    let fetchMessage = `SELECT MESSAGE_ID,SENT_AT, UPDATED_DATE FROM MESSAGING WHERE SENDER_ID=${senderId} AND RECIEVER_ID=${receiverId} ORDER BY SENT_AT DESC LIMIT 1`;
     dbConnection.query(fetchMessage, (err, result) => {
       if (err) {
         console.log(err);
@@ -118,7 +118,11 @@ module.exports.sendMessageSocket = (data, callback) => {
         receiverId,
         senderId,
         message,
-        timestamp,
+        messageId: timestamp.MESSAGE_ID,
+        timestamp: {
+          sentAt: timestamp.SENT_AT,
+          updatedAt: timestamp.UPDATED_DATE,
+        },
       });
       return;
     });
@@ -138,4 +142,65 @@ module.exports.getMessageScoket = (data, callback) => {
     callback(message);
     return;
   });
+};
+
+module.exports.getMessagingList = async (req, res) => {
+  let { userId, roleId } = req.query;
+  const dbPromise = util.promisify(dbConnection.query).bind(dbConnection);
+
+  let contacts = null;
+  let sqlGetContacts = null;
+
+  if (roleId == 2) {
+    sqlGetContacts = `SELECT STUDENT_ID FROM CONNECTIONS WHERE TUTOR_ID = ${userId} AND REMARK = 1`;
+  } else if (roleId == 3) {
+    sqlGetContacts = `SELECT TUTOR_ID FROM CONNECTIONS WHERE STUDENT_ID = ${userId} AND REMARK = 1`;
+  }
+
+  try {
+    contacts = await dbPromise(sqlGetContacts);
+  } catch (err) {
+    throw err;
+  }
+  let contactedIds = [];
+  for (contact of contacts) {
+    if (roleId == 2) {
+      contactedIds.push(contact.STUDENT_ID);
+    } else if (roleId == 3) {
+      contactedIds.push(contact.TUTOR_ID);
+    }
+  }
+
+  let response = [];
+  for (contactedId of contactedIds) {
+    let sqlGetContactDetails = `SELECT u.NAME,u.IMAGE FROM USER u WHERE u.USER_ID = ${contactedId} `;
+    let sqlGetLastMessage = `SELECT MESSAGE,SENT_AT FROM MESSAGING WHERE (SENDER_ID = ${userId} AND RECIEVER_ID = ${contactedId}) OR (SENDER_ID = ${contactedId}  AND RECIEVER_ID = ${userId}) ORDER BY SENT_AT DESC LIMIT 1`;
+    let contactDetails = null;
+    let lastMessageDetails = null;
+    try {
+      contactDetails = await dbPromise(sqlGetContactDetails);
+    } catch (err) {
+      throw err;
+    }
+
+    try {
+      lastMessageDetails = await dbPromise(sqlGetLastMessage);
+    } catch (err) {
+      throw err;
+    }
+
+    console.log(contactDetails);
+    console.log(lastMessageDetails);
+    let userDetail = {
+      userId: contactedId,
+      userName: contactDetails[0].NAME,
+      profilePicture: contactDetails[0].IMAGE,
+      timestamp: lastMessageDetails[0].SENT_AT,
+      lastMessage: lastMessageDetails[0].MESSAGE,
+    };
+
+    response.push(userDetail);
+  }
+
+  res.json(response);
 };

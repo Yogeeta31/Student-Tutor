@@ -1,3 +1,4 @@
+import axios from "axios";
 import "../css/chatList.css";
 import React from "react";
 
@@ -23,9 +24,43 @@ class ChatScreen extends React.Component {
         )
       ),
       FRID: parseInt(window.location.href.toString().split("/")[4]),
+      FR: {},
     };
   }
   componentDidMount() {
+    let role;
+    let stringRole = document.cookie.replace(
+      /(?:(?:^|.*;\s*)role\s*\=\s*([^;]*).*$)|^.*$/,
+      "$1"
+    );
+    if (stringRole === "student") {
+      role = 3;
+    } else if (stringRole === "tutor") {
+      role = 2;
+    } else {
+      role = 1;
+    }
+
+    let token = document.cookie.replace(
+      /(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/,
+      "$1"
+    );
+
+    axios
+      .get(
+        `${process.env.REACT_APP_SERVER_URL}/api/message/getMessagingList/?userId=${this.state.MYID}&roleId=${role}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      .then((response) => {
+        let friend = response.data.filter((f) => {
+          return f.userId === this.state.FRID;
+        });
+        this.setState({ ...this.state, FR: friend[0] });
+      })
+      .catch((err) => {
+        if (err.response.status === 404) console.log("Error");
+      });
+
     let data = { receiverId: this.state.FRID, senderId: this.state.MYID };
     socket.emit("findmessage", data);
     socket.on("output", (messages) => {
@@ -60,6 +95,23 @@ class ChatScreen extends React.Component {
     socket.emit("sendmessage", msgObj);
     this.setState({ ...this.state, msg: "" });
   };
+
+  renderDate = (d) => {
+    const registrationDate = new Date(d);
+    return (
+      registrationDate.getDate().toString() +
+      "/" +
+      (registrationDate.getMonth() + 1).toString() +
+      "/" +
+      registrationDate.getFullYear().toString() +
+      " (" +
+      registrationDate.getHours().toString() +
+      ":" +
+      registrationDate.getMinutes().toString() +
+      ")"
+    );
+  };
+
   render() {
     return (
       <>
@@ -72,11 +124,16 @@ class ChatScreen extends React.Component {
                     <div className="row">
                       <div className="col-lg-6">
                         <img
-                          src="https://bootdey.com/img/Content/avatar/avatar2.png"
+                          src={
+                            this.state.FR.profilePicture
+                              ? `${process.env.REACT_APP_PROFILE_URL}${this.state.FR.profilePicture}`
+                              : null
+                          }
                           alt="avatar"
+                          style={{ height: "50px", width: "50px" }}
                         />
-                        <div className="chat-about">
-                          <h6 className="mt-2">Aiden Chavez</h6>
+                        <div className="chat-about mt-2">
+                          <h6 className="mt-2">{this.state.FR.userName}</h6>
                         </div>
                       </div>
                     </div>
@@ -93,7 +150,7 @@ class ChatScreen extends React.Component {
                             }
                           >
                             <span className="message-data-time">
-                              {chat.SENT_AT}
+                              {this.renderDate(chat.SENT_AT)}
                             </span>
                           </div>
                           <div

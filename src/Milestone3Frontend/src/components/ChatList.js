@@ -24,7 +24,6 @@ const ChatList = () => {
         { headers: { Authorization: `Bearer ${cookies.token}` } }
       )
       .then((response) => {
-        console.log(response.data);
         setListOfPeople(response.data);
       })
       .catch((err) => {
@@ -55,12 +54,12 @@ const ChatList = () => {
                           alt="Profile Pic"
                           style={{
                             objectFit: "cover",
-                            width: "180px",
-                            height: "180px",
+                            width: "60px",
+                            height: "60px",
                           }}
                         />
                         <div className="about">
-                          <div className="name">{person.userName}</div>
+                          <div className="name mt-3">{person.userName}</div>
                         </div>
                       </li>
                     </Link>

@@ -1,14 +1,82 @@
 import "../css/chatList.css"
+import React, { useState, useEffect } from "react";
+
+const io = require("socket.io-client");
+
+const socket = io("http://localhost:4000", {
+  withCredentials: true,
+  extraHeaders: {
+    "my-custom-header": "Chatting",
+  },
+});
 
 
 const ChatScreen = () => {
+    const MYID = 3, FRID = 5;
+    
+    const [msg, setMsg] = useState("");
+    const [chats, setChats] = useState([]);
+
     const onSendMessage = () => {
-        console.log("Hello");
+        let msgObj = {receiverId: FRID, senderId: MYID, message: msg}
+        // console.log(msgObj);
+        socket.emit("sendmessage", msgObj);
+        setMsg("");
     }
+
+    socket.on("output", (messages) => {
+        setChats(messages);
+        // console.log(messages);
+    });
+
+    socket.on("singleOutput", (message) => {
+        // console.log("HEREERERE");
+        let temp = [...msg];
+        let newMessage = {
+            MESSAGE: message.message,
+            RECEIVER_ID: message.receiverId,
+            SENDER_ID: message.senderId,
+            SENT_AT: message.timestamp.SENT_AT,
+            UPDATED_DATE: message.timestamp.UPDATED_DATE
+        }
+        // console.log(newMessage);
+        temp.push(newMessage);
+        setChats(temp);
+        console.log("+++++++========++++++ZZZZZZZzzzzzzzzZZZZZZZZ");
+        console.log(chats);
+    });
+
+
+    useEffect(() => {
+        let data = { receiverId: FRID, senderId: MYID };
+        socket.emit("findmessage", data);
+      }, []);
+
+        // socket.on("findmessage", ({receiverId: "1", senderId: "2"}) => {
+        //   let name = msg.name,
+        //     message = msg.message;
+        //   const updatedChat = [...chats];
+        //   updatedChat.push({ name, message });
+        //   console.log(chats);
+        //   console.log(updatedChat);
+        //   setChats(updatedChat);
+        // });
+
+    const listChats = () => {
+        return chats.map((chat) => {
+            // console.log(chat);
+            return <li className="clearfix" key={chat.SENT_AT}>
+            <div className={chat.SENDER_ID === MYID ? "message-data text-right":"message-data"}>
+                <span className="message-data-time">{chat.SENT_AT}</span>
+            </div>
+            <div className={chat.SENDER_ID === MYID ? "message other-message float-right": "message my-message"}>{chat.MESSAGE}</div>
+        </li>
+        });
+    };
+
     return (
         <>
-            <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
-
+            {/* <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" /> */}
             <div className="container mt-4">
                 <div className="row clearfix">
                     <div className="col-lg-12">
@@ -26,53 +94,16 @@ const ChatScreen = () => {
                                 </div>
                                 <div className="chat-history" >
                                     <ul className="m-b-0">
-                                        <li className="clearfix">
-                                            <div className="message-data text-right">
-                                                <span className="message-data-time">10:10 AM, Today</span>
-                                            </div>
-                                            <div className="message other-message float-right"> Hi Aiden, how are you? How is the project coming along? </div>
-                                        </li>
-                                        <li className="clearfix">
-                                            <div className="message-data">
-                                                <span className="message-data-time">10:12 AM, Today</span>
-                                            </div>
-                                            <div className="message my-message">Are we meeting today?</div>
-                                        </li>
-                                        <li className="clearfix">
-                                            <div className="message-data">
-                                                <span className="message-data-time">10:15 AM, Today</span>
-                                            </div>
-                                            <div className="message my-message">Project has been already finished and I have results to show you.</div>
-                                        </li>
-                                        <li className="clearfix">
-                                            <div className="message-data text-right">
-                                                <span className="message-data-time">10:10 AM, Today</span>
-                                            </div>
-                                            <div className="message other-message float-right"> Hi Aiden, how are you? How is the project coming along? </div>
-                                        </li>
-                                        <li className="clearfix">
-                                            <div className="message-data">
-                                                <span className="message-data-time">10:12 AM, Today</span>
-                                            </div>
-                                            <div className="message my-message">Are we meeting today?</div>
-                                        </li>
-                                        <li className="clearfix">
-                                            <div className="message-data text-right">
-                                                <span className="message-data-time">10:10 AM, Today</span>
-                                            </div>
-                                            <div className="message other-message float-right"> Hi Aiden, how are you? How is the project coming along? </div>
-                                        </li>
-                                        <li className="clearfix">
-                                            <div className="message-data">
-                                                <span className="message-data-time">10:12 AM, Today</span>
-                                            </div>
-                                            <div className="message my-message">Are we meeting today?</div>
-                                        </li>
+                                        {
+                                            listChats()
+                                        }
                                     </ul>
                                 </div>
                                 <div className="chat-message clearfix">
                                     <div className="input-group mb-0">
-                                        <input type="text" className="form-control" placeholder="Enter text here..." />
+                                        <input type="text" className="form-control" placeholder="Enter text here..." value={msg} onChange={(e) => {
+                                            setMsg(e.target.value);
+                                        }}/>
                                         <div className="input-group-prepend">
                                             <button className="input-group-text" onClick={onSendMessage}><i className="fa fa-send"></i></button>
                                         </div>

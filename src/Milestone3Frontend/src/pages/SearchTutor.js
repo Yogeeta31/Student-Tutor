@@ -151,7 +151,6 @@ const SearchTutors = () => {
                         tutors.map(tutor => {
                             return (
                                 <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3" key={tutor.SUBJECT_ID}>
-                                    {console.log(process.env.REACT_APP_PROFILE_URL)}
                                     <div className="card sl">
                                         <div className="card-image">
                                             <img src={`${process.env.REACT_APP_PROFILE_URL}2021-11-23-062341.jpg`} alt="TutorImage" />

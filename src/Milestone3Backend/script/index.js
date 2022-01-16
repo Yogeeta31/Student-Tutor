@@ -76,6 +76,12 @@ const createTutors = async () => {
       console.log(err);
     }
   });
+  var dropMessagingTable = `DROP TABLE IF EXISTS REJECT_REASON`;
+  con.query(dropMessagingTable, (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+  });
 
   var sqlCreateUserTable = `CREATE TABLE USER (USER_ID INT NOT NULL AUTO_INCREMENT, NAME VARCHAR(90), GENDER VARCHAR(10), MOBILE_NO BIGINT, EMAIL VARCHAR(45), PASSWORD VARCHAR(100), ROLE_ID INT, BIO VARCHAR(150), REGISTERED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP, LAST_LOGIN TIMESTAMP DEFAULT CURRENT_TIMESTAMP, HAS_PERMISSION TINYINT NOT NULL, ROLES_ROLE_ID INT, REVIEW_ID INT, IMAGE VARCHAR(255), PRIMARY KEY (USER_ID), UNIQUE(EMAIL))`;
   con.query(sqlCreateUserTable, (err, result) => {
@@ -105,7 +111,7 @@ const createTutors = async () => {
     }
   });
 
-  var sqlCreateMessagingTable = `CREATE TABLE MESSAGING ( SENDER_ID INT NOT NULL ,RECIEVER_ID INT NOT NULL ,MESSAGE VARCHAR(255) ,SENT_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP, UPDATED_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`;
+  var sqlCreateMessagingTable = `CREATE TABLE MESSAGING (MESSAGE_ID INT NOT NULL AUTO_INCREMENT, SENDER_ID INT NOT NULL ,RECIEVER_ID INT NOT NULL ,MESSAGE VARCHAR(255) ,SENT_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP, UPDATED_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,PRIMARY KEY (MESSAGE_ID))`;
   con.query(sqlCreateMessagingTable, (err, result) => {
     if (err) {
       console.log(err);
@@ -119,12 +125,7 @@ const createTutors = async () => {
     }
   });
 
-  var sqlCreateRejectionReasonTable = `CREATE TABLE REJECT_REASON (
-    REASON_ID INT AUTO_INCREMENT PRIMARY KEY,
-    REASON VARCHAR(400) NOT NULL,
-    SENDER_ID INT NOT NULL,
-    RECEIVER_ID INT NOT NULL,
-    TIME_SENT datetime
+  var sqlCreateRejectionReasonTable = `CREATE TABLE REJECT_REASON (REASON_ID INT AUTO_INCREMENT PRIMARY KEY, REASON VARCHAR(400) NOT NULL, SENDER_ID INT NOT NULL, RECEIVER_ID INT NOT NULL, TIME_SENT datetime
     )`;
   con.query(sqlCreateRejectionReasonTable, (err, result) => {
     if (err) {

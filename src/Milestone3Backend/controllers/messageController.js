@@ -71,7 +71,7 @@ module.exports.changeMessageRequestStatus = async (req, res) => {
 
 module.exports.getAllMessages = async (req, res) => {
   let { studentId, tutorId } = req.query;
-  const getMessage = `SELECT MESSAGE FROM MESSAGING WHERE (SENDER_ID = ${studentId} AND RECIEVER_ID = ${tutorId}) OR (SENDER_ID = ${tutorId} AND RECIEVER_ID = ${studentId}) ORDER BY SENT_AT ASC`;
+  const getMessage = `SELECT * FROM MESSAGING WHERE (SENDER_ID = ${studentId} AND RECIEVER_ID = ${tutorId}) OR (SENDER_ID = ${tutorId} AND RECIEVER_ID = ${studentId}) ORDER BY SENT_AT ASC`;
   dbConnection.query(getMessage, async (err, result) => {
     if (err) {
       console.log(err);
@@ -107,7 +107,7 @@ module.exports.sendMessageSocket = (data, callback) => {
     if (err) {
       console.log(err);
     }
-    let fetchMessage = `SELECT SENT_AT, UPDATED_DATE FROM MESSAGING WHERE SENDER_ID=${senderId} AND RECIEVER_ID=${receiverId} ORDER BY SENT_AT DESC LIMIT 1`;
+    let fetchMessage = `SELECT MESSAGE_ID,SENT_AT, UPDATED_DATE FROM MESSAGING WHERE SENDER_ID=${senderId} AND RECIEVER_ID=${receiverId} ORDER BY SENT_AT DESC LIMIT 1`;
     dbConnection.query(fetchMessage, (err, result) => {
       if (err) {
         console.log(err);
@@ -118,7 +118,11 @@ module.exports.sendMessageSocket = (data, callback) => {
         receiverId,
         senderId,
         message,
-        timestamp,
+        messageId: timestamp.MESSAGE_ID,
+        timestamp: {
+          sentAt: timestamp.SENT_AT,
+          updatedAt: timestamp.UPDATED_DATE,
+        },
       });
       return;
     });

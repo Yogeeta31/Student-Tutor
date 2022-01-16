@@ -67,7 +67,10 @@ module.exports.getRejectionReason = (req, res) => {
 
 module.exports.getMessageFromConn = (req, res) => {
     let { tutorId } = req.body;
-    const reasonMessage = `Select * FROM CONNECTIONS  WHERE  TUTOR_ID=${tutorId}`;
+    const reasonMessage = `SELECT c.STUDENT_ID, c.TUTOR_ID, c.REMARK , c.MESSAGE , c.UPDATED_DATE , u.NAME, u.IMAGE
+                           FROM CONNECTIONS c
+                           INNER JOIN User u ON c.STUDENT_ID=u.USER_ID WHERE  TUTOR_ID=${tutorId}`;
+
     dbConnection.query(reasonMessage, async (err, result) => {
       if (err) {
         return res.status(400).json(err);

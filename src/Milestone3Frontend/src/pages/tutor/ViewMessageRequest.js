@@ -35,8 +35,10 @@ const ViewMessageRequest = () => {
             decision,
             { headers: { "Authorization": `Bearer ${cookies.token}` } })
             .then((response) => {
-                if (response.status === 200)
+                if (response.status === 201) {
                     getData();
+                }
+
             })
             .catch((err) => {
                 console.log(err);

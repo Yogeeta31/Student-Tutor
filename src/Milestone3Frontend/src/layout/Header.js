@@ -10,11 +10,22 @@ const Header = () => {
 
     const renderMenue = (role) => {
 
-        if (role === "student" || !role) {
+        if (!role) {
             return (
                 <>
                     <li className="nav-item"><Link className="nav-link" to="/">Home</Link></li>
                     <li className="nav-item"><Link className="nav-link" to="/searchTutors">Search Tutor</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to="/aboutus">About us</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to="/contactus">Contact us</Link></li>
+                </>
+            )
+        }
+        else if (role === "student") {
+            return (
+                <>
+                    <li className="nav-item"><Link className="nav-link" to="/">Home</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to="/searchTutors">Search Tutor</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to="/chats">Chats</Link></li>
                     <li className="nav-item"><Link className="nav-link" to="/aboutus">About us</Link></li>
                     <li className="nav-item"><Link className="nav-link" to="/contactus">Contact us</Link></li>
                 </>

@@ -15,9 +15,9 @@ const PrivateRoute = (props) => {
 
     let loginInfo = authentication();
 
-    if (loginInfo.loginStatus && loginInfo.role === props.role)
+    if (loginInfo.loginStatus && props.role.includes(loginInfo.role))
         return <props.component></props.component>
-    else if (loginInfo.loginStatus && loginInfo.role !== props.role)
+    else if (loginInfo.loginStatus && !props.role.includes(loginInfo.role))
         return <Navigate to="/errorpage" />
     else
         return <Navigate to="/login" />

@@ -145,15 +145,15 @@ const SearchTutors = () => {
             </div>
             <div className="container">
                 <div className="row">
-
+                    {console.log(tutors)}
                     {
 
                         tutors.map(tutor => {
                             return (
                                 <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3" key={tutor.SUBJECT_ID}>
                                     <div className="card sl">
-                                        <div className="card-image">
-                                            <img src={`${process.env.REACT_APP_PROFILE_URL}2021-11-23-062341.jpg`} alt="TutorImage" />
+                                        <div className="card-image" style={{ maxHeight: "250px", maxWidth: "350px" }}>
+                                            <img src={`${process.env.REACT_APP_PROFILE_URL}${tutor.IMAGE}`} alt="TutorImage" />
                                         </div>
                                         <div className="card-heading">
                                             {tutor.NAME}

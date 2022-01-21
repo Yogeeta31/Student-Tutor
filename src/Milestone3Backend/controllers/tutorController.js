@@ -73,3 +73,39 @@ module.exports.getMessageFromConn = (req, res) => {
     res.status(200).json(result);
   });
 };
+
+module.exports.getReviewOptions = async (req,res) => {
+  let {studentId , tutorId , subjectIds} = req.body;
+  const dbPromise = util.promisify(dbConnection.query).bind(dbConnection);
+  let response = []
+  for (subjectId of Array.from(subjectIds))
+  {
+    let sqlIfReviewed = `SELECT ID FROM REVIEWS WHERE FROM_USER_ID =${studentId} AND TO_USER_ID=${tutorId} `
+    let result = null;
+    try {
+      result = await dbPromise(sqlIfReviewed);
+    } catch (err) {
+      throw err;
+    }
+    let isReviewed = !_.isEmpty(result)
+
+    let sqlIfContacted = `SELECT * FROM MESSAGING WHERE (SENDER_ID = ${studentId} AND RECIEVER_ID =${tutorId} ) `
+    try {
+      result = await dbPromise(sqlIfContacted);
+    } catch (err) {
+      throw err;
+    }
+    let isContacted = !_.isEmpty(result)
+    let flag = null;
+    if(!isReviewed && isContacted)
+    {
+      flag = 1
+    }
+    else
+    {
+      flag = 0;
+    }
+    response.push({SUBJECT_ID:subjectId,flag})
+  }
+  res.send(response)
+}

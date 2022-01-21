@@ -27,4 +27,11 @@ router.post(
     tutorController.getMessageFromConn
   );
 
+  router.get(
+    "/getTutorReviews",
+    SecureAPI(),
+    roleCheck(["TUTOR"]),
+    tutorController.getTutorReviews
+  );
+
 module.exports = router;

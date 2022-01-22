@@ -41,66 +41,66 @@ const ViewTutor = (props) => {
         if (n === 0) {
             return (
                 <div className="small-ratings">
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
                 </div>
             )
         }
         if (n === 1) {
             return (
                 <div className="small-ratings">
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
+                    <i class="bi bi-star-fill rating-color"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
                 </div>
             )
         }
         if (n === 2) {
             return (
                 <div className="small-ratings">
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
+                    <i class="bi bi-star-fill rating-color"></i>
+                    <i class="bi bi-star-fill rating-color"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
                 </div>
             )
         }
         if (n === 3) {
             return (
                 <div className="small-ratings">
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
+                    <i class="bi bi-star-fill rating-color"></i>
+                    <i class="bi bi-star-fill rating-color"></i>
+                    <i class="bi bi-star-fill rating-color"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
                 </div>
             )
         }
         if (n === 4) {
             return (
                 <div className="small-ratings">
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star"></i>
+                    <i class="bi bi-star-fill rating-color"></i>
+                    <i class="bi bi-star-fill rating-color"></i>
+                    <i class="bi bi-star-fill rating-color"></i>
+                    <i class="bi bi-star-fill rating-color"></i>
+                    <i class="bi bi-star-fill"></i>
                 </div>
             )
         }
         if (n === 5) {
             return (
                 <div className="small-ratings">
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star rating-color"></i>
+                    <i class="bi bi-star-fill rating-color"></i>
+                    <i class="bi bi-star-fill rating-color"></i>
+                    <i class="bi bi-star-fill rating-color"></i>
+                    <i class="bi bi-star-fill rating-color"></i>
+                    <i class="bi bi-star-fill rating-color"></i>
                 </div>
             )
         }

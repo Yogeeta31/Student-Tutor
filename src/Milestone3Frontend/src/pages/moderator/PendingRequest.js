@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import $ from 'jquery';
+import 'datatables.net';
 
 const PendingRequest = () => {
     const [tutors, setTutors] = useState([]);
@@ -12,6 +14,11 @@ const PendingRequest = () => {
         axios.get(`${process.env.REACT_APP_SERVER_URL}/api/notVerifiedTutors`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
             .then((response) => {
                 setTutors(response.data);
+                $(document).ready(function () {
+                    $('#pendingTutors').dataTable({
+                        responsive: true,
+                    });
+                });
             })
             .catch((error) => {
                 console.log(console.error);
@@ -37,7 +44,7 @@ const PendingRequest = () => {
 
     return (
         <>
-
+            <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.css"></link>
             <div className="container mt-3">
                 <div className="row">
                     <div className="container mt-1 mb-3">
@@ -48,14 +55,16 @@ const PendingRequest = () => {
                 <div className="card">
                     <div className="card-body">
                         {tutors.length > 0 ?
-                            <table className="table table-hover mt-1">
-                                <tbody>
+                            <table className="table table-hover mt-1" id="pendingTutors">
+                                <thead>
                                     <tr>
                                         <th scope="col"></th>
                                         <th scope="col">Name</th>
                                         <th scope="col">Requested Date</th>
                                         <th></th>
                                     </tr>
+                                </thead>
+                                <tbody>
                                     {
                                         tutors.map(tutor => (
 

@@ -5,6 +5,7 @@ const dbConnection = require("./db");
 const db = require("./db");
 const indexRoute = require("./routes/index");
 const messageController = require("./controllers/messageController");
+const notificationController = require("./controllers/notificationController");
 const http = require("http");
 
 app.use(cors());
@@ -24,7 +25,52 @@ const io = require("socket.io")(Server, {
   allowEIO3: true,
 });
 
+let users = [];
+
 io.on("connection", (socket) => {
+  //login
+  socket.on("username", (data) => {
+    users.push({
+      id: socket.id,
+      userId: data.userId,
+    });
+
+    let len = users.length;
+    len--;
+    io.emit("userList", users, users[len].id);
+  });
+
+  socket.on("sendnotification", (data) => {
+    notificationController.sendNotificationSocket(data, (result) => {
+      for (let i = 0; i < users.length; i++) {
+        if (users[i].userId === data.tutorId) {
+          let socketid = users[i].id;
+          io.to(socketid).emit("noti", [result]);
+        }
+      }
+    });
+  });
+
+  socket.on("getnotification", (data) => {
+    notificationController.getNotificationSocket(data, (result) => {
+      for (let i = 0; i < users.length; i++) {
+        if (users[i].userId === data.tutorId) {
+          let socketid = users[i].id;
+          io.to(socketid).emit("noti", result);
+        }
+      }
+    });
+  });
+
+  //logout
+  socket.on("logout", (data) => {
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].id === data.id) {
+        users.splice(i, 1);
+      }
+    }
+    io.emit("exit", users);
+  });
   socket.on("sendmessage", async (data) => {
     messageController.sendMessageSocket(data, (result) => {
       io.emit("output", [result]);

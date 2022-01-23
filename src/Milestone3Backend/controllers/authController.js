@@ -34,12 +34,10 @@ module.exports.signup_post = async (req, res) => {
 
   let user_id;
   let tutor_id;
-  var sqlCreateUser = `INSERT INTO USER ( NAME, MOBILE_NO,GENDER, EMAIL, PASSWORD, ROLE_ID,HAS_PERMISSION, BIO,IMAGE) VALUES 
-  ("${params.name}",${params.phone},"${params.gender}","${
-    params.email
-  }","${hashedPassword}",${params.role_id},${params.role_id == 1},${
-    params.bio == undefined ? "" : '"' + params.bio + '"'
-  },${params.image != undefined ? '"' + params.image + '"' : null})`;
+  var sqlCreateUser = `INSERT INTO USER ( NAME, MOBILE_NO,GENDER, EMAIL, PASSWORD, ROLE_ID, BIO,IMAGE) VALUES 
+  ("${params.name}",${params.phone},"${params.gender}","${params.email
+    }","${hashedPassword}",${params.role_id},${params.bio == undefined ? "" : '"' + params.bio + '"'
+    },${params.image != undefined ? '"' + params.image + '"' : null})`;
   dbConnection.query(sqlCreateUser, (err, result) => {
     if (err) {
       if (err.sqlMessage.includes("Duplicate entry")) {
@@ -54,9 +52,8 @@ module.exports.signup_post = async (req, res) => {
     const jwt = createToken(user_id, params.role_id);
     if (params.role_id == 2) {
       var sqlCreateTutor = `INSERT INTO TUTOR (USER_ID, IS_ACTIVE, CV,IS_APPROVED)
-        VALUES (${user_id}, 0,${
-        params.cv != undefined ? '"' + params.cv + '"' : null
-      },0)`;
+        VALUES (${user_id}, 0,${params.cv != undefined ? '"' + params.cv + '"' : null
+        },0)`;
       dbConnection.query(sqlCreateTutor, async (err, result) => {
         if (err) {
           return res.status(400).json(err);
@@ -102,8 +99,8 @@ module.exports.login_post = async (req, res) => {
       res.status(200).json({ errors: { email: "Email Does not exist" } });
     } else {
 
-      if(data[0].HAS_PERMISSION == 0){
-        return res.status(401).json({ errors: { message: "You are banned. Please contact the administrator." } });
+      if (data[0].HAS_PERMISSION == 0) {
+        return res.status(200).json({ errors: { message: "You are banned. Please contact the administrator." } });
       }
 
       const hashedPassword = data[0].PASSWORD;

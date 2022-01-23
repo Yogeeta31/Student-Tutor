@@ -19,6 +19,7 @@ import SignUpChoice from "./pages/SignUpChoice";
 import ErrorPage from "./pages/ErrorPage";
 import ViewTutorProfile from "./pages/moderator/ViewTutorProfile";
 import ApprovedTutors from "./pages/moderator/ApprovedTutors";
+import StudentList from "./pages/moderator/StudentList";
 
 import { LoginStateProvider } from "./context/LoginContext";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -49,6 +50,7 @@ function App(props) {
             <Route path="/changerequests" exact element={<PrivateRoute component={ChangeRequests} role={["moderator"]} />} />
             <Route path="/viewTutorProfile/:id" exact element={<PrivateRoute component={ViewTutorProfile} role={["moderator"]} />} />
             <Route path="/approvedtutors" exact element={<PrivateRoute component={ApprovedTutors} role={"moderator"} />} />
+            <Route path="/students" exact element={<PrivateRoute component={StudentList} role={"moderator"} />} />
           </Routes>
         </Layout>
       </LoginStateProvider>

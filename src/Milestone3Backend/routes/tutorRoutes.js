@@ -26,12 +26,12 @@ router.post(
   tutorController.getMessageFromConn
 );
 
-router.patch(
-  "/updateTutorDetails",
-  SecureAPI(),
-  roleCheck(["TUTOR"]),
-  tutorController.updateTutorDetails
-);
+// router.patch(
+//   "/updateTutorDetails",
+//   SecureAPI(),
+//   roleCheck(["TUTOR"]),
+//   tutorController.updateTutorDetails
+// );
 
 router.patch(
   "/updateTutorSubjects",

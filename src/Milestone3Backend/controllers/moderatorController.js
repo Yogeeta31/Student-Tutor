@@ -74,6 +74,7 @@ module.exports.banProfile = async (req, res) => {
   res.status(200).json(result);
 };
 
+//list of enrolled students function
 module.exports.getEnrolledStudents = (req, res) => {
   const list = `SELECT * FROM User WHERE User.ROLE_ID = 3`;
   dbConnection.query(list, async (err, result) => {

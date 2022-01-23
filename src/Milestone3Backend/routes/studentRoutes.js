@@ -6,17 +6,17 @@ const { roleCheck } = require("../middleware/roleChecker");
 const router = Router();
 
 router.get(
-    "/getStudentDetails",
-    SecureAPI(),
-    roleCheck(["MODERATOR", "STUDENT", "TUTOR"]),
-    studentController.getStudentDetails
+  "/getStudentDetails",
+  SecureAPI(),
+  roleCheck(["MODERATOR", "STUDENT", "TUTOR"]),
+  studentController.getStudentDetails
 );
 
 router.patch(
-    "/updateStudentDetails",
-    SecureAPI(),
-    roleCheck(["STUDENT"]),
-    studentController.updateStudentDetails
+  "/updateStudentDetails",
+  SecureAPI(),
+  roleCheck(["STUDENT"]),
+  studentController.updateStudentDetails
 );
 
 module.exports = router;

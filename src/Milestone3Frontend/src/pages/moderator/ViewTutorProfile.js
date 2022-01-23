@@ -13,9 +13,10 @@ const ViewTutorProfile = (props) => {
 
     useEffect(() => {
         if (cookies.token !== undefined) {
-            axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getTutorDetails?userID=${window.location.href.toString().split("/")[4]}`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
+            axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getTutorDetails?user_id=${window.location.href.toString().split("/")[4]}`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
                 .then(response => {
                     setUser(response.data);
+                    console.log(response.data)
                 })
                 .catch(err => {
                     console.log(err);
@@ -44,6 +45,23 @@ const ViewTutorProfile = (props) => {
             .then(response => {
                 if (response.status === 200)
                     navigate("/pendingrequests")
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+    const handleBan = () => {
+        const ban = {
+            reason: msg,
+            moderatorId: parseInt(cookies.userid),
+            userId: user.USER_ID
+        }
+        axios.post(`${process.env.REACT_APP_SERVER_URL}/api/banProfile`,
+            ban,
+            { headers: { "Authorization": `Bearer ${cookies.token}` } })
+            .then(response => {
+                if (response.status === 200)
+                    console.log(response.data)
             })
             .catch(err => {
                 console.log(err);
@@ -78,7 +96,6 @@ const ViewTutorProfile = (props) => {
                             console.log(err);
                         })
                 }
-                // navigate("/pendingrequests")
             })
             .catch(err => {
                 console.log(err);
@@ -144,10 +161,15 @@ const ViewTutorProfile = (props) => {
                                 <div className="card-body">
                                     <div className="d-flex justify-content-center">
                                         {
-                                            user.IS_APPROVED ? null :
-                                                <button className='btn btn-outline-success' onClick={() => { handleApproval() }}>Approve</button>
+                                            user.IS_APPROVED ?
+                                                <button className='btn btn-outline-danger' data-bs-toggle="modal" data-bs-target="#banModal">Ban</button>
+                                                :
+                                                <>
+                                                    <button className='btn btn-outline-success' onClick={() => { handleApproval() }}>Approve</button>&nbsp;
+                                                    <button className='btn btn-outline-danger' data-bs-toggle="modal" data-bs-target="#messageModal">Disapprove</button>
+                                                </>
                                         }
-                                        &nbsp;<button className='btn btn-outline-danger' data-bs-toggle="modal" data-bs-target="#messageModal">Disapprove</button>
+
                                     </div>
                                 </div>
                             </div>
@@ -173,6 +195,28 @@ const ViewTutorProfile = (props) => {
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={handleRejection}>Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="modal fade" id="banModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="exampleModalLabel">Reason for banning ...</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <div className="mb-3">
+                                <label htmlFor="message-text" className="col-form-label">Reason:</label>
+                                <textarea className="form-control"
+                                    value={msg}
+                                    onChange={(e) => { setMsg(e.currentTarget.value) }} id="messageText"></textarea>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={handleBan}>Submit</button>
                         </div>
                     </div>
                 </div>

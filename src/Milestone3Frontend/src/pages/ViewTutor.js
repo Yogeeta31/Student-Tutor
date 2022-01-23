@@ -12,11 +12,15 @@ const ViewTutor = (props) => {
     const [viewBtn, setViewBtn] = useState(false);
     const [cookies, setCookie] = useCookies(['user']);
 
+    const [review, setReview] = useState("");
+    const [viewReviewBtn, setviewReviewBtn] = useState(false);
+
     useEffect(() => {
         let tutorId;
-        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getTutorDetails?userID=${window.location.href.toString().split("/")[4]}`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getTutorDetails?user_id=${window.location.href.toString().split("/")[4]}`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
             .then(response => {
                 setTutor(response.data);
+                console.log(response.data);
                 tutorId = response.data.USER_ID;
                 axios.post(`${process.env.REACT_APP_SERVER_URL}/api/message/checkConnections`,
                     { studentId: cookies.userid, tutorId: tutorId }, { headers: { "Authorization": `Bearer ${cookies.token}` } })
@@ -41,66 +45,66 @@ const ViewTutor = (props) => {
         if (n === 0) {
             return (
                 <div className="small-ratings">
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
+                    <i className="bi bi-star-fill"></i>
+                    <i className="bi bi-star-fill"></i>
+                    <i className="bi bi-star-fill"></i>
+                    <i className="bi bi-star-fill"></i>
+                    <i className="bi bi-star-fill"></i>
                 </div>
             )
         }
         if (n === 1) {
             return (
                 <div className="small-ratings">
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
+                    <i className="bi bi-star-fill rating-color"></i>
+                    <i className="bi bi-star-fill"></i>
+                    <i className="bi bi-star-fill"></i>
+                    <i className="bi bi-star-fill"></i>
+                    <i className="bi bi-star-fill"></i>
                 </div>
             )
         }
         if (n === 2) {
             return (
                 <div className="small-ratings">
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
+                    <i className="bi bi-star-fill rating-color"></i>
+                    <i className="bi bi-star-fill rating-color"></i>
+                    <i className="bi bi-star-fill"></i>
+                    <i className="bi bi-star-fill"></i>
+                    <i className="bi bi-star-fill"></i>
                 </div>
             )
         }
         if (n === 3) {
             return (
                 <div className="small-ratings">
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
+                    <i className="bi bi-star-fill rating-color"></i>
+                    <i className="bi bi-star-fill rating-color"></i>
+                    <i className="bi bi-star-fill rating-color"></i>
+                    <i className="bi bi-star-fill"></i>
+                    <i className="bi bi-star-fill"></i>
                 </div>
             )
         }
         if (n === 4) {
             return (
                 <div className="small-ratings">
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star"></i>
+                    <i className="bi bi-star-fill rating-color"></i>
+                    <i className="bi bi-star-fill rating-color"></i>
+                    <i className="bi bi-star-fill rating-color"></i>
+                    <i className="bi bi-star-fill rating-color"></i>
+                    <i className="bi bi-star-fill"></i>
                 </div>
             )
         }
         if (n === 5) {
             return (
                 <div className="small-ratings">
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star rating-color"></i>
-                    <i className="fa fa-star rating-color"></i>
+                    <i className="bi bi-star-fill rating-color"></i>
+                    <i className="bi bi-star-fill rating-color"></i>
+                    <i className="bi bi-star-fill rating-color"></i>
+                    <i className="bi bi-star-fill rating-color"></i>
+                    <i className="bi bi-star-fill rating-color"></i>
                 </div>
             )
         }
@@ -162,6 +166,10 @@ const ViewTutor = (props) => {
                                                     </button> :
                                                     null
                                             }
+                                            <button type="button" className="btn btn-outline-primary mt-1"
+                                                data-bs-toggle="modal" data-bs-target="#reviewModal">
+                                                Review
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -245,6 +253,38 @@ const ViewTutor = (props) => {
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={onMessageSend}>Send message</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="modal fade" id="reviewModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="exampleModalLabel">Provide Review ...</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <div className="mb-3">
+                                <label htmlFor="message-text" className="col-form-label">Message:</label>
+                                <select className="form-select">
+                                    <option value={"select"}>- Select Subject -</option>
+                                    {
+                                        tutor.subjects ?
+                                            tutor.subjects.map(s => (<option>{s.SUBJECT_NAME}</option>))
+                                            : null
+                                    }
+                                </select>
+
+                                <label htmlFor="message-text" className="col-form-label">Message:</label>
+                                <textarea className="form-control"
+                                    value={msg}
+                                    onChange={(e) => { setReview(e.currentTarget.value) }} id="messageText"></textarea>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" className="btn btn-primary" data-bs-dismiss="modal">Send message</button>
                         </div>
                     </div>
                 </div>

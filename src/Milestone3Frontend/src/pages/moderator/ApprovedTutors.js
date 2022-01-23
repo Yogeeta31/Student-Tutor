@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import $ from 'jquery';
+import 'datatables.net';
 
 const ApprovedTutors = () => {
     let navigate = useNavigate();
@@ -11,10 +13,16 @@ const ApprovedTutors = () => {
         axios.get(`${process.env.REACT_APP_SERVER_URL}/api/approvedTutors`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
             .then((response) => {
                 setTutors(response.data);
+                $(document).ready(function () {
+                    $('#approvedTutors').dataTable({
+                        responsive: true,
+                    });
+                });
             })
             .catch((error) => {
                 console.log(console.error);
             });
+
     }, [])
 
     const handleClick = (e) => {
@@ -24,7 +32,7 @@ const ApprovedTutors = () => {
 
     return (
         <>
-
+            <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.css"></link>
             <div className="container mt-3">
                 <div className="row">
                     <div className="container mt-1 mb-3">
@@ -35,13 +43,15 @@ const ApprovedTutors = () => {
                 <div className="card">
                     <div className="card-body">
                         {tutors.length > 0 ?
-                            <table className="table table-hover mt-1">
-                                <tbody>
+                            <table className="table table-hover mt-1" id="approvedTutors">
+                                <thead>
                                     <tr>
                                         <th scope="col"></th>
-                                        <th scope="col">Name</th>
+                                        <th scope="col" style={{ textAlign: "center" }}>Name</th>
                                         <th></th>
                                     </tr>
+                                </thead>
+                                <tbody>
                                     {
                                         tutors.map(tutor => (
 
@@ -49,10 +59,10 @@ const ApprovedTutors = () => {
                                                 <td>
                                                     <img src={`${process.env.REACT_APP_PROFILE_URL}${tutor.IMAGE}`} style={{ maxWidth: "65px", borderRadius: "50%" }} alt="avatar" />
                                                 </td>
-                                                <td>
+                                                <td style={{ textAlign: "center" }}>
                                                     {tutor.NAME}
                                                 </td>
-                                                <td>
+                                                <td style={{ textAlign: "center" }}>
                                                     <button className="btn btn-outline-dark" onClick={handleClick} id={tutor.USER_ID}>View Profile</button>
                                                 </td>
                                             </tr>

@@ -64,6 +64,8 @@ const Login = () => {
             setError(response.data.errors.email);
           else if (response.data.errors.password)
             setError(response.data.errors.password);
+          else if (response.data.errors.message)
+            setError(response.data.errors.message);
         })
         .catch((error) => {
           console.log(error);

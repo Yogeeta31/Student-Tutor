@@ -26,12 +26,12 @@ router.post(
   tutorController.getMessageFromConn
 );
 
-// router.patch(
-//   "/updateTutorDetails",
-//   SecureAPI(),
-//   roleCheck(["TUTOR"]),
-//   tutorController.updateTutorDetails
-// );
+router.patch(
+  "/updateTutorDetails",
+  SecureAPI(),
+  roleCheck(["TUTOR"]),
+  tutorController.updateTutorDetails
+);
 
 router.patch(
   "/updateTutorSubjects",
@@ -81,11 +81,11 @@ router.post(
   tutorController.reviewTutor
 );
 
-  router.get(
-    "/getTutorReviews",
-    SecureAPI(),
-    roleCheck(["TUTOR"]),
-    tutorController.getTutorReviews
-  );
+//   router.get(
+//     "/getTutorReviews",
+//     SecureAPI(),
+//     roleCheck(["TUTOR"]),
+//     tutorController.getTutorReviews
+//   );
 
 module.exports = router;

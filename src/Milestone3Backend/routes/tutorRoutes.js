@@ -27,4 +27,46 @@ router.post(
     tutorController.getMessageFromConn
   );
 
+router.patch(
+    "/updateTutorDetails",
+    SecureAPI(),
+    roleCheck(["TUTOR"]),
+    tutorController.updateTutorDetails
+);
+
+router.patch(
+    "/updateTutorSubjects",
+    SecureAPI(),
+    roleCheck(["TUTOR"]),
+    tutorController.updateTutorSubjects
+);
+
+router.patch(
+    "/updateTutorCV",
+    SecureAPI(),
+    roleCheck(["TUTOR"]),
+    tutorController.updateTutorCV
+);
+
+router.patch(
+    "/updateTutorImage",
+    SecureAPI(),
+    roleCheck(["TUTOR"]),
+    tutorController.updateTutorImage
+);
+
+router.post(
+    "/addNewSubject",
+    SecureAPI(),
+    roleCheck(["TUTOR"]),
+    tutorController.addNewSubject
+);
+
+router.delete(
+    "/deleteExistingSubject",
+    SecureAPI(),
+    roleCheck(["TUTOR"]),
+    tutorController.deleteExistingSubject
+);
+
 module.exports = router;

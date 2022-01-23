@@ -5,5 +5,6 @@ const router = Router();
 
 router.post("/signup", authController.signup_post);
 router.post("/login", authController.login_post);
+router.patch("/forgetPassword", authController.forgetPassword);
 
 module.exports = router;

@@ -12,61 +12,73 @@ router.get(
   tutorController.getTutorDetails
 );
 
-
 router.post(
-    "/getRejectionReason",
-    // SecureAPI(),
-    // roleCheck(["MODERATOR"]),
-    tutorController.getRejectionReason
-  );
-
-router.post(
-    "/getMessageFromConn",
-    // SecureAPI(),
-    // roleCheck(["MODERATOR"]),
-    tutorController.getMessageFromConn
-  );
-
-router.patch(
-    "/updateTutorDetails",
-    SecureAPI(),
-    roleCheck(["TUTOR"]),
-    tutorController.updateTutorDetails
-);
-
-router.patch(
-    "/updateTutorSubjects",
-    SecureAPI(),
-    roleCheck(["TUTOR"]),
-    tutorController.updateTutorSubjects
-);
-
-router.patch(
-    "/updateTutorCV",
-    SecureAPI(),
-    roleCheck(["TUTOR"]),
-    tutorController.updateTutorCV
-);
-
-router.patch(
-    "/updateTutorImage",
-    SecureAPI(),
-    roleCheck(["TUTOR"]),
-    tutorController.updateTutorImage
+  "/getRejectionReason",
+  // SecureAPI(),
+  // roleCheck(["MODERATOR"]),
+  tutorController.getRejectionReason
 );
 
 router.post(
-    "/addNewSubject",
-    SecureAPI(),
-    roleCheck(["TUTOR"]),
-    tutorController.addNewSubject
+  "/getMessageFromConn",
+  // SecureAPI(),
+  // roleCheck(["MODERATOR"]),
+  tutorController.getMessageFromConn
+);
+
+router.patch(
+  "/updateTutorDetails",
+  SecureAPI(),
+  roleCheck(["TUTOR"]),
+  tutorController.updateTutorDetails
+);
+
+router.patch(
+  "/updateTutorSubjects",
+  SecureAPI(),
+  roleCheck(["TUTOR"]),
+  tutorController.updateTutorSubjects
+);
+
+router.patch(
+  "/updateTutorCV",
+  SecureAPI(),
+  roleCheck(["TUTOR"]),
+  tutorController.updateTutorCV
+);
+
+router.patch(
+  "/updateTutorImage",
+  SecureAPI(),
+  roleCheck(["TUTOR"]),
+  tutorController.updateTutorImage
+);
+
+router.post(
+  "/addNewSubject",
+  SecureAPI(),
+  roleCheck(["TUTOR"]),
+  tutorController.addNewSubject
 );
 
 router.delete(
-    "/deleteExistingSubject",
-    SecureAPI(),
-    roleCheck(["TUTOR"]),
-    tutorController.deleteExistingSubject
+  "/deleteExistingSubject",
+  SecureAPI(),
+  roleCheck(["TUTOR"]),
+  tutorController.deleteExistingSubject
+);
+router.get(
+  "/getReviewOptions",
+  SecureAPI(),
+  roleCheck(["STUDENT"]),
+  tutorController.getReviewOptions
+);
+
+router.post(
+  "/reviewTutor",
+  SecureAPI(),
+  roleCheck(["STUDENT"]),
+  tutorController.reviewTutor
 );
 
 module.exports = router;

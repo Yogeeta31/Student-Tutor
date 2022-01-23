@@ -81,4 +81,11 @@ router.post(
   tutorController.reviewTutor
 );
 
+  router.get(
+    "/getTutorReviews",
+    SecureAPI(),
+    roleCheck(["TUTOR"]),
+    tutorController.getTutorReviews
+  );
+
 module.exports = router;

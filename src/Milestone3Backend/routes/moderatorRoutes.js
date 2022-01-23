@@ -33,4 +33,19 @@ router.post(
   moderatorController.rejectProfileWithReason
 );
 
+router.post(
+  "/banProfile",
+  // SecureAPI(),
+  // roleCheck(["MODERATOR"]),
+  moderatorController.banProfile
+);
+
+router.get(
+  "/getEnrolledStudents",
+  // SecureAPI(),
+  // roleCheck(["MODERATOR"]),
+  moderatorController.getEnrolledStudents
+);
+
+
 module.exports = router;

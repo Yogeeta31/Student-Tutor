@@ -89,7 +89,7 @@ module.exports.signup_post = async (req, res) => {
 module.exports.login_post = async (req, res) => {
   const { email, password } = req.body;
 
-  const loginUser = `SELECT u.PASSWORD, u.USER_ID, u.ROLE_ID
+  const loginUser = `SELECT u.PASSWORD, u.USER_ID, u.ROLE_ID, u.HAS_PERMISSION
     FROM USER u
     WHERE u.EMAIL = "${email}"`;
 
@@ -101,6 +101,11 @@ module.exports.login_post = async (req, res) => {
     if (_.isEmpty(data)) {
       res.status(200).json({ errors: { email: "Email Does not exist" } });
     } else {
+
+      if(data[0].HAS_PERMISSION == 0){
+        return res.status(401).json({ errors: { message: "You are banned. Please contact the administrator." } });
+      }
+
       const hashedPassword = data[0].PASSWORD;
       const user_id = data[0].USER_ID;
       const role_id = data[0].ROLE_ID;

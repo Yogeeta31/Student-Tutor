@@ -16,7 +16,6 @@ const SearchTutors = () => {
         axios.get(`${process.env.REACT_APP_SERVER_URL}/api/search/tutors`)
             .then(response => {
                 setTutors(response.data);
-                console.log(response.data.length)
                 setPage({ ...page, numberOfPage: Math.ceil(response.data.length / page.step), data: response.data.slice(0, page.step) });
             })
             .catch(err => {
@@ -28,6 +27,7 @@ const SearchTutors = () => {
         axios.get(`${process.env.REACT_APP_SERVER_URL}/api/search/tutors?searchTerm=${sT}&sortBy=${sB}`)
             .then(response => {
                 setTutors(response.data);
+                setPage({ ...page, numberOfPage: Math.ceil(response.data.length / page.step), data: response.data.slice(0, page.step) });
 
             })
             .catch(err => {
@@ -121,19 +121,15 @@ const SearchTutors = () => {
         if (page.currentPage + 1 <= page.numberOfPage) {
             let start = page.currentPage * page.step;
             let stop = tutors.length < page.currentPage * page.step + page.step ? page.currentPage * page.step + page.step : tutors.length - 1;
-            console.log(start, stop)
             setPage({ ...page, currentPage: page.currentPage + 1, data: tutors.slice(start, stop) })
         }
-        console.log(page);
     }
     const handlePrev = () => {
         if (page.currentPage - 1 > 0) {
             let start = (page.currentPage * page.step) - (page.step * 2) < 0 ? 0 : (page.currentPage * page.step) - (page.step * 2);
             let stop = page.currentPage * page.step - page.step;
-            console.log(page.data)
             setPage({ ...page, currentPage: page.currentPage - 1, data: tutors.slice(start, stop) })
         }
-        console.log(page);
     }
 
     return (
@@ -195,13 +191,23 @@ const SearchTutors = () => {
                     }
                 </div>
                 <div className="row">
-                    <div className="container d-flex justify-content-center my-3">
+                    <div className="col d-flex justify-content-center mt-3">
                         <nav aria-label="Page navigation">
                             <ul className="pagination">
-                                <li className="page-item"><button className="page-link" onClick={handlePrev}><i className="bi bi-arrow-left-square"></i></button></li>
-                                <li className="page-item"><button className="page-link" onClick={handleNext} ><i className="bi bi-arrow-right-square"></i></button></li>
+                                <li className="page-item">
+                                    <button className="page-link" disabled={page.currentPage === 1 ? true : false} onClick={handlePrev}><i className="bi bi-arrow-left-square"></i>
+                                    </button></li>
+                                <li className="page-item">
+                                    <button className="page-link" disabled={page.currentPage === page.numberOfPage ? true : false} onClick={handleNext} ><i className="bi bi-arrow-right-square"></i>
+                                    </button>
+                                </li>
                             </ul>
                         </nav>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col d-flex justify-content-center mb-3">
+                        Showing Page {page.currentPage} out of {page.numberOfPage}
                     </div>
                 </div>
             </div>

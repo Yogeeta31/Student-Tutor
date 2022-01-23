@@ -75,37 +75,47 @@ module.exports.getMessageFromConn = (req, res) => {
 };
 
 module.exports.getReviewOptions = async (req,res) => {
-  let {studentId , tutorId , subjectIds} = req.body;
+  let {studentId , tutorId} = req.body;
   const dbPromise = util.promisify(dbConnection.query).bind(dbConnection);
-  let response = []
-  for (subjectId of Array.from(subjectIds))
-  {
-    let sqlIfReviewed = `SELECT ID FROM REVIEWS WHERE FROM_USER_ID =${studentId} AND TO_USER_ID=${tutorId} `
-    let result = null;
-    try {
-      result = await dbPromise(sqlIfReviewed);
-    } catch (err) {
-      throw err;
-    }
-    let isReviewed = !_.isEmpty(result)
-
-    let sqlIfContacted = `SELECT * FROM MESSAGING WHERE (SENDER_ID = ${studentId} AND RECIEVER_ID =${tutorId} ) `
-    try {
-      result = await dbPromise(sqlIfContacted);
-    } catch (err) {
-      throw err;
-    }
-    let isContacted = !_.isEmpty(result)
-    let flag = null;
-    if(!isReviewed && isContacted)
-    {
-      flag = 1
-    }
-    else
-    {
-      flag = 0;
-    }
-    response.push({SUBJECT_ID:subjectId,flag})
+ 
+  let sqlIfReviewed = `SELECT ID FROM REVIEWS WHERE FROM_USER_ID =${studentId} AND TO_USER_ID=${tutorId} `;
+  let result = null;
+  try {
+    result = await dbPromise(sqlIfReviewed);
+  } catch (err) {
+    throw err;
   }
-  res.send(response)
+  let isReviewed = !_.isEmpty(result)
+
+  let sqlIfContacted = `SELECT * FROM CONNECTIONS WHERE STUDENT_ID = ${studentId} AND TUTOR_ID =${tutorId} AND REMARK = 1 `;
+  try {
+    result = await dbPromise(sqlIfContacted);
+  } catch (err) {
+    throw err;
+  }
+  let isContacted = !_.isEmpty(result)
+  let flag = null;
+  if(!isReviewed && isContacted)
+  {
+    flag = 1
+  }
+  else
+  {
+    flag = 0;
+  }
+  res.send({flag});
+}
+
+module.exports.reviewTutor = (req,res) => 
+{
+  let { studentId,tutorId,subjectId,review,rating } = req.body;
+  let sqlAddReview = `INSERT INTO REVIEWS (RATING,REVIEW,FROM_USER_ID,TO_USER_ID,SUBJECT_ID) VALUES (${rating},\"${review}\",${studentId},${tutorId},${subjectId})`
+
+  dbConnection.query(sqlAddReview, (err, result) => {
+    if (err) {
+      return res.status(400).send({message:"Review Failed"});
+    }
+    res.status(200).send({message:"Review Successful"});
+  });
+
 }

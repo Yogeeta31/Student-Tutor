@@ -34,4 +34,11 @@ router.get(
     tutorController.getReviewOptions
 );
 
+router.post(
+  "/reviewTutor",
+   SecureAPI(),
+   roleCheck(["STUDENT"]),
+   tutorController.reviewTutor
+);
+
 module.exports = router;

@@ -70,7 +70,7 @@ module.exports.banProfile = async (req, res) => {
 };
 
 module.exports.getEnrolledStudents = (req, res) => {
-  const list = `SELECT * FROM User WHERE User.ROLE_ID = 1`;
+  const list = `SELECT * FROM User WHERE User.ROLE_ID = 3`;
   dbConnection.query(list, async (err, result) => {
     if (err) {
       return res.status(400).json(err);

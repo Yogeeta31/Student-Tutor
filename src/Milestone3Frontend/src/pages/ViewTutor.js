@@ -12,10 +12,14 @@ const ViewTutor = (props) => {
     const [viewBtn, setViewBtn] = useState(false);
     const [cookies, setCookie] = useCookies(['user']);
 
-    const [review, setReview] = useState({ subjectId: 0, review: "", rating: 0 });
+    const [review, setReview] = useState({ subjectId: 0, review: "", rating: 1 });
     const [viewReviewBtn, setviewReviewBtn] = useState(false);
 
     useEffect(() => {
+        loadData();
+    }, [])
+
+    const loadData = () => {
         let tutorId;
         axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getTutorDetails?user_id=${window.location.href.toString().split("/")[4]}`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
             .then(response => {
@@ -43,16 +47,11 @@ const ViewTutor = (props) => {
                         console.log(err);
                     });
 
-
-
             })
             .catch(err => {
                 console.log(err);
             });
-
-    }, [])
-
-
+    }
 
     const renderRating = (n) => {
         if (n === 0) {
@@ -164,7 +163,7 @@ const ViewTutor = (props) => {
             { headers: { "Authorization": `Bearer ${cookies.token}` } })
             .then(response => {
                 if (response.status === 200)
-                    setviewReviewBtn(false);
+                    loadData();
             })
             .catch(err => {
                 console.log(err);

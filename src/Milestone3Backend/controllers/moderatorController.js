@@ -25,7 +25,7 @@ module.exports.listOfNotVerifiedTutors = (req, res) => {
 };
 
 module.exports.listOfApprovedTutors = (req, res) => {
-  const list = `SELECT USER.NAME, USER.IMAGE, TUTOR.IS_APPROVED, USER.USER_ID FROM TUTOR INNER JOIN USER ON (TUTOR.USER_ID=USER.USER_ID) WHERE IS_APPROVED=1`;
+  const list = `SELECT USER.NAME, USER.IMAGE, TUTOR.IS_APPROVED, USER.HAS_PERMISSION, USER.USER_ID FROM TUTOR INNER JOIN USER ON (TUTOR.USER_ID=USER.USER_ID) WHERE IS_APPROVED=1`;
   dbConnection.query(list, async (err, result) => {
     if (err) {
       return res.status(400).json(err);
@@ -57,9 +57,9 @@ module.exports.banProfile = async (req, res) => {
   const postRejectMessage = `INSERT INTO 
                              BANNED_USER ( REASON, SENDER_ID,RECEIVER_ID,TIME_SENT ) 
                              VALUES ("${reason}",${moderatorId},${userId},"${new Date()
-    .toISOString()
-    .replace(/T/, " ")
-    .replace(/\..+/, "")}")`;
+      .toISOString()
+      .replace(/T/, " ")
+      .replace(/\..+/, "")}")`;
   try {
     result = await dbPromise(updateUser);
   } catch (err) {
@@ -68,6 +68,20 @@ module.exports.banProfile = async (req, res) => {
 
   try {
     result = await dbPromise(postRejectMessage);
+  } catch (err) {
+    throw err;
+  }
+  res.status(200).json(result);
+};
+
+module.exports.liftupBan = async (req, res) => {
+  let { userId } = req.body;
+  const dbPromise = util.promisify(dbConnection.query).bind(dbConnection);
+  const updateUser = `UPDATE User
+                      SET HAS_PERMISSION = 1
+                      WHERE USER_ID = ${userId}`;
+  try {
+    result = await dbPromise(updateUser);
   } catch (err) {
     throw err;
   }

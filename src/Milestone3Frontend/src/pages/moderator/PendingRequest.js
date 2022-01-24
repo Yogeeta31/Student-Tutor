@@ -70,7 +70,7 @@ const PendingRequest = () => {
 
                                             <tr key={tutor.USER_ID}>
                                                 <td>
-                                                    <img src={`${process.env.REACT_APP_PROFILE_URL}${tutor.IMAGE}`} style={{ maxWidth: "65px", borderRadius: "50%" }} alt="avatar" />
+                                                    <img src={`${process.env.REACT_APP_PROFILE_URL}${tutor.IMAGE}`} style={{ width: "65px", height: "65px", borderRadius: "50%" }} alt="avatar" />
                                                 </td>
                                                 <td>
                                                     {tutor.NAME}

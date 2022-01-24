@@ -40,6 +40,13 @@ router.post(
   moderatorController.banProfile
 );
 
+router.put(
+  "/liftUpBan",
+  // SecureAPI(),
+  // roleCheck(["MODERATOR"]),
+  moderatorController.liftupBan
+);
+
 router.get(
   "/getEnrolledStudents",
   // SecureAPI(),

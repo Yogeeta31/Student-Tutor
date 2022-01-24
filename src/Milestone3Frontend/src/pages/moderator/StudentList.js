@@ -13,19 +13,24 @@ const StudentList = () => {
     const [banID, setbanID] = useState("");
 
     useEffect(() => {
-        loadData();
-    }, [])
-
-    const loadData = () => {
         axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getEnrolledStudents`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
             .then((response) => {
-                console.log(response.data)
                 setStudents(response.data);
                 $(document).ready(function () {
                     $('#students').dataTable({
                         responsive: true,
                     });
                 });
+            })
+            .catch((error) => {
+                console.log(console.error);
+            });
+    }, [])
+
+    const loadData = () => {
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getEnrolledStudents`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
+            .then((response) => {
+                setStudents(response.data);
             })
             .catch((error) => {
                 console.log(console.error);
@@ -48,21 +53,24 @@ const StudentList = () => {
             moderatorId: cookies.userid,
             userId: banID
         }
-
-        console.log(ban);
-
         axios.post(`${process.env.REACT_APP_SERVER_URL}/api/banProfile`,
             ban,
             { headers: { "Authorization": `Bearer ${cookies.token}` } })
             .then(response => {
+                if (response.status === 200)
+                    loadData();
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+    const handleBanLiftup = (id) => {
+        axios.put(`${process.env.REACT_APP_SERVER_URL}/api/liftUpBan`,
+            { userId: id },
+            { headers: { "Authorization": `Bearer ${cookies.token}` } })
+            .then(response => {
                 if (response.status === 200) {
-                    axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getEnrolledStudents`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
-                        .then((response) => {
-                            setStudents(response.data);
-                        })
-                        .catch((error) => {
-                            console.log(console.error);
-                        });
+                    loadData();
                 }
             })
             .catch(err => {
@@ -113,8 +121,12 @@ const StudentList = () => {
                                                 <td style={{ textAlign: "center" }}>
                                                     {student.HAS_PERMISSION ? "No" : "Yes"}
                                                 </td>
-                                                <td style={{ textAlign: "center" }}>
-                                                    <button className='btn btn-outline-danger' onClick={() => { setbanID(student.USER_ID) }} data-bs-toggle="modal" data-bs-target="#banModal">Ban</button>
+                                                <td style={{ textAlign: "center" }}>{
+                                                    student.HAS_PERMISSION ?
+                                                        <button className='btn btn-outline-danger' onClick={() => { setbanID(student.USER_ID) }} data-bs-toggle="modal" data-bs-target="#banModal">Ban</button>
+                                                        :
+                                                        <button className='btn btn-outline-success' onClick={() => { handleBanLiftup(student.USER_ID) }}>Lift-up Ban</button>
+                                                }
                                                 </td>
                                             </tr>
 

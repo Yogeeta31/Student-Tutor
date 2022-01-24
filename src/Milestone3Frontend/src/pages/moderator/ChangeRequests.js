@@ -60,7 +60,7 @@ const ChangeRequests = () => {
 
                                 <tr key={tutor.id}>
                                     <td>
-                                        <img src={tutor.img} style={{ maxWidth: "65px", borderRadius: "50%" }} alt="avatar" />
+                                        <img src={tutor.img} style={{ width: "65px", height: "65px", borderRadius: "50%" }} alt="avatar" />
                                     </td>
                                     <td>
                                         {tutor.name}

@@ -46,7 +46,8 @@ const Header = () => {
         else if (role === "moderator") {
             return (
                 <>
-                    <li className="nav-item"><Link className="nav-link" to="/approvedtutors">Approved Tutors</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to="/students">Students</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to="/approvedtutors">Tutors</Link></li>
                     <li className="nav-item"><Link className="nav-link" to="/pendingrequests">Pending Requests</Link></li>
                     <li className="nav-item"><Link className="nav-link" to="/changerequests">Change Request</Link></li>
                 </>

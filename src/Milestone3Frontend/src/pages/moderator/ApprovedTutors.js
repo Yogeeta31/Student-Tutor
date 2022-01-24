@@ -13,7 +13,6 @@ const ApprovedTutors = () => {
         axios.get(`${process.env.REACT_APP_SERVER_URL}/api/approvedTutors`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
             .then((response) => {
                 setTutors(response.data);
-                console.log(response.data);
                 $(document).ready(function () {
                     $('#approvedTutors').dataTable({
                         responsive: true,
@@ -37,7 +36,7 @@ const ApprovedTutors = () => {
             <div className="container mt-3">
                 <div className="row">
                     <div className="container mt-1 mb-3">
-                        <h3>Approved Tutors</h3>
+                        <h3>Tutors</h3>
                     </div>
                 </div>
                 <hr />
@@ -49,6 +48,7 @@ const ApprovedTutors = () => {
                                     <tr>
                                         <th scope="col"></th>
                                         <th scope="col" style={{ textAlign: "center" }}>Name</th>
+                                        <th scope="col" style={{ textAlign: "center" }}>Is Banned</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -58,10 +58,13 @@ const ApprovedTutors = () => {
 
                                             <tr key={tutor.USER_ID}>
                                                 <td>
-                                                    <img src={tutor.IMAGE ? `${process.env.REACT_APP_PROFILE_URL}${tutor.IMAGE}` : null} style={{ maxWidth: "65px", borderRadius: "50%" }} alt="avatar" />
+                                                    <img src={tutor.IMAGE ? `${process.env.REACT_APP_PROFILE_URL}${tutor.IMAGE}` : null} style={{ width: "65px", height: "65px", borderRadius: "50%" }} alt="avatar" />
                                                 </td>
                                                 <td style={{ textAlign: "center" }}>
                                                     {tutor.NAME}
+                                                </td>
+                                                <td style={{ textAlign: "center" }}>
+                                                    {tutor.HAS_PERMISSION ? "No" : "Yes"}
                                                 </td>
                                                 <td style={{ textAlign: "center" }}>
                                                     <button className="btn btn-outline-dark" onClick={handleClick} id={tutor.USER_ID}>View Profile</button>

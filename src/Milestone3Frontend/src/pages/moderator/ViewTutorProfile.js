@@ -13,18 +13,22 @@ const ViewTutorProfile = (props) => {
 
     useEffect(() => {
         if (cookies.token !== undefined) {
-            axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getTutorDetails?user_id=${window.location.href.toString().split("/")[4]}`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
-                .then(response => {
-                    setUser(response.data);
-                    console.log(response.data)
-                })
-                .catch(err => {
-                    console.log(err);
-                })
+            loadData();
         } else
             navigate('/login');
 
     }, []);
+
+    const loadData = () => {
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getTutorDetails?user_id=${window.location.href.toString().split("/")[4]}`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
+            .then(response => {
+                setUser(response.data);
+                console.log(response.data)
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
 
     const renderDate = (d) => {
         const registrationDate = new Date(d);
@@ -61,7 +65,7 @@ const ViewTutorProfile = (props) => {
             { headers: { "Authorization": `Bearer ${cookies.token}` } })
             .then(response => {
                 if (response.status === 200)
-                    console.log(response.data)
+                    loadData();
             })
             .catch(err => {
                 console.log(err);
@@ -107,6 +111,19 @@ const ViewTutorProfile = (props) => {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    }
+    const handleBanLiftup = (id) => {
+        axios.put(`${process.env.REACT_APP_SERVER_URL}/api/liftUpBan`,
+            { userId: id },
+            { headers: { "Authorization": `Bearer ${cookies.token}` } })
+            .then(response => {
+                if (response.status === 200) {
+                    loadData();
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
     return (
         <>
@@ -162,14 +179,16 @@ const ViewTutorProfile = (props) => {
                                     <div className="d-flex justify-content-center">
                                         {
                                             user.IS_APPROVED ?
-                                                <button className='btn btn-outline-danger' data-bs-toggle="modal" data-bs-target="#banModal">Ban</button>
+                                                user.HAS_PERMISSION ?
+                                                    <button className='btn btn-outline-danger' data-bs-toggle="modal" data-bs-target="#banModal">Ban</button>
+                                                    :
+                                                    <button className='btn btn-outline-success' onClick={() => { handleBanLiftup(user.USER_ID) }}>Lift-up Ban</button>
                                                 :
                                                 <>
                                                     <button className='btn btn-outline-success' onClick={() => { handleApproval() }}>Approve</button>&nbsp;
                                                     <button className='btn btn-outline-danger' data-bs-toggle="modal" data-bs-target="#messageModal">Disapprove</button>
                                                 </>
                                         }
-
                                     </div>
                                 </div>
                             </div>

@@ -13,7 +13,7 @@ const hashPassword = async (password) => {
 
 module.exports.getStudentDetails = async (req, res) => {
   let { user_id } = req.query;
-  let sql = `SELECT u.NAME,u.IMAGE,u.EMAIL,u.MOBILE_NO,u.REGISTERED_AT, u.PASSWORD FROM USER u WHERE u.USER_ID = ${user_id}`;
+  let sql = `SELECT u.NAME,u.IMAGE,u.EMAIL,u.MOBILE_NO,u.REGISTERED_AT FROM USER u WHERE u.USER_ID = ${user_id}`;
 
   const dbPromise = util.promisify(dbConnection.query).bind(dbConnection);
   let result = null;

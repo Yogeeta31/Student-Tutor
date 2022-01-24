@@ -67,7 +67,7 @@ router.delete(
   roleCheck(["TUTOR"]),
   tutorController.deleteExistingSubject
 );
-router.get(
+router.post(
   "/getReviewOptions",
   SecureAPI(),
   roleCheck(["STUDENT"]),

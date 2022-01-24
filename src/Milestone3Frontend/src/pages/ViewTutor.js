@@ -12,7 +12,7 @@ const ViewTutor = (props) => {
     const [viewBtn, setViewBtn] = useState(false);
     const [cookies, setCookie] = useCookies(['user']);
 
-    const [review, setReview] = useState("");
+    const [review, setReview] = useState({ subjectId: 0, review: "", rating: 0 });
     const [viewReviewBtn, setviewReviewBtn] = useState(false);
 
     useEffect(() => {
@@ -32,6 +32,19 @@ const ViewTutor = (props) => {
                         if (err.response.status === 404)
                             setViewBtn(true);
                     });
+
+                axios.post(`${process.env.REACT_APP_SERVER_URL}/api/getReviewOptions`,
+                    { studentId: 1, tutorId: 4 }, { headers: { "Authorization": `Bearer ${cookies.token}` } })
+                    .then(response => {
+                        if (response.status === 200)
+                            setviewReviewBtn(response.data.flag);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+
+
+
             })
             .catch(err => {
                 console.log(err);
@@ -141,6 +154,22 @@ const ViewTutor = (props) => {
         link.click();
         document.body.removeChild(link);
     }
+    const handleSubmitReview = () => {
+        let r = { ...review };
+        r.studentId = cookies.userid;
+        r.tutorId = tutor.USER_ID;
+
+        axios.post(`${process.env.REACT_APP_SERVER_URL}/api/reviewTutor`,
+            r,
+            { headers: { "Authorization": `Bearer ${cookies.token}` } })
+            .then(response => {
+                if (response.status === 200)
+                    setviewReviewBtn(false);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
     return (
         <>
             <div className="container mt-4">
@@ -165,11 +194,15 @@ const ViewTutor = (props) => {
                                                         Message
                                                     </button> :
                                                     null
+                                            }&nbsp;
+                                            {
+                                                viewReviewBtn ?
+                                                    <button type="button" className="btn btn-outline-primary mt-1"
+                                                        data-bs-toggle="modal" data-bs-target="#reviewModal">
+                                                        Review
+                                                    </button>
+                                                    : null
                                             }
-                                            <button type="button" className="btn btn-outline-primary mt-1"
-                                                data-bs-toggle="modal" data-bs-target="#reviewModal">
-                                                Review
-                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -185,8 +218,8 @@ const ViewTutor = (props) => {
                                     <hr />
                                     {
                                         tutor.subjects ?
-                                            tutor.subjects.map((s, i) => (
-                                                <div key={i}>
+                                            tutor.subjects.map((s) => (
+                                                <div key={s.SUBJECT_ID}>
                                                     <div className="row">
                                                         <div className="col-sm-3">
                                                             <h6 className="mb-0">{s.SUBJECT_NAME}</h6>
@@ -217,9 +250,9 @@ const ViewTutor = (props) => {
                                                     <div className="card shadow rounded" key={i}>
                                                         <div className="card-body">
                                                             <blockquote className="blockquote mb-0">
-                                                                {renderRating(review.RATING)}
                                                                 <p style={{ fontSize: "18px" }}>{review.REVIEW}</p>
-                                                                <footer className="blockquote-footer">Admin</footer>
+                                                                {renderRating(review.RATING)}
+                                                                {/* <footer className="blockquote-footer">Admin</footer> */}
                                                             </blockquote>
                                                         </div>
                                                     </div>
@@ -267,24 +300,34 @@ const ViewTutor = (props) => {
                         <div className="modal-body">
                             <div className="mb-3">
                                 <label htmlFor="message-text" className="col-form-label">Message:</label>
-                                <select className="form-select">
+                                <select className="form-select" onChange={(e) => { setReview({ ...review, subjectId: e.currentTarget.value }) }}>
                                     <option value={"select"}>- Select Subject -</option>
                                     {
                                         tutor.subjects ?
-                                            tutor.subjects.map(s => (<option>{s.SUBJECT_NAME}</option>))
+                                            tutor.subjects.map(s => (<option value={s.SUBJECT_ID} key={s.SUBJECT_ID}>{s.SUBJECT_NAME}</option>))
                                             : null
                                     }
                                 </select>
 
+                                <label htmlFor="message-text" className="col-form-label">Ratning:</label>
+                                <select className="form-select" onChange={(e) => { setReview({ ...review, rating: e.currentTarget.value }) }}>
+                                    <option value={"1"}>- 1 -</option>
+                                    <option value={"2"}>- 2 -</option>
+                                    <option value={"3"}>- 3 -</option>
+                                    <option value={"4"}>- 4 -</option>
+                                    <option value={"5"}>- 5 -</option>
+                                </select>
+
                                 <label htmlFor="message-text" className="col-form-label">Message:</label>
                                 <textarea className="form-control"
-                                    value={msg}
-                                    onChange={(e) => { setReview(e.currentTarget.value) }} id="messageText"></textarea>
+                                    value={review.review}
+                                    onChange={(e) => { setReview({ ...review, review: e.currentTarget.value }) }} id="messageText">
+                                </textarea>
                             </div>
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" className="btn btn-primary" data-bs-dismiss="modal">Send message</button>
+                            <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={handleSubmitReview}>Submit</button>
                         </div>
                     </div>
                 </div>

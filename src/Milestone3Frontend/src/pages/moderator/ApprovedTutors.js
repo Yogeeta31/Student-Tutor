@@ -13,6 +13,7 @@ const ApprovedTutors = () => {
         axios.get(`${process.env.REACT_APP_SERVER_URL}/api/approvedTutors`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
             .then((response) => {
                 setTutors(response.data);
+                console.log(response.data);
                 $(document).ready(function () {
                     $('#approvedTutors').dataTable({
                         responsive: true,
@@ -57,7 +58,7 @@ const ApprovedTutors = () => {
 
                                             <tr key={tutor.USER_ID}>
                                                 <td>
-                                                    <img src={`${process.env.REACT_APP_PROFILE_URL}${tutor.IMAGE}`} style={{ maxWidth: "65px", borderRadius: "50%" }} alt="avatar" />
+                                                    <img src={tutor.IMAGE ? `${process.env.REACT_APP_PROFILE_URL}${tutor.IMAGE}` : null} style={{ maxWidth: "65px", borderRadius: "50%" }} alt="avatar" />
                                                 </td>
                                                 <td style={{ textAlign: "center" }}>
                                                     {tutor.NAME}

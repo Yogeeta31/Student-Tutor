@@ -9,7 +9,7 @@ const SearchTutors = () => {
     const [tutors, setTutors] = useState([]);
     const [searchTerm, setsearchTerm] = useState("");
     const [sortBy, setsortBy] = useState("default");
-    const [page, setPage] = useState({ currentPage: 1, step: 4, numberOfPage: 0, data: [] });
+    const [page, setPage] = useState({ currentPage: 1, step: 12, numberOfPage: 0, data: [] });
     let navigate = useNavigate();
 
     useEffect(() => {
@@ -27,7 +27,7 @@ const SearchTutors = () => {
         axios.get(`${process.env.REACT_APP_SERVER_URL}/api/search/tutors?searchTerm=${sT}&sortBy=${sB}`)
             .then(response => {
                 setTutors(response.data);
-                setPage({ ...page, numberOfPage: Math.ceil(response.data.length / page.step), data: response.data.slice(0, page.step) });
+                setPage({ ...page, numberOfPage: Math.ceil(response.data.length / page.step), data: response.data.slice(0, page.step), currentPage: 1 });
 
             })
             .catch(err => {
@@ -120,7 +120,7 @@ const SearchTutors = () => {
     const handleNext = () => {
         if (page.currentPage + 1 <= page.numberOfPage) {
             let start = page.currentPage * page.step;
-            let stop = tutors.length < page.currentPage * page.step + page.step ? page.currentPage * page.step + page.step : tutors.length - 1;
+            let stop = tutors.length > ((page.currentPage * page.step) + page.step) ? (page.currentPage * page.step) + page.step : tutors.length;
             setPage({ ...page, currentPage: page.currentPage + 1, data: tutors.slice(start, stop) })
         }
     }
@@ -168,8 +168,8 @@ const SearchTutors = () => {
                             return (
                                 <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3" key={tutor.SUBJECT_ID}>
                                     <div className="card sl">
-                                        <div className="card-image" style={{ maxHeight: "250px", maxWidth: "350px" }}>
-                                            <img src={`${process.env.REACT_APP_PROFILE_URL}${tutor.IMAGE}`} alt="TutorImage" />
+                                        <div className="card-image">
+                                            <img style={{ height: "250px", width: "300px" }} src={`${process.env.REACT_APP_PROFILE_URL}${tutor.IMAGE}`} alt="TutorImage" />
                                         </div>
                                         <div className="card-heading">
                                             {tutor.NAME}

@@ -17,12 +17,9 @@ app.use("/", indexRoute);
 let Server = http.createServer(app);
 const io = require("socket.io")(Server, {
   cors: {
-    origin: `${process.env.FRONTEND_PORT}`,
+    origin: `*`,
     methods: ["GET", "POST"],
-    credentials: true,
-    transports: ["websocket", "polling"],
   },
-  allowEIO3: true,
 });
 
 let users = [];

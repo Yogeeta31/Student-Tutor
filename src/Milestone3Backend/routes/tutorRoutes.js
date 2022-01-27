@@ -88,4 +88,11 @@ router.post(
 //     tutorController.getTutorReviews
 //   );
 
+router.post(
+  "/updateNewContent",
+  // SecureAPI(),
+  // roleCheck(["TUTOR"]),
+  tutorController.updateNewContent
+);
+
 module.exports = router;

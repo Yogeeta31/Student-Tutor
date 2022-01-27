@@ -57,9 +57,9 @@ module.exports.banProfile = async (req, res) => {
   const postRejectMessage = `INSERT INTO 
                              BANNED_USER ( REASON, SENDER_ID,RECEIVER_ID,TIME_SENT ) 
                              VALUES ("${reason}",${moderatorId},${userId},"${new Date()
-      .toISOString()
-      .replace(/T/, " ")
-      .replace(/\..+/, "")}")`;
+    .toISOString()
+    .replace(/T/, " ")
+    .replace(/\..+/, "")}")`;
   try {
     result = await dbPromise(updateUser);
   } catch (err) {
@@ -97,4 +97,12 @@ module.exports.getEnrolledStudents = (req, res) => {
     }
     res.status(200).json(result);
   });
+};
+
+//if approved change status to 1 on approval table and update either tutor table or user table based on content type
+// isApproved=0 not approved isApproved=1 approved
+module.exports.approveNewContent = (req, res) => {
+  // let { tutorId, isApproved, contentType, content } = req.body;
+  // const approve = ``;
+  // dbConnection.query(approve, async (err, result) => {});
 };

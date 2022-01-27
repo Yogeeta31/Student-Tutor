@@ -54,5 +54,11 @@ router.get(
   moderatorController.getEnrolledStudents
 );
 
+router.post(
+  "/approveNewContent",
+  // SecureAPI(),
+  // roleCheck(["MODERATOR"]),
+  moderatorController.approveNewContent
+);
 
 module.exports = router;

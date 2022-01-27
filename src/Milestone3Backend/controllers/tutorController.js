@@ -83,7 +83,6 @@ module.exports.getMessageFromConn = (req, res) => {
   });
 };
 
-
 module.exports.updateTutorDetails = (req, res) => {
   const { user_id, name, email, phoneNo, gender, password, bio } = req.body;
 
@@ -99,10 +98,14 @@ module.exports.updateTutorDetails = (req, res) => {
       res.status(200).json({ errors: { email: "Email Does not exist" } });
     } else {
       const hashedPassword = data[0].PASSWORD;
-      if ((password !== "" && password !== null)) {
+      if (password !== "" && password !== null) {
         const isSame = await bcrypt.compare(password, hashedPassword);
         if (isSame) {
-          res.status(200).json({ errors: { password: "New Password can't be same as Old Password" } });
+          res.status(200).json({
+            errors: {
+              password: "New Password can't be same as Old Password",
+            },
+          });
         } else {
           let newHashedPassword = await hashPassword(password);
           const updateStudent = `UPDATE USER
@@ -136,8 +139,6 @@ module.exports.updateTutorDetails = (req, res) => {
     }
   });
 };
-
-
 
 module.exports.updateTutorSubjects = (req, res) => {
   const { user_id, subject_id, subject_name, price } = req.body;
@@ -187,7 +188,6 @@ module.exports.addNewSubject = (req, res) => {
   });
 };
 
-
 module.exports.deleteExistingSubject = (req, res) => {
   const { subject_id } = req.body;
   var sqlDeleteSubject = `DELETE FROM SUBJECT WHERE SUBJECT_ID = ${subject_id}`;
@@ -198,7 +198,6 @@ module.exports.deleteExistingSubject = (req, res) => {
     res.status(200).json({ message: "Subject Deleted Successfully" });
   });
 };
-
 
 module.exports.updateTutorCV = (req, res) => {
   const { user_id, CV } = req.body;
@@ -214,7 +213,6 @@ module.exports.updateTutorCV = (req, res) => {
     res.status(200).json({ message: "CV Updated Successfully" });
   });
 };
-
 
 module.exports.updateTutorImage = (req, res) => {
   const { user_id, image } = req.body;
@@ -247,7 +245,7 @@ module.exports.getReviewOptions = async (req, res) => {
   } catch (err) {
     throw err;
   }
-  let isReviewed = !_.isEmpty(result)
+  let isReviewed = !_.isEmpty(result);
 
   let sqlIfContacted = `SELECT * FROM CONNECTIONS WHERE STUDENT_ID = ${studentId} AND TUTOR_ID =${tutorId} AND REMARK = 1 `;
   try {
@@ -255,20 +253,19 @@ module.exports.getReviewOptions = async (req, res) => {
   } catch (err) {
     throw err;
   }
-  let isContacted = !_.isEmpty(result)
+  let isContacted = !_.isEmpty(result);
   let flag = null;
   if (!isReviewed && isContacted) {
-    flag = 1
-  }
-  else {
+    flag = 1;
+  } else {
     flag = 0;
   }
   res.send({ flag });
-}
+};
 
 module.exports.reviewTutor = (req, res) => {
   let { studentId, tutorId, subjectId, review, rating } = req.body;
-  let sqlAddReview = `INSERT INTO REVIEWS (RATING,REVIEW,FROM_USER_ID,TO_USER_ID,SUBJECT_ID) VALUES (${rating},\"${review}\",${studentId},${tutorId},${subjectId})`
+  let sqlAddReview = `INSERT INTO REVIEWS (RATING,REVIEW,FROM_USER_ID,TO_USER_ID,SUBJECT_ID) VALUES (${rating},\"${review}\",${studentId},${tutorId},${subjectId})`;
 
   dbConnection.query(sqlAddReview, (err, result) => {
     if (err) {
@@ -276,5 +273,18 @@ module.exports.reviewTutor = (req, res) => {
     }
     res.status(200).send({ message: "Review Successful" });
   });
+};
 
-}
+//contentType= cv,image or bio
+module.exports.updateNewContent = (req, res) => {
+  let { tutorId, contentType, content } = req.body;
+  let update = `INSERT INTO APPROVAL (TUTOR_ID,IS_APPROVED,CONTENT_TYPE,CONTENT) VALUES (${tutorId},0,'${contentType}','${content}')`;
+  dbConnection.query(update, (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+    res
+      .status(200)
+      .send({ message: "Your Data is updated. Sent for approval" });
+  });
+};

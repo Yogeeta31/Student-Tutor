@@ -40,19 +40,6 @@ router.patch(
   tutorController.updateTutorSubjects
 );
 
-router.patch(
-  "/updateTutorCV",
-  SecureAPI(),
-  roleCheck(["TUTOR"]),
-  tutorController.updateTutorCV
-);
-
-router.patch(
-  "/updateTutorImage",
-  SecureAPI(),
-  roleCheck(["TUTOR"]),
-  tutorController.updateTutorImage
-);
 
 router.post(
   "/addNewSubject",

@@ -102,7 +102,91 @@ module.exports.getEnrolledStudents = (req, res) => {
 //if approved change status to 1 on approval table and update either tutor table or user table based on content type
 // isApproved=0 not approved isApproved=1 approved
 module.exports.approveNewContent = (req, res) => {
-  // let { tutorId, isApproved, contentType, content } = req.body;
-  // const approve = ``;
-  // dbConnection.query(approve, async (err, result) => {});
+  let { id , isApproved} = req.body;
+  if(isApproved == 1) {
+    const approve = `UPDATE APPROVAL
+                      SET IS_APPROVED = 1
+                      WHERE ID = ${id}`;
+    dbConnection.query(approve, async (err, result) => {
+      if (err) {
+        return res.status(400).json(err);
+      }
+      const list = `SELECT * FROM APPROVAL WHERE (IS_APPROVED = 1 AND ID = ${id})`;
+      dbConnection.query(list, async (err, result) => {
+        if (err) {
+          return res.status(400).json(err);
+        }
+        let data = JSON.parse(JSON.stringify(result));
+        console.log(data);
+        let contentType = data[0].CONTENT_TYPE;
+        let content = data[0].CONTENT;
+        let tutorID = data[0].TUTOR_ID;
+        if (contentType == 'cv') {
+          const approve = `UPDATE TUTOR
+                      SET CV = '${content}'
+                      WHERE TUTOR_ID = ${tutorID}`;
+          dbConnection.query(approve, async (err, result) => {
+            if (err) {
+              return res.status(400).json(err);
+            }
+            res.status(200).json({message: "CV Has been Approved & Updated"});
+          });
+        } else {
+          const list = `SELECT USER_ID FROM TUTOR WHERE TUTOR_ID = ${tutorID}`;
+          dbConnection.query(list, async (err, result) => {
+            if (err) {
+              return res.status(400).json(err);
+            }
+            let data = JSON.parse(JSON.stringify(result));
+            let userId = data[0].USER_ID;
+            if (contentType == 'image') {
+              const approve = `UPDATE USER
+                      SET IMAGE = '${content}'
+                      WHERE USER_ID = ${userId}`;
+              dbConnection.query(approve, async (err, result) => {
+                if (err) {
+                  return res.status(400).json(err);
+                }
+                res.status(200).json({message: "Image Has been Approved & Updated"});
+              });
+            }
+            if (contentType == 'bio') {
+              const approve = `UPDATE USER
+                      SET BIO = '${content}'
+                      WHERE USER_ID = ${userId}`;
+              dbConnection.query(approve, async (err, result) => {
+                if (err) {
+                  return res.status(400).json(err);
+                }
+                res.status(200).json({message: "BIO Has been Approved & Updated"});
+              });
+            }
+          });
+        }
+      });
+    });
+  }else {
+    const approve = `UPDATE APPROVAL
+                      SET IS_APPROVED = 2
+                      WHERE ID = ${id}`;
+    dbConnection.query(approve, async (err, result) => {
+      if (err) {
+        return res.status(400).json(err);
+      }
+      res.status(200).json({message: "Content has been Rejected by the moderator"});
+    });
+  }
+};
+
+
+
+// Fetch all the tutors for the approval
+module.exports.listOfTutorsWithNewContent = (req, res) => {
+  const approve = `SELECT * FROM APPROVAL WHERE IS_APPROVED = 0`;
+  dbConnection.query(approve, (err, result) => {
+    if (err) {
+      return res.status(400).json(err);
+    }
+    res.status(200).json(result);
+  });
 };

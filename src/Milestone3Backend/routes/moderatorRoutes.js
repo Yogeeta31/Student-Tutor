@@ -61,4 +61,11 @@ router.post(
   moderatorController.approveNewContent
 );
 
+router.get(
+    "/tutorsListWithNewContent",
+    // SecureAPI(),
+    // roleCheck(["MODERATOR"]),
+    moderatorController.listOfTutorsWithNewContent
+);
+
 module.exports = router;

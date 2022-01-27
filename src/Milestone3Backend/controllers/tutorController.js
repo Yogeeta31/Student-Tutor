@@ -84,7 +84,7 @@ module.exports.getMessageFromConn = (req, res) => {
 };
 
 module.exports.updateTutorDetails = (req, res) => {
-  const { user_id, name, email, phoneNo, gender, password, bio } = req.body;
+  const { user_id, name, email, phoneNo, gender, password } = req.body;
 
   const loginUser = `SELECT u.PASSWORD, u.USER_ID, u.ROLE_ID
         FROM USER u
@@ -108,14 +108,13 @@ module.exports.updateTutorDetails = (req, res) => {
           });
         } else {
           let newHashedPassword = await hashPassword(password);
-          const updateStudent = `UPDATE USER
+          const updateTutorsPassword = `UPDATE USER
                     SET NAME = '${name}',
                     MOBILE_NO = ${phoneNo},
-                    BIO = '${bio}',
                     PASSWORD = '${newHashedPassword}',
                     GENDER = '${gender}'
                     WHERE (USER_ID = ${user_id} AND EMAIL ="${email}");`;
-          dbConnection.query(updateStudent, async (err, result) => {
+          dbConnection.query(updateTutorsPassword, async (err, result) => {
             if (err) {
               return res.status(400).json(err);
             }
@@ -123,13 +122,12 @@ module.exports.updateTutorDetails = (req, res) => {
           });
         }
       } else {
-        const updateStudent = `UPDATE USER
+        const updateDetails = `UPDATE USER
                 SET NAME = '${name}',
-                BIO = '${bio}',
                 MOBILE_NO = ${phoneNo},
                 GENDER = '${gender}'
                 WHERE (USER_ID = ${user_id} AND EMAIL = "${email}");`;
-        dbConnection.query(updateStudent, async (err, result) => {
+        dbConnection.query(updateDetails, async (err, result) => {
           if (err) {
             return res.status(400).json(err);
           }
@@ -199,41 +197,7 @@ module.exports.deleteExistingSubject = (req, res) => {
   });
 };
 
-module.exports.updateTutorCV = (req, res) => {
-  const { user_id, CV } = req.body;
 
-  const updateCV = `UPDATE TUTOR
-                SET CV = '${CV}',
-                IS_APPROVED = 0
-                WHERE USER_ID = ${user_id};`;
-  dbConnection.query(updateCV, async (err, result) => {
-    if (err) {
-      return res.status(400).json(err);
-    }
-    res.status(200).json({ message: "CV Updated Successfully" });
-  });
-};
-
-module.exports.updateTutorImage = (req, res) => {
-  const { user_id, image } = req.body;
-
-  const updateImage = `UPDATE USER
-                SET IMAGE = '${image}'
-                WHERE USER_ID = ${user_id};`;
-  dbConnection.query(updateImage, async (err, result) => {
-    if (err) {
-      return res.status(400).json(err);
-    }
-    var updateApprovalStatus = `UPDATE TUTOR SET IS_APPROVED = 0
-                WHERE USER_ID = ${user_id};`;
-    dbConnection.query(updateApprovalStatus, (err, result) => {
-      if (err) {
-        console.log(err);
-      }
-      res.status(200).json({ message: "Image Updated Successfully" });
-    });
-  });
-};
 module.exports.getReviewOptions = async (req, res) => {
   let { studentId, tutorId } = req.body;
   const dbPromise = util.promisify(dbConnection.query).bind(dbConnection);

@@ -1,4 +1,36 @@
 const dbConnection = require("../db");
+const util = require("util");
+
+const query = util.promisify(dbConnection.query).bind(dbConnection);
+
+module.exports.createNotification = async ({ tutorId, title, description }) => {
+  try {
+    let notification = await query(
+      `INSERT INTO NOTIFICATIONS (TITLE,DESCRIPTION,RECEIVER_ID) VALUES('${title}','${description}',${tutorId})`
+    );
+    if (notification) {
+      return 1;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports.getNotifications = async (req, res) => {
+  let { tutorId } = req.body;
+  try {
+    let notification = await query(
+      `SELECT * FROM NOTIFICATIONS WHERE RECEIVER_ID=${tutorId} ORDER BY SENT_AT LIMIT 100`
+    );
+    notification = JSON.parse(JSON.stringify(notification));
+    return notification;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports.getNotificationDetail = async (req, res) => {};
+
 module.exports.sendNotificationSocket = (data, callback) => {
   let { tutorId, title, description } = data;
   let createNotification = `INSERT INTO NOTIFICATIONS (TITLE,DESCRIPTION,RECEIVER_ID) VALUES('${title}','${description}',${tutorId})`;

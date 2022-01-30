@@ -12,7 +12,7 @@ const hashPassword = async (password) => {
 };
 module.exports.getTutorDetails = async (req, res) => {
   let { user_id } = req.query;
-  let sql = `SELECT u.NAME,u.HAS_PERMISSION,u.IMAGE,u.EMAIL,u.MOBILE_NO,u.BIO,u.REGISTERED_AT,t.*FROM TUTOR t INNER JOIN USER u ON (u.USER_ID = t.USER_ID) WHERE u.USER_ID = ${user_id}`;
+  let sql = `SELECT u.NAME,u.HAS_PERMISSION,u.IMAGE,u.EMAIL,u.MOBILE_NO,u.BIO,u.REGISTERED_AT,u.GENDER,t.*FROM TUTOR t INNER JOIN USER u ON (u.USER_ID = t.USER_ID) WHERE u.USER_ID = ${user_id}`;
 
   const dbPromise = util.promisify(dbConnection.query).bind(dbConnection);
 
@@ -196,7 +196,6 @@ module.exports.deleteExistingSubject = (req, res) => {
     res.status(200).json({ message: "Subject Deleted Successfully" });
   });
 };
-
 
 module.exports.getReviewOptions = async (req, res) => {
   let { studentId, tutorId } = req.body;

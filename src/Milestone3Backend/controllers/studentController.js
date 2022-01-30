@@ -13,7 +13,7 @@ const hashPassword = async (password) => {
 
 module.exports.getStudentDetails = async (req, res) => {
   let { user_id } = req.query;
-  let sql = `SELECT u.NAME,u.IMAGE,u.EMAIL,u.MOBILE_NO,u.REGISTERED_AT FROM USER u WHERE u.USER_ID = ${user_id}`;
+  let sql = `SELECT u.NAME,u.IMAGE,u.EMAIL,u.MOBILE_NO,u.REGISTERED_AT,u.GENDER FROM USER u WHERE u.USER_ID = ${user_id}`;
 
   const dbPromise = util.promisify(dbConnection.query).bind(dbConnection);
   let result = null;
@@ -51,13 +51,11 @@ module.exports.updateStudentDetails = (req, res) => {
       if (password !== "" && password !== null) {
         const isSame = await bcrypt.compare(password, hashedPassword);
         if (isSame) {
-          res
-            .status(200)
-            .json({
-              errors: {
-                password: "New Password can't be same as Old Password",
-              },
-            });
+          res.status(200).json({
+            errors: {
+              password: "New Password can't be same as Old Password",
+            },
+          });
         } else {
           let newHashedPassword = await hashPassword(password);
           const updateStudent = `UPDATE USER

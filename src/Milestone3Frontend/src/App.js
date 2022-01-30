@@ -23,6 +23,8 @@ import StudentList from "./pages/moderator/StudentList";
 
 import { LoginStateProvider } from "./context/LoginContext";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import EditProfileStudent from "./pages/EditProfileStudent";
+import EditProfileTutor from "./pages/tutor/EditProfileTutor";
 
 function App(props) {
   return (
@@ -36,6 +38,7 @@ function App(props) {
             <Route path="/contactus" exact element={<ContactUs />} />
             <Route path="/chats" exact element={<PrivateRoute component={ChatList} role={["student", "tutor"]} />} />
             <Route path="/chat/:id" exact element={<PrivateRoute component={ChatScreen} role={["student", "tutor"]} />} />
+            <Route path="/tutor/editProfile" exact element={<PrivateRoute component={EditProfileTutor} role={["tutor"]}/>}/>
             <Route path="/signupchoice" exact element={<SignUpChoice />} />
             <Route path="/login" exact element={<Login />} />
             <Route path="/logout" exact element={<Logout />} />
@@ -44,6 +47,7 @@ function App(props) {
             <Route path="/signUp/tutor" exact element={<TutorSignUp />} />
 
             <Route path="/viewtutor/:id" exact element={<PrivateRoute component={ViewTutor} role={["student"]} />} />
+            <Route path="/student/editProfile" exact element={<PrivateRoute component={EditProfileStudent} role={["student"]}/>}/>
             <Route path="/viewmessagerequest" exact element={<ViewMessageRequest />} />
 
             <Route path="/pendingrequests" exact element={<PrivateRoute component={PendingRequest} role={["moderator"]} />} />

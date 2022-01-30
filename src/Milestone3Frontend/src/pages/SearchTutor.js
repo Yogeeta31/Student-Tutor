@@ -169,7 +169,7 @@ const SearchTutors = () => {
                                 <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3" key={tutor.SUBJECT_ID}>
                                     <div className="card sl">
                                         <div className="card-image">
-                                            <img style={{ height: "250px", width: "300px" }} src={`${process.env.REACT_APP_PROFILE_URL}${tutor.IMAGE}`} alt="TutorImage" />
+                                            <img style={{ height: "250px", width: "300px" }} src={tutor.IMAGE ? `${process.env.REACT_APP_PROFILE_URL}${tutor.IMAGE}` : null} alt="TutorImage" />
                                         </div>
                                         <div className="card-heading">
                                             {tutor.NAME}
@@ -206,7 +206,7 @@ const SearchTutors = () => {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col d-flex justify-content-center mb-3">
+                    <div className="col d-flex justify-content-center" style={{ marginBottom: "70px" }}>
                         Showing Page {page.currentPage} out of {page.numberOfPage}
                     </div>
                 </div>

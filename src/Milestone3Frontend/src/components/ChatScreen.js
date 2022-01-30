@@ -183,7 +183,7 @@ class ChatScreen extends React.Component {
                             className="input-group-text"
                             onClick={this.onSendMessage}
                           >
-                            <i className="fa fa-send"></i>
+                            <i className="bi bi-send"></i>
                           </button>
                         </div>
                       </div>

@@ -24,7 +24,6 @@ const ViewTutor = (props) => {
         axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getTutorDetails?user_id=${window.location.href.toString().split("/")[4]}`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
             .then(response => {
                 setTutor(response.data);
-                console.log(response.data);
                 tutorId = response.data.USER_ID;
                 axios.post(`${process.env.REACT_APP_SERVER_URL}/api/message/checkConnections`,
                     { studentId: cookies.userid, tutorId: tutorId }, { headers: { "Authorization": `Bearer ${cookies.token}` } })
@@ -38,7 +37,7 @@ const ViewTutor = (props) => {
                     });
 
                 axios.post(`${process.env.REACT_APP_SERVER_URL}/api/getReviewOptions`,
-                    { studentId: 1, tutorId: 4 }, { headers: { "Authorization": `Bearer ${cookies.token}` } })
+                    { studentId: cookies.userid, tutorId: tutorId }, { headers: { "Authorization": `Bearer ${cookies.token}` } })
                     .then(response => {
                         if (response.status === 200)
                             setviewReviewBtn(response.data.flag);
@@ -227,7 +226,7 @@ const ViewTutor = (props) => {
                                                             €{s.PRICE}/hour
                                                         </div>
                                                         <div className="col-sm-6 text-secondary">
-                                                            {renderRating(s.AVERAGE_RATING)}
+                                                            {renderRating(Math.ceil(s.AVERAGE_RATING))}
                                                         </div>
                                                     </div>
                                                     <hr />

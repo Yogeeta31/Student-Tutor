@@ -24,6 +24,8 @@ const EditProfileTutor = () => {
   const [subjects, setSubjects] = useState([]);
   const [imageFirst, setImageFirst] = useState("");
 
+  const [tutorID, setTutorID] = useState("");
+
   const loadData = () => {
     axios
       .get(
@@ -32,6 +34,8 @@ const EditProfileTutor = () => {
       )
       .then((response) => {
         const data = response.data;
+
+        setTutorID(data.TUTOR_ID);
 
         let newFormData = {
           fullName: data.NAME,
@@ -239,7 +243,7 @@ const EditProfileTutor = () => {
         )
         .then((cvResponse) => {
           let newContent = {
-            tutorId: cookies.userid,
+            tutorId: tutorID,
             contentType: "cv",
             content: cvResponse.data.name,
           };
@@ -289,7 +293,7 @@ const EditProfileTutor = () => {
         )
         .then((imageResponse) => {
           let newContent = {
-            tutorId: cookies.userid,
+            tutorId: tutorID,
             contentType: "image",
             content: imageResponse.data.name,
           };
@@ -347,7 +351,7 @@ const EditProfileTutor = () => {
     }
     if (flag) {
       let newContent = {
-        tutorId: cookies.userid,
+        tutorId: tutorID,
         contentType: "bio",
         content: formData.bio,
       };

@@ -16,7 +16,6 @@ const ChangeRequests = () => {
       })
       .then((response) => {
         setTutors(response.data);
-        console.log(response.data);
         $(document).ready(function () {
           $("#changes").dataTable({
             responsive: true,
@@ -24,7 +23,7 @@ const ChangeRequests = () => {
         });
       })
       .catch((error) => {
-        console.log(console.error);
+        console.log(error);
       });
   }, []);
 
@@ -37,8 +36,24 @@ const ChangeRequests = () => {
         setTutors(response.data);
       })
       .catch((error) => {
-        console.log(console.error);
+        console.log(error);
       });
+
+    // axios
+    //   .get(`${process.env.REACT_APP_SERVER_URL}/api/tutorsListWithNewContent`, {
+    //     headers: { Authorization: `Bearer ${cookies.token}` },
+    //   })
+    //   .then((response) => {
+    //     if (response.data.length > 0) {
+    //       // setTutors(response.data);
+    //       setTutors([]);
+    //     } else {
+    //       setTutors([]);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   };
   const handleDownload = (l) => {
     const link = document.createElement("a");
@@ -83,7 +98,7 @@ const ChangeRequests = () => {
         <hr />
         <div className="card">
           <div className="card-body">
-            {tutors.length > 0 ? (
+            {tutors.length >= 0 ? (
               <table className="table table-hover mt-1" id="changes">
                 <thead>
                   <tr>
@@ -103,42 +118,36 @@ const ChangeRequests = () => {
                     <tr key={tutor.ID}>
                       <td>{tutor.CONTENT_TYPE.toString().toUpperCase()}</td>
                       <td>
-                        <>
-                          {tutor.CONTENT_TYPE === "bio" ? (
-                            <>{tutor.CONTENT}</>
-                          ) : (
-                            <>
-                              {tutor.CONTENT_TYPE === "cv" ? (
-                                <>
-                                  <button
-                                    className="btn btn-outline-dark"
-                                    onClick={() => {
-                                      handleDownload(
-                                        `${process.env.REACT_APP_RESUME_URL}${tutor.CONTENT}`
-                                      );
-                                    }}
-                                  >
-                                    Download CV
-                                  </button>
-                                </>
-                              ) : (
-                                <img
-                                  src={
-                                    tutor.CONTENT
-                                      ? `${process.env.REACT_APP_PROFILE_URL}${tutor.CONTENT}`
-                                      : null
-                                  }
-                                  style={{
-                                    width: "65px",
-                                    height: "65px",
-                                    borderRadius: "50%",
-                                  }}
-                                  alt="avatar"
-                                />
-                              )}
-                            </>
-                          )}
-                        </>
+                        {tutor.CONTENT_TYPE === "bio" ? (
+                          tutor.CONTENT
+                        ) : tutor.CONTENT_TYPE === "cv" ? (
+                          <>
+                            <button
+                              className="btn btn-outline-dark"
+                              onClick={() => {
+                                handleDownload(
+                                  `${process.env.REACT_APP_RESUME_URL}${tutor.CONTENT}`
+                                );
+                              }}
+                            >
+                              Download CV
+                            </button>
+                          </>
+                        ) : (
+                          <img
+                            src={
+                              tutor.CONTENT
+                                ? `${process.env.REACT_APP_PROFILE_URL}${tutor.CONTENT}`
+                                : null
+                            }
+                            style={{
+                              width: "65px",
+                              height: "65px",
+                              borderRadius: "50%",
+                            }}
+                            alt="avatar"
+                          />
+                        )}
                       </td>
                       <td style={{ textAlign: "center" }}>{tutor.EMAIL}</td>
                       <td style={{ textAlign: "center" }}>
@@ -155,7 +164,7 @@ const ChangeRequests = () => {
                         <button
                           className="btn btn-outline-danger"
                           onClick={() => {
-                            isApprove(0, tutor.ID);
+                            isApprove(2, tutor.ID);
                           }}
                         >
                           Disapprove

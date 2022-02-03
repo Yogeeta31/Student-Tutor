@@ -15,6 +15,8 @@ const ViewTutor = (props) => {
     const [review, setReview] = useState({ subjectId: 0, review: "", rating: 1 });
     const [viewReviewBtn, setviewReviewBtn] = useState(false);
 
+    const [page, setPage] = useState({ currentPage: 1, step: 2, numberOfPage: 0, data: [] });
+
     useEffect(() => {
         loadData();
     }, [])
@@ -23,6 +25,8 @@ const ViewTutor = (props) => {
         let tutorId;
         axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getTutorDetails?user_id=${window.location.href.toString().split("/")[4]}`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
             .then(response => {
+                setPage({ ...page, numberOfPage: Math.ceil(response.data.reviews.length / page.step), data: response.data.reviews.slice(0, page.step) });
+
                 setTutor(response.data);
                 tutorId = response.data.USER_ID;
                 axios.post(`${process.env.REACT_APP_SERVER_URL}/api/message/checkConnections`,
@@ -50,6 +54,21 @@ const ViewTutor = (props) => {
             .catch(err => {
                 console.log(err);
             });
+    }
+
+    const handleNext = () => {
+        if (page.currentPage + 1 <= page.numberOfPage) {
+            let start = page.currentPage * page.step;
+            let stop = tutor.reviews.length > ((page.currentPage * page.step) + page.step) ? (page.currentPage * page.step) + page.step : tutor.reviews.length;
+            setPage({ ...page, currentPage: page.currentPage + 1, data: tutor.reviews.slice(start, stop) })
+        }
+    }
+    const handlePrev = () => {
+        if (page.currentPage - 1 > 0) {
+            let start = (page.currentPage * page.step) - (page.step * 2) < 0 ? 0 : (page.currentPage * page.step) - (page.step * 2);
+            let stop = page.currentPage * page.step - page.step;
+            setPage({ ...page, currentPage: page.currentPage - 1, data: tutor.reviews.slice(start, stop) })
+        }
     }
 
     const renderRating = (n) => {
@@ -170,7 +189,7 @@ const ViewTutor = (props) => {
     }
     return (
         <>
-            <div className="container mt-4">
+            <div className="container mt-4 mb-3">
                 <div className="main-body">
                     <div className="row gutters-sm">
                         <div className="col-md-4 mb-3">
@@ -244,7 +263,7 @@ const ViewTutor = (props) => {
                                         </div>
                                         {
                                             tutor.reviews ?
-                                                tutor.reviews.map((review, i) => (
+                                                page.data.map((review, i) => (
                                                     <div className="card shadow rounded" key={i}>
                                                         <div className="card-body">
                                                             <blockquote className="blockquote mb-0">
@@ -257,6 +276,26 @@ const ViewTutor = (props) => {
                                                 )) :
                                                 null
                                         }
+                                        <div className="row">
+                                            <div className="col d-flex justify-content-center mt-3">
+                                                <nav aria-label="Page navigation">
+                                                    <ul className="pagination">
+                                                        <li className="page-item">
+                                                            <button className="page-link" disabled={page.currentPage === 1 ? true : false} onClick={handlePrev}><i className="bi bi-arrow-left-square"></i>
+                                                            </button></li>
+                                                        <li className="page-item">
+                                                            <button className="page-link" disabled={page.currentPage === page.numberOfPage ? true : false} onClick={handleNext} ><i className="bi bi-arrow-right-square"></i>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </nav>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col d-flex justify-content-center">
+                                                Showing Page {page.currentPage} out of {page.numberOfPage}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div> : null
                             }

@@ -134,7 +134,7 @@ const SearchTutors = () => {
 
     return (
         <>
-            <div className="container mb-2">
+            <div className="container mb-4">
                 <form onSubmit={handleSubmit}>
                     <div className="row d-flex justify-content-center">
                         <div className="col-sm-12 col-lg-2 my-3">

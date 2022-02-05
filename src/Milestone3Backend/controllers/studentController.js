@@ -87,3 +87,19 @@ module.exports.updateStudentDetails = (req, res) => {
     }
   });
 };
+
+//content = image
+module.exports.updateStudentImage = (req, res) => {
+  let { imageName, userID } = req.body;
+  if (!imageName || !userID) {
+    res.send({ message: "Please send all fields!" });
+  } else {
+    let update = `UPDATE USER SET IMAGE='${imageName}' WHERE USER_ID='${userID}'`;
+    dbConnection.query(update, (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      res.status(200).send({ message: "Your Image has been updated!" });
+    });
+  }
+};

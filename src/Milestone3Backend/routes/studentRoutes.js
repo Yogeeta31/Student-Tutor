@@ -19,4 +19,11 @@ router.patch(
   studentController.updateStudentDetails
 );
 
+router.patch(
+  "/updateStudentImage",
+  SecureAPI(),
+  roleCheck(["STUDENT"]),
+  studentController.updateStudentImage
+);
+
 module.exports = router;

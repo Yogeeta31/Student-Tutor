@@ -119,13 +119,12 @@ const EditProfileStudent = () => {
         )
         .then((imageResponse) => {
           let newContent = {
-            tutorId: cookies.userid,
-            contentType: "image",
-            content: imageResponse.data.name,
+            userID: cookies.userid,
+            imageName: imageResponse.data.name,
           };
           axios
-            .post(
-              `${process.env.REACT_APP_SERVER_URL}/api/updateNewContent`,
+            .patch(
+              `${process.env.REACT_APP_SERVER_URL}/api/updateStudentImage`,
               newContent,
               {
                 headers: { Authorization: `Bearer ${cookies.token}` },

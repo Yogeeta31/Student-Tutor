@@ -15,7 +15,7 @@ const ViewTutor = (props) => {
     const [review, setReview] = useState({ subjectId: 0, review: "", rating: 1 });
     const [viewReviewBtn, setviewReviewBtn] = useState(false);
 
-    const [page, setPage] = useState({ currentPage: 1, step: 2, numberOfPage: 0, data: [] });
+    const [page, setPage] = useState({ currentPage: 1, step: 5, numberOfPage: 0, data: [] });
 
     useEffect(() => {
         loadData();

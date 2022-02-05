@@ -206,7 +206,7 @@ const SearchTutors = () => {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col d-flex justify-content-center" style={{ marginBottom: "70px" }}>
+                    <div className="col d-flex justify-content-center mb-3">
                         Showing Page {page.currentPage} out of {page.numberOfPage}
                     </div>
                 </div>

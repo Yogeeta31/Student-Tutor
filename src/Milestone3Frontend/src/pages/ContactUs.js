@@ -35,6 +35,8 @@
 // }
 // export default ContactUs;
 
+//commented codes should be removed if it's not necessary
+
 
 import "../css/ContactUs.css"
 const ContactUs = () => {

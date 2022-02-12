@@ -127,10 +127,10 @@ const Login = () => {
           >
             {error}
           </span>
-          <Link to="/" className="forgotText">
+          {/* <Link to="/" className="forgotText">
             Forgot Password
             <br />{" "}
-          </Link>
+          </Link> */}
           <div className="text-center">
             <Link to="/signupchoice" className="signUpText">
               Sign-Up

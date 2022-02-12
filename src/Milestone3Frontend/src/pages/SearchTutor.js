@@ -181,7 +181,7 @@ const SearchTutors = () => {
                                             € {tutor.PRICE}/hour
                                         </div>
                                         <div className="card-text mb-2">
-                                            {renderRating(0)}
+                                            {renderRating(parseInt(tutor.AVERAGE_RATING))}
                                         </div>
                                         <button className="card-button" id={tutor.USER_ID} onClick={onViewTutor}>View Tutor</button>
                                     </div>

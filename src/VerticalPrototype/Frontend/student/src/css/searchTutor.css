@@ -1,0 +1,26 @@
+.card-deck {
+    @include media-breakpoint-only(sm) {
+     column-count: 1;
+    }
+   @include media-breakpoint-only(sm) {
+     column-count: 2;
+    }
+    @include media-breakpoint-only(lg) {
+      column-count: 4;
+    }
+    @include media-breakpoint-only(xl) {
+      column-count: 5;
+    }
+  }
+
+  
+.tutorCards:hover {
+    transform: scale(1.05);
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.6);
+}
+
+.tutorCards {
+    transition: 0.5s ease;
+    cursor: pointer;
+    margin: 30px;
+}

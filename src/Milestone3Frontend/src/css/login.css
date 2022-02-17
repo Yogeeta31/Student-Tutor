@@ -1,0 +1,80 @@
+.loginBox {
+  min-height: 200px;
+  background: white;
+  border-radius: 10px;
+  padding: 40px;
+}
+
+.user {
+  margin: 0 auto;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.loginBox h3 {
+  margin: 0;
+  padding: 0 0 20px;
+  color: black;
+  text-align: center;
+}
+
+.loginBox input {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+
+
+.inputBox {
+  position: relative;
+}
+
+.inputBox span {
+  position: absolute;
+  top: 10px;
+  color: #262626;
+}
+
+.loginBox input[type="submit"] {
+  border: none;
+  outline: none;
+  height: 40px;
+  font-size: 16px;
+  background: black;
+  color: white;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.loginBox input[type="submit"]:hover {
+  background: gray;
+  color:white;
+}
+
+.loginBox a {
+  font-size: 14px;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+  display: block;
+}
+
+
+
+.forgotText {
+  color: black;
+}
+.forgotText:hover {
+  cursor: pointer;
+  color: gray;
+}
+
+.signUpText {
+  color:black;
+}
+
+.signUpText:hover {
+  cursor: pointer;
+  color: gray;
+}

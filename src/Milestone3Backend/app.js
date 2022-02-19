@@ -1,3 +1,7 @@
+//Code Reviewed by Mohammed Afwan
+//Github username: theafwan
+//University email: mohammed.afwan@informatik.hs-fulda.de
+
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -13,7 +17,7 @@ app.use(express.json());
 app.use(express.static("public"));
 
 app.use("/", indexRoute);
-
+//*************** It's better to remove unnecessary Code*********************************
 let Server = http.createServer(app);
 // const io = require("socket.io")(Server, {
 //   cors: {
@@ -22,6 +26,8 @@ let Server = http.createServer(app);
 //   },
 // });
 
+//******************** On this file, It would be better to create a separate file for socket instead of on main app configuration file.*********************
+//*********** You could create a function which would initiate and accept websocket connections and use all the events over there.*************************
 const io = require("socket.io")(Server, {
   cors: {
     origin: `${process.env.FRONTEND_PORT}`,

@@ -1,3 +1,7 @@
+//Code Reviewed by Mohammed Afwan
+//Github username: theafwan
+//University email: mohammed.afwan@informatik.hs-fulda.de
+
 const dbConnection = require("../db");
 const util = require("util");
 var _ = require("underscore");
@@ -13,7 +17,7 @@ module.exports.sendMessageRequest = async (req, res) => {
     res.status(200).json({ message: "request sent" });
   });
 };
-
+//********************* Describe properly what params are doing and what does the significance of value mentioned in the comment *****************
 //pending= 0, accept=1, reject=2
 module.exports.changeMessageRequestStatus = async (req, res) => {
   let { status, studentId, tutorId } = req.body;
@@ -130,7 +134,7 @@ module.exports.sendMessageSocket = (data, callback) => {
     // return cb(result);
   });
 };
-
+//***************************************** Please add comments what this method is doing *****************************************************
 module.exports.getMessageScoket = (data, callback) => {
   let { receiverId, senderId } = data;
   let fetchMessage = `SELECT * FROM MESSAGING WHERE (RECIEVER_ID = ${receiverId} AND SENDER_ID=${senderId}) OR (RECIEVER_ID=${senderId} AND SENDER_ID=${receiverId}) ORDER BY SENT_AT LIMIT 100`;
@@ -143,7 +147,7 @@ module.exports.getMessageScoket = (data, callback) => {
     return;
   });
 };
-
+//**************** What is the roleId and it's value means?? ******************************
 module.exports.getMessagingList = async (req, res) => {
   let { userId, roleId } = req.query;
   const dbPromise = util.promisify(dbConnection.query).bind(dbConnection);
@@ -177,6 +181,7 @@ module.exports.getMessagingList = async (req, res) => {
     let sqlGetLastMessage = `SELECT MESSAGE,SENT_AT FROM MESSAGING WHERE (SENDER_ID = ${userId} AND RECIEVER_ID = ${contactedId}) OR (SENDER_ID = ${contactedId}  AND RECIEVER_ID = ${userId}) ORDER BY SENT_AT DESC LIMIT 1`;
     let contactDetails = null;
     let lastMessageDetails = null;
+    //********************** Instead of multiple try catch it could have been better to use single try catch*******************
     try {
       contactDetails = await dbPromise(sqlGetContactDetails);
     } catch (err) {
@@ -188,7 +193,7 @@ module.exports.getMessagingList = async (req, res) => {
     } catch (err) {
       throw err;
     }
-
+    //****************************Remove unnecessary console logs****************************
     console.log(contactDetails);
     console.log(lastMessageDetails);
     let userDetail = {

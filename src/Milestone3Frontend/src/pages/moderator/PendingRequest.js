@@ -102,3 +102,7 @@ const PendingRequest = () => {
 
 }
 export default PendingRequest;
+
+//***************** Ahmad Estaitia Review ****************/
+// The code is understandable and organized, but it would have been better to put the comments to be clearer and easier to read
+// The code has some deprecated function

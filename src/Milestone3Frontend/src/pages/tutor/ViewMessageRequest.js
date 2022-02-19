@@ -87,3 +87,6 @@ const ViewMessageRequest = () => {
 }
 
 export default ViewMessageRequest;
+
+// ****************************************   Review by Yogeeta  ******************************************************
+// It should have been a better practice to use comments when using fucntions for better understanding of the code.

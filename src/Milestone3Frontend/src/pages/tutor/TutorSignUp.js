@@ -650,3 +650,8 @@ const TutorSignUp = () => {
   );
 };
 export default TutorSignUp;
+
+// -------------------- Reviewed by Pratikkumar A. Kakadiya --------------------
+// -> In my opinion onstead of using separate state for each error it could be combined in one state as key-value pair
+// it will increase code readability and maintainability both.
+// -> Code for validating form could be separated as function to further improve maintainability.

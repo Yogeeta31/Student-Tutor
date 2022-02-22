@@ -6,6 +6,7 @@ import axios from "axios";
 
 const SearchTutors = () => {
 
+    // I really like the naming convention for variables used here, it improves the code readability.
     const [tutors, setTutors] = useState([]);
     const [searchTerm, setsearchTerm] = useState("");
     const [sortBy, setsortBy] = useState("default");
@@ -23,6 +24,8 @@ const SearchTutors = () => {
             })
     }, []);
 
+    // The idea of making the major Axios calls of the page in a separate function is really efficient and save lines of code,
+    // it also sets all the states in a single function call, helping to update the complete page in a single function call.
     const loadData = (sT, sB) => {
         axios.get(`${process.env.REACT_APP_SERVER_URL}/api/search/tutors?searchTerm=${sT}&sortBy=${sB}`)
             .then(response => {
@@ -45,9 +48,9 @@ const SearchTutors = () => {
         loadData(searchTerm, sortBy)
     }
     const onViewTutor = (e) => {
-
         navigate(`/viewtutor/${e.currentTarget.id}`);
     }
+    
     const renderRating = (n) => {
         if (n === 0) {
             return (
@@ -115,6 +118,16 @@ const SearchTutors = () => {
                 </div>
             )
         }
+        // The above functionality could also have been implemented in a single block of code
+        // by using ternary operators for each rating star, like following code of block. To save
+        // lines of code
+        // return (<div className="small-ratings">
+        //     {n >= 1 ? <i className="bi bi-star-fill rating-color"></i> : <i className="bi bi-star-fill"></i>}
+        //     {n >= 2 ? <i className="bi bi-star-fill rating-color"></i> : <i className="bi bi-star-fill"></i>}
+        //     {n >= 3 ? <i className="bi bi-star-fill rating-color"></i> : <i className="bi bi-star-fill"></i>}
+        //     {n >= 4 ? <i className="bi bi-star-fill rating-color"></i> : <i className="bi bi-star-fill"></i>}
+        //     {n >= 5 ? <i className="bi bi-star-fill rating-color"></i> : <i className="bi bi-star-fill"></i>}
+        // </div>);
     }
 
     const handleNext = () => {

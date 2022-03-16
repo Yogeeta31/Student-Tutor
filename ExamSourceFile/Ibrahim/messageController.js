@@ -1,6 +1,8 @@
 const dbConnection = require("../db");
 const util = require("util");
 var _ = require("underscore");
+
+/************************************* START OF OMAR's CODE ***********************************/
 module.exports.sendMessageRequest = async (req, res) => {
   let { studentId, tutorId, message } = req.body;
 
@@ -13,6 +15,9 @@ module.exports.sendMessageRequest = async (req, res) => {
     res.status(200).json({ message: "request sent" });
   });
 };
+/************************************* END OF OMAR's CODE ***********************************/
+
+
 //********************* Describe properly what params are doing and what does the significance of value mentioned in the comment *****************
 //pending= 0, accept=1, reject=2
 module.exports.changeMessageRequestStatus = async (req, res) => {
@@ -82,6 +87,8 @@ module.exports.getAllMessages = async (req, res) => {
 
 module.exports.getAllConnections = async (req, res) => {};
 
+/************************************* START OF OMAR's CODE ***********************************/
+
 module.exports.checkConnections = async (req, res) => {
   let { studentId, tutorId } = req.body;
 
@@ -99,6 +106,7 @@ module.exports.checkConnections = async (req, res) => {
     }
   });
 };
+/************************************* END OF OMAR's CODE ***********************************/
 
 module.exports.sendMessageSocket = (data, callback) => {
   let { receiverId, senderId, message } = data;
@@ -143,7 +151,7 @@ module.exports.getMessageScoket = (data, callback) => {
     return;
   });
 };
-//**************** What is the roleId and it's value means?? ******************************
+/************************************* START OF OMAR's CODE ***********************************/
 module.exports.getMessagingList = async (req, res) => {
   let { userId, roleId } = req.query;
   const dbPromise = util.promisify(dbConnection.query).bind(dbConnection);
@@ -205,3 +213,4 @@ module.exports.getMessagingList = async (req, res) => {
 
   res.json(response);
 };
+/************************************* END OF OMAR's CODE ***********************************/

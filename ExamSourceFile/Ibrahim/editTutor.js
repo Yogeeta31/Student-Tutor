@@ -190,6 +190,7 @@ const EditProfileTutor = () => {
     });
   };
 
+  /******************************************** START OF OMAR's CODE ******************************************/
   const submitEditSub = (e) => {
     e.preventDefault();
     let updateSub = {
@@ -218,6 +219,7 @@ const EditProfileTutor = () => {
         console.log(error);
       });
   };
+  /******************************************** END OF OMAR's CODE ******************************************/
 
   const uploadFile = (e) => {
     e.preventDefault();

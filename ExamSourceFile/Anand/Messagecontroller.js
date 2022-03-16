@@ -13,6 +13,12 @@ module.exports.sendMessageRequest = async (req, res) => {
     res.status(200).json({ message: "request sent" });
   });
 };
+
+
+//*******************************************Ankit Start***************************************************
+
+
+
 //********************* Describe properly what params are doing and what does the significance of value mentioned in the comment *****************
 //pending= 0, accept=1, reject=2
 module.exports.changeMessageRequestStatus = async (req, res) => {
@@ -79,6 +85,10 @@ module.exports.getAllMessages = async (req, res) => {
     res.status(200).json({ result });
   });
 };
+
+
+
+//*******************************************Ankit End***************************************************
 
 module.exports.getAllConnections = async (req, res) => {};
 

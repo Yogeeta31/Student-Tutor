@@ -5,11 +5,13 @@ const jwt = require("jsonwebtoken");
 var _ = require("underscore");
 // controller actions
 
+
 const hashPassword = async (password) => {
   const salt = await bcrypt.genSalt();
   const hashedPassword = await bcrypt.hash(password, salt);
   return hashedPassword;
 };
+/****************************** START OF OMAR's CODE *********************/
 module.exports.getTutorDetails = async (req, res) => {
   let { user_id } = req.query;
   let sql = `SELECT u.NAME,u.HAS_PERMISSION,u.IMAGE,u.EMAIL,u.MOBILE_NO,u.BIO,u.REGISTERED_AT,u.GENDER,t.*FROM TUTOR t INNER JOIN USER u ON (u.USER_ID = t.USER_ID) WHERE u.USER_ID = ${user_id}`;
@@ -58,6 +60,7 @@ module.exports.getTutorDetails = async (req, res) => {
 
   res.json(tutor);
 };
+/****************************** END OF OMAR's CODE *********************/
 
 module.exports.getRejectionReason = (req, res) => {
   let { tutorId } = req.body;
@@ -70,6 +73,7 @@ module.exports.getRejectionReason = (req, res) => {
   });
 };
 
+/****************************** START OF OMAR's CODE *********************/
 module.exports.getMessageFromConn = (req, res) => {
   let { tutorId } = req.body;
   const reasonMessage = `SELECT c.STUDENT_ID, c.TUTOR_ID, c.REMARK , c.MESSAGE , c.UPDATED_DATE , u.NAME, u.IMAGE
@@ -82,6 +86,7 @@ module.exports.getMessageFromConn = (req, res) => {
     res.status(200).json(result);
   });
 };
+/****************************** END OF OMAR's CODE *********************/
 
 module.exports.updateTutorDetails = (req, res) => {
   const { user_id, name, email, phoneNo, gender, password } = req.body;
@@ -196,7 +201,7 @@ module.exports.deleteExistingSubject = (req, res) => {
     res.status(200).json({ message: "Subject Deleted Successfully" });
   });
 };
-
+/****************************** START OF OMAR's CODE *********************/
 module.exports.getReviewOptions = async (req, res) => {
   let { studentId, tutorId } = req.body;
   const dbPromise = util.promisify(dbConnection.query).bind(dbConnection);
@@ -237,6 +242,7 @@ module.exports.reviewTutor = (req, res) => {
     res.status(200).send({ message: "Review Successful" });
   });
 };
+/****************************** END OF OMAR's CODE *********************/
 
 //contentType= cv,image or bio
 module.exports.updateNewContent = (req, res) => {

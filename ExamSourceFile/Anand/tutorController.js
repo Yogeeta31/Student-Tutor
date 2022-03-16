@@ -59,6 +59,11 @@ module.exports.getTutorDetails = async (req, res) => {
   res.json(tutor);
 };
 
+
+
+//******************* Ankit Start **********************************************
+
+
 module.exports.getRejectionReason = (req, res) => {
   let { tutorId } = req.body;
   const reasonMessage = `SELECT * FROM REJECT_REASON WHERE RECEIVER_ID = ${tutorId}`;
@@ -82,6 +87,9 @@ module.exports.getMessageFromConn = (req, res) => {
     res.status(200).json(result);
   });
 };
+
+
+//******************* Ankit End **********************************************
 
 module.exports.updateTutorDetails = (req, res) => {
   const { user_id, name, email, phoneNo, gender, password } = req.body;

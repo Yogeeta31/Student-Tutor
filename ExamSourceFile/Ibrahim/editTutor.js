@@ -181,7 +181,7 @@ const EditProfileTutor = () => {
     SUBJECT_NAME: "",
     PRICE: "",
   });
-
+/******************************************** START OF OMAR's CODE ******************************************/
   const editSubClicked = (sp) => {
     setEditSubPriceClick({
       SUBJECT_ID: sp.SUBJECT_ID,
@@ -189,7 +189,7 @@ const EditProfileTutor = () => {
       PRICE: sp.PRICE,
     });
   };
-
+  
   const submitEditSub = (e) => {
     e.preventDefault();
     let updateSub = {
@@ -218,6 +218,7 @@ const EditProfileTutor = () => {
         console.log(error);
       });
   };
+  /******************************************** END OF OMAR's CODE ******************************************/
 
   const uploadFile = (e) => {
     e.preventDefault();
@@ -876,6 +877,7 @@ const EditProfileTutor = () => {
                   <h4 className="mt-3 d-flex justify-content-center">
                     Subjects
                   </h4>
+/********************************************* START OF OMAR CODE *********************/
                   <table className="table table-hover">
                     <thead>
                       <tr>
@@ -975,6 +977,7 @@ const EditProfileTutor = () => {
                       ))}
                     </tbody>
                   </table>
+/********************************************* END OF OMAR CODE *********************/
                   {addSubjectClick ? (
                     <>
                       <div className="row mt-2">

@@ -219,6 +219,7 @@ const EditProfileTutor = () => {
       });
   };
 
+  //****************Written by Bibek ----*/
   const uploadFile = (e) => {
     e.preventDefault();
     let flag = true;
@@ -317,6 +318,8 @@ const EditProfileTutor = () => {
     }
   };
 
+  //*********---------------------*/
+
   const submitNewSub = (e) => {
     e.preventDefault();
     if (chkSubPrice()) {
@@ -340,6 +343,13 @@ const EditProfileTutor = () => {
     }
   };
 
+  /*
+   * submitBio : Method used for to submit the tutors bio.
+   * @member of {editTutor}
+   * @param {tutorId, contentType, content}
+   * @returns {} Updated Bio of Tutor.
+   * @Author {Mohammed Afwan}
+   */
   const submitBio = (e) => {
     e.preventDefault();
     let flag = true;
@@ -377,7 +387,13 @@ const EditProfileTutor = () => {
         });
     }
   };
-
+  /*
+   * submitGenInfo : Method used for to submit the General Info of a tutors.
+   * @member of {editTutor}
+   * @param {user_id, name, email, phone, gender, password}
+   * @returns {} Updated General Info of Tutor.
+   * @Author {Mohammed Afwan}
+   */
   const submitGenInfo = (e) => {
     e.preventDefault();
     let flag = true;
@@ -450,7 +466,7 @@ const EditProfileTutor = () => {
         });
     }
   };
-
+/* ******************************************** End of Mohammed Afwan's code *********************************** */
   return (
     <>
       <div className="container rounded bg-white mt-4 mb-5 shadow">
@@ -1064,3 +1080,5 @@ const EditProfileTutor = () => {
     </>
   );
 };
+
+export default EditProfileTutor;

@@ -74,6 +74,8 @@ module.exports.banProfile = async (req, res) => {
   res.status(200).json(result);
 };
 
+// Start of Pratikkummar's code
+
 module.exports.liftupBan = async (req, res) => {
   let { userId } = req.body;
   const dbPromise = util.promisify(dbConnection.query).bind(dbConnection);
@@ -87,6 +89,8 @@ module.exports.liftupBan = async (req, res) => {
   }
   res.status(200).json(result);
 };
+
+// End of Pratikkumr's code
 
 //list of enrolled students function
 module.exports.getEnrolledStudents = (req, res) => {

@@ -27,20 +27,8 @@ const io = require("socket.io")(Server, {
   allowEIO3: true,
 });
 
-let users = [];
-
 io.on("connection", (socket) => {
   //login
-  socket.on("username", (data) => {
-    users.push({
-      id: socket.id,
-      userId: data.userId,
-    });
-
-    let len = users.length;
-    len--;
-    io.emit("userList", users, users[len].id);
-  });
 
   socket.on("sendmessage", async (data) => {
     messageController.sendMessageSocket(data, (result) => {

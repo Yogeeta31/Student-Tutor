@@ -185,21 +185,14 @@ module.exports.getMessagingList = async (req, res) => {
     let sqlGetLastMessage = `SELECT MESSAGE,SENT_AT FROM MESSAGING WHERE (SENDER_ID = ${userId} AND RECIEVER_ID = ${contactedId}) OR (SENDER_ID = ${contactedId}  AND RECIEVER_ID = ${userId}) ORDER BY SENT_AT DESC LIMIT 1`;
     let contactDetails = null;
     let lastMessageDetails = null;
-    //********************** Instead of multiple try catch it could have been better to use single try catch*******************
+    
     try {
       contactDetails = await dbPromise(sqlGetContactDetails);
-    } catch (err) {
-      throw err;
-    }
-
-    try {
       lastMessageDetails = await dbPromise(sqlGetLastMessage);
     } catch (err) {
       throw err;
     }
-    //****************************Remove unnecessary console logs****************************
-    console.log(contactDetails);
-    console.log(lastMessageDetails);
+   
     let userDetail = {
       userId: contactedId,
       userName: contactDetails[0].NAME,

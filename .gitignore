@@ -30,3 +30,8 @@ test
 /src/VerticalPrototype/Frontend/student/node_modules
 /src/VerticalPrototype/Server/node_modules
 /src/VerticalPrototype/Server/.env
+
+/src/Milestone3Backend/node_modules/
+/src/Milestone3Backend/.env
+/src/Milestone3Frontend/node_modules/
+/src/Milestone3Frontend/build/

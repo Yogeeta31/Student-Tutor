@@ -9,7 +9,7 @@ import axios from "axios";
 const Login = () => {
   const navigate = useNavigate();
   const [user, setUser] = useContext(LoginContext);
-  const [cookies, setCookie] = useCookies(['user']);
+  const [cookies, setCookie, removeCookie] = useCookies(['user']);
   const [formData, setFormData] = useState({
     emailID: "",
     pass: "",
@@ -46,6 +46,9 @@ const Login = () => {
               isAuth: true
             })
 
+            removeCookie("userid");
+            removeCookie("token");
+            removeCookie("role");
             setCookie('userid', response.data.id, { path: '/', maxAge: 1 * 60 * 60 * 24 });
             setCookie('role', role, { path: '/', maxAge: 1 * 60 * 60 * 24 });
             setCookie('token', response.data.token, { path: '/', maxAge: 1 * 60 * 60 * 24 });
@@ -61,6 +64,8 @@ const Login = () => {
             setError(response.data.errors.email);
           else if (response.data.errors.password)
             setError(response.data.errors.password);
+          else if (response.data.errors.message)
+            setError(response.data.errors.message);
         })
         .catch((error) => {
           console.log(error);
@@ -122,10 +127,10 @@ const Login = () => {
           >
             {error}
           </span>
-          <Link to="/" className="forgotText">
+          {/* <Link to="/" className="forgotText">
             Forgot Password
             <br />{" "}
-          </Link>
+          </Link> */}
           <div className="text-center">
             <Link to="/signupchoice" className="signUpText">
               Sign-Up

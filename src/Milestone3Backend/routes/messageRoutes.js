@@ -25,5 +25,9 @@ router.patch(
   SecureAPI(),
   MessageController.changeMessageRequestStatus
 );
-
+router.get(
+  "/getMessagingList",
+  SecureAPI(),
+  MessageController.getMessagingList
+);
 module.exports = router;

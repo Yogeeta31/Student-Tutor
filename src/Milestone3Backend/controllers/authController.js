@@ -34,10 +34,10 @@ module.exports.signup_post = async (req, res) => {
 
   let user_id;
   let tutor_id;
-  var sqlCreateUser = `INSERT INTO USER ( NAME, MOBILE_NO, EMAIL, PASSWORD, ROLE_ID,HAS_PERMISSION, BIO,IMAGE) VALUES 
-  ("${params.name}",${params.phone},"${params.email}","${hashedPassword}",${params.role_id
-    },${params.role_id == 1},${params.bio == undefined ? "" : '"' + params.bio + '"'
-    },${params.image != undefined ? params.image : null})`;
+  var sqlCreateUser = `INSERT INTO USER ( NAME, MOBILE_NO,GENDER, EMAIL, PASSWORD, ROLE_ID, BIO,IMAGE) VALUES 
+  ("${params.name}",${params.phone},"${params.gender}","${params.email
+    }","${hashedPassword}",${params.role_id},${params.bio == undefined ? "" : '"' + params.bio + '"'
+    },${params.image != undefined ? '"' + params.image + '"' : null})`;
   dbConnection.query(sqlCreateUser, (err, result) => {
     if (err) {
       if (err.sqlMessage.includes("Duplicate entry")) {
@@ -52,7 +52,8 @@ module.exports.signup_post = async (req, res) => {
     const jwt = createToken(user_id, params.role_id);
     if (params.role_id == 2) {
       var sqlCreateTutor = `INSERT INTO TUTOR (USER_ID, IS_ACTIVE, CV,IS_APPROVED)
-        VALUES (${user_id}, 0,${params.cv != undefined ? params.cv : null},0)`;
+        VALUES (${user_id}, 0,${params.cv != undefined ? '"' + params.cv + '"' : null
+        },0)`;
       dbConnection.query(sqlCreateTutor, async (err, result) => {
         if (err) {
           return res.status(400).json(err);
@@ -67,7 +68,6 @@ module.exports.signup_post = async (req, res) => {
             }
             console.log(result);
             subject_id = result.insertId;
-            //[15:08] Mohammed AfwanREVIEW VARCHAR(400), RATING INT, FROM_USER_ID INT, TO_USER_ID INT, SUBJECT_ID INT,
 
             var sqlCreateReview = `INSERT INTO REVIEWS (TO_USER_ID, SUBJECT_ID, RATING) VALUES (${user_id},${subject_id},0)`;
             dbConnection.query(sqlCreateReview, (err, result) => {
@@ -86,7 +86,7 @@ module.exports.signup_post = async (req, res) => {
 module.exports.login_post = async (req, res) => {
   const { email, password } = req.body;
 
-  const loginUser = `SELECT u.PASSWORD, u.USER_ID, u.ROLE_ID
+  const loginUser = `SELECT u.PASSWORD, u.USER_ID, u.ROLE_ID, u.HAS_PERMISSION
     FROM USER u
     WHERE u.EMAIL = "${email}"`;
 
@@ -98,6 +98,11 @@ module.exports.login_post = async (req, res) => {
     if (_.isEmpty(data)) {
       res.status(200).json({ errors: { email: "Email Does not exist" } });
     } else {
+
+      if (data[0].HAS_PERMISSION == 0) {
+        return res.status(200).json({ errors: { message: "You are banned. Please contact the administrator." } });
+      }
+
       const hashedPassword = data[0].PASSWORD;
       const user_id = data[0].USER_ID;
       const role_id = data[0].ROLE_ID;
@@ -120,4 +125,44 @@ const checkEmail = async (email) => {
   } else {
     return 0;
   }
+};
+
+module.exports.forgetPassword = (req, res) => {
+  const { email, password } = req.body;
+
+  const loginUser = `SELECT u.PASSWORD, u.USER_ID, u.ROLE_ID
+        FROM USER u
+        WHERE u.EMAIL = "${email}"`;
+  dbConnection.query(loginUser, async (err, result) => {
+    if (err) {
+      return res.status(400).json(err);
+    }
+    const data = JSON.parse(JSON.stringify(result));
+    if (_.isEmpty(data)) {
+      res.status(200).json({ errors: { message: "User Does not exist" } });
+    } else {
+      const hashedPassword = data[0].PASSWORD;
+      const isSame = await bcrypt.compare(password, hashedPassword);
+      if (isSame) {
+        res
+          .status(200)
+          .json({
+            errors: { password: "New Password can't be same as Old Password" },
+          });
+      } else {
+        let newHashedPassword = await hashPassword(password);
+        const updateStudent = `UPDATE USER
+                    SET PASSWORD = '${newHashedPassword}'
+                    WHERE (EMAIL ="${email}");`;
+        dbConnection.query(updateStudent, async (err, result) => {
+          if (err) {
+            return res.status(400).json(err);
+          }
+          res
+            .status(200)
+            .json({ message: "New Password Updated Successfully" });
+        });
+      }
+    }
+  });
 };

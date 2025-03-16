@@ -1,5 +1,5 @@
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import React from "react";
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
@@ -9,20 +9,27 @@ const ViewTutorProfile = (props) => {
     let navigate = useNavigate();
     const [user, setUser] = useState({});
     const [cookies, setCookie] = useCookies(['user']);
+    const [msg, setMsg] = useState("");
 
     useEffect(() => {
         if (cookies.token !== undefined) {
-            axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getTutorDetails?userID=${window.location.href.toString().split("/")[4]}`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
-                .then(response => {
-                    setUser(response.data);
-                })
-                .catch(err => {
-                    console.log(err);
-                })
+            loadData();
         } else
             navigate('/login');
 
     }, []);
+
+    const loadData = () => {
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getTutorDetails?user_id=${window.location.href.toString().split("/")[4]}`, { headers: { "Authorization": `Bearer ${cookies.token}` } })
+            .then(response => {
+                setUser(response.data);
+                console.log(response.data)
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
     const renderDate = (d) => {
         const registrationDate = new Date(d);
         return (
@@ -31,10 +38,10 @@ const ViewTutorProfile = (props) => {
             registrationDate.getFullYear().toString()
         );
     }
-    const handleDecision = (e) => {
+    const handleApproval = () => {
         const decision = {
             tutorId: user.TUTOR_ID,
-            isApprove: e
+            isApprove: 1
         }
         axios.patch(`${process.env.REACT_APP_SERVER_URL}/api/approval`,
             decision,
@@ -42,6 +49,77 @@ const ViewTutorProfile = (props) => {
             .then(response => {
                 if (response.status === 200)
                     navigate("/pendingrequests")
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+    const handleBan = () => {
+        const ban = {
+            reason: msg,
+            moderatorId: parseInt(cookies.userid),
+            userId: user.USER_ID
+        }
+        axios.post(`${process.env.REACT_APP_SERVER_URL}/api/banProfile`,
+            ban,
+            { headers: { "Authorization": `Bearer ${cookies.token}` } })
+            .then(response => {
+                if (response.status === 200)
+                    loadData();
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+    const handleRejection = () => {
+        const decision = {
+            tutorId: user.TUTOR_ID,
+            isApprove: 2
+        }
+
+        const rejectionMsg = {
+            reason: msg,
+            senderId: parseInt(cookies.userid),
+            receiverId: user.TUTOR_ID
+        }
+
+
+        axios.patch(`${process.env.REACT_APP_SERVER_URL}/api/approval`,
+            decision,
+            { headers: { "Authorization": `Bearer ${cookies.token}` } })
+            .then(response => {
+                if (response.status === 200) {
+
+                    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/rejectProfileWithReason`,
+                        rejectionMsg)
+                        .then(response => {
+                            if (response.data.affectedRows)
+                                navigate("/pendingrequests")
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        })
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+    const handleDownload = (l) => {
+        const link = document.createElement('a');
+        link.href = l;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+    const handleBanLiftup = (id) => {
+        axios.put(`${process.env.REACT_APP_SERVER_URL}/api/liftUpBan`,
+            { userId: id },
+            { headers: { "Authorization": `Bearer ${cookies.token}` } })
+            .then(response => {
+                if (response.status === 200) {
+                    loadData();
+                }
             })
             .catch(err => {
                 console.log(err);
@@ -56,12 +134,14 @@ const ViewTutorProfile = (props) => {
                             <div className="card rounded">
                                 <div className="card-body">
                                     <div className="d-flex flex-column align-items-center text-center">
-                                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" className="rounded-circle" width="150" />
+                                        <img src={`${process.env.REACT_APP_PROFILE_URL}${user.IMAGE}`} alt="Admin" className="rounded-circle" width="150" />
                                         <div className="mt-3">
                                             <h4>{user.NAME}</h4>
                                             <p className="text-secondary mb-1">{user.BIO}</p>
+                                            <p className="text-secondary mb-1">{user.EMAIL}</p>
+                                            <p className="text-secondary mb-1">+{user.MOBILE_NO}</p>
                                             <p className="text-secondary mb-1">Requested At - {renderDate(user.REGISTERED_AT)}</p>
-                                            <button className='btn btn-outline-primary'>Download CV</button>&nbsp;
+                                            <button className='btn btn-outline-primary' onClick={() => { handleDownload(`${process.env.REACT_APP_RESUME_URL}${user.CV}`) }}>Download CV</button>&nbsp;
                                         </div>
                                     </div>
                                 </div>
@@ -97,11 +177,65 @@ const ViewTutorProfile = (props) => {
                             <div className="card mb-3 rounded">
                                 <div className="card-body">
                                     <div className="d-flex justify-content-center">
-                                        <button className='btn btn-outline-success' id="1" onClick={e => { handleDecision(1) }}>Approve</button>&nbsp;
-                                        <button className='btn btn-outline-danger' id="0" onClick={e => { handleDecision(0) }}>Disapprove</button>
+                                        {
+                                            user.IS_APPROVED ?
+                                                user.HAS_PERMISSION ?
+                                                    <button className='btn btn-outline-danger' data-bs-toggle="modal" data-bs-target="#banModal">Ban</button>
+                                                    :
+                                                    <button className='btn btn-outline-success' onClick={() => { handleBanLiftup(user.USER_ID) }}>Lift-up Ban</button>
+                                                :
+                                                <>
+                                                    <button className='btn btn-outline-success' onClick={() => { handleApproval() }}>Approve</button>&nbsp;
+                                                    <button className='btn btn-outline-danger' data-bs-toggle="modal" data-bs-target="#messageModal">Disapprove</button>
+                                                </>
+                                        }
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="modal fade" id="messageModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="exampleModalLabel">Reason for rejection ...</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <div className="mb-3">
+                                <label htmlFor="message-text" className="col-form-label">Reason:</label>
+                                <textarea className="form-control"
+                                    value={msg}
+                                    onChange={(e) => { setMsg(e.currentTarget.value) }} id="messageText"></textarea>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={handleRejection}>Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="modal fade" id="banModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="exampleModalLabel">Reason for banning ...</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <div className="mb-3">
+                                <label htmlFor="message-text" className="col-form-label">Reason:</label>
+                                <textarea className="form-control"
+                                    value={msg}
+                                    onChange={(e) => { setMsg(e.currentTarget.value) }} id="messageText"></textarea>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={handleBan}>Submit</button>
                         </div>
                     </div>
                 </div>

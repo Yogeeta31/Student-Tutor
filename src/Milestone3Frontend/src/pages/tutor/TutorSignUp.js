@@ -26,6 +26,8 @@ const TutorSignUp = () => {
 
   const [fileError, setFileError] = useState("");
 
+  const [ImageError, setImageError] = useState("");
+
   const [bioError, setBioError] = useState("");
 
   const [nameError, setNameError] = useState("");
@@ -83,8 +85,6 @@ const TutorSignUp = () => {
     }
   };
 
-  const defaultImg = "../images/profileIMG.jpg";
-
   const removeImg = () => {
     setRemoveSelectedImg("");
     setSelectedImage(null);
@@ -94,6 +94,7 @@ const TutorSignUp = () => {
     setSelectedImage(image);
     if (image) {
       setRemoveSelectedImg("Set");
+      setImageError("");
     } else {
       removeImg();
     }
@@ -124,6 +125,12 @@ const TutorSignUp = () => {
       setFileError("Please Upload CV");
     } else {
       setFileError("");
+    }
+    if (!selectedImage) {
+      flag = false;
+      setImageError("Please Upload Image");
+    } else {
+      setImageError("");
     }
     if (!formData.bio) {
       flag = false;
@@ -179,45 +186,71 @@ const TutorSignUp = () => {
       setConfirmPassError("");
     }
     if (flag && chkSubPrice()) {
-      // let user = {
-      //   name: formData.fullName,
-      //   phone: formData.mobileNum,
-      //   email: formData.emailID,
-      //   password: formData.pass,
-      //   role_id: 2,
-      //   gender: formData.gender,
-      //   about: formData.bio,
-      //   photo: selectedImage ? selectedImage : defaultImg,
-      //   cv: selectedFile,
-      //   subjects: subPrice,
-      // };
+      let newSelectedImage = new File(
+        [selectedImage],
+        Date.now() + selectedImage.name.toLowerCase().split(" ").join("-"),
+        {
+          type: selectedImage.type,
+        }
+      );
 
-      //WHEN BACKEND IS COMPLETE, DELETE THE FOLLOWING user AND UNCOMMENT ABOVE
-      let user = {
-        name: formData.fullName,
-        phone: formData.mobileNum,
-        email: formData.emailID,
-        password: formData.pass,
-        bio: formData.bio,
-        role_id: 2,
-        subjects: subPrice,
-      };
+      const formImage = new FormData();
+      e.preventDefault();
+      formImage.append("filename", newSelectedImage);
+
+      let newSelectedResume = new File(
+        [selectedFile],
+        Date.now() + selectedFile.name.toLowerCase().split(" ").join("-"),
+        {
+          type: selectedFile.type,
+        }
+      );
+
+      const formResume = new FormData();
+      e.preventDefault();
+      formResume.append("filename", newSelectedResume);
 
       axios
-        .post(`${process.env.REACT_APP_SERVER_URL}/api/signup`, user)
-        .then((response) => {
-          if (response.status === 200) {
-            navigate("/login");
-          }
-        })
-        .catch((error) => {
-          if (
-            error.response.status === 400 &&
-            error.response.data.errors.email
-          ) {
-            setEmailError(error.response.data.errors.email);
-          }
-          flag = false;
+        .post(
+          "https://uploadresume.azurewebsites.net/api/uploadImage",
+          formImage
+        )
+        .then((imageResponse) => {
+          axios
+            .post(
+              "https://uploadresume.azurewebsites.net/api/uploadResume",
+              formResume
+            )
+            .then((cvResponse) => {
+              let user = {
+                name: formData.fullName,
+                phone: formData.mobileNum,
+                email: formData.emailID,
+                password: formData.pass,
+                gender: formData.gender,
+                role_id: 2,
+                bio: formData.bio,
+                subjects: subPrice,
+                cv: cvResponse.data.name,
+                image: imageResponse.data.name,
+              };
+              axios
+                .post(`${process.env.REACT_APP_SERVER_URL}/api/signup`, user)
+                .then((response) => {
+                  if (response.status === 200) {
+                    navigate("/login");
+                  }
+                })
+                .catch((error) => {
+                  if (
+                    error.response.status === 400 &&
+                    error.response.data.errors.email
+                  ) {
+                    setEmailError(error.response.data.errors.email);
+                  }
+                  flag = false;
+                });
+            });
         });
     }
   };
@@ -225,7 +258,7 @@ const TutorSignUp = () => {
   return (
     <>
       <div className="container rounded bg-white mt-4 mb-5 shadow">
-        <form>
+        <form encType="multipart/form-data">
           <div className="row">
             <div className="d-flex justify-content-between align-items-center mt-4">
               <h3 className="text-right offset-5" style={{ marginBottom: 0 }}>
@@ -268,8 +301,17 @@ const TutorSignUp = () => {
                   />
                   Upload Your
                   <br />
-                  Recent Image
+                  Recent Image<span style={{ color: "Red" }}>*</span>
                 </label>
+                <span
+                  style={{
+                    fontWeight: "bold",
+                    color: "red",
+                    fontSize: "13px",
+                  }}
+                >
+                  {ImageError}
+                </span>
                 {removeSelectedImg && (
                   <label className="remove mt-1" onClick={removeImg}>
                     Remove Image
@@ -495,7 +537,11 @@ const TutorSignUp = () => {
                           placeholder="Enter Hourly Rate"
                           value={subP.price}
                           onInput={(e) =>
-                            updatedSubPrice(i, subP.subject_name, e.target.value)
+                            updatedSubPrice(
+                              i,
+                              subP.subject_name,
+                              e.target.value
+                            )
                           }
                         />
                       </div>

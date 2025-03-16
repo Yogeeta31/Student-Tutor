@@ -15,7 +15,7 @@ const SignUpChoice = () => {
 
   return (
     <>
-      <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 my-3 justify-content-center" style={{ margin: "0", display: "inline-flex" }}>
+      <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3 justify-content-center" style={{ marginBottom: "40px", display: "inline-flex" }}>
         <div className="card my-4 shadow" style={{ maxWidth: "340px", display: "inline-flex" }}>
           <img
             className="card-img-top"

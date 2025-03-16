@@ -17,7 +17,6 @@ export const LoginStateProvider = (props) => {
                 role: cookies.role,
                 isAuth: loginStatus
             });
-            console.log(cookies);
         }
     }, []);
     return (

@@ -1,6 +1,5 @@
 const { Router } = require("express");
 const moderatorController = require("../controllers/moderatorController");
-const tutorController = require("../controllers/tutorController");
 const SecureAPI = require("../middleware/secureAPI");
 const { roleCheck } = require("../middleware/roleChecker");
 
@@ -31,7 +30,42 @@ router.post(
   "/rejectProfileWithReason",
   // SecureAPI(),
   // roleCheck(["MODERATOR"]),
-  tutorController.getRejectionReason
+  moderatorController.rejectProfileWithReason
+);
+
+router.post(
+  "/banProfile",
+  // SecureAPI(),
+  // roleCheck(["MODERATOR"]),
+  moderatorController.banProfile
+);
+
+router.put(
+  "/liftUpBan",
+  // SecureAPI(),
+  // roleCheck(["MODERATOR"]),
+  moderatorController.liftupBan
+);
+
+router.get(
+  "/getEnrolledStudents",
+  // SecureAPI(),
+  // roleCheck(["MODERATOR"]),
+  moderatorController.getEnrolledStudents
+);
+
+router.post(
+  "/approveNewContent",
+  // SecureAPI(),
+  // roleCheck(["MODERATOR"]),
+  moderatorController.approveNewContent
+);
+
+router.get(
+    "/tutorsListWithNewContent",
+    // SecureAPI(),
+    // roleCheck(["MODERATOR"]),
+    moderatorController.listOfTutorsWithNewContent
 );
 
 module.exports = router;

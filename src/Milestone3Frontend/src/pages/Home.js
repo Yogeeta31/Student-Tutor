@@ -12,7 +12,7 @@ const Home = (props) => {
   };
 
   const chat = () => {
-    navigate("/chats");
+    navigate("/");
   };
 
   return (

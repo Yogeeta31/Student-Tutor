@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom";
-
 const Footer = () => {
     return (
         <footer className="bg-dark text-center text-lg-start" style={{ color: "white", backgroundColor: "#212529" }}>

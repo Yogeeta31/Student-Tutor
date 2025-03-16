@@ -21,6 +21,8 @@ const StudentSignUp = () => {
 
   const [removeSelectedImg, setRemoveSelectedImg] = useState("");
 
+  const [ImageError, setImageError] = useState("");
+
   const [nameError, setNameError] = useState("");
 
   const [mobileNumError, setMobileNumError] = useState("");
@@ -43,6 +45,7 @@ const StudentSignUp = () => {
     setSelectedImage(image);
     if (image) {
       setRemoveSelectedImg("Set");
+      setImageError("");
     } else {
       removeImg();
     }
@@ -51,6 +54,12 @@ const StudentSignUp = () => {
   const submit = (e) => {
     e.preventDefault();
     let flag = true;
+    if (!selectedImage) {
+      flag = false;
+      setImageError("Please Upload Image");
+    } else {
+      setImageError("");
+    }
     if (!formData.fullName) {
       flag = false;
       setNameError("Please Enter Your Name");
@@ -98,33 +107,50 @@ const StudentSignUp = () => {
       setConfirmPassError("");
     }
     if (flag) {
-      let user = {
-        name: formData.fullName,
-        phone: formData.mobileNum,
-        email: formData.emailID,
-        password: formData.pass,
-        bio: "",
-        role_id: 3,
-        // gender: formData.gender,
-        // photo: selectedImage ? selectedImage : defaultImg,
-        //UNCOMMENT ABOVE 2 LINES ONCE BACKEND COMPLETE
-      };
+      let newSelectedImage = new File(
+        [selectedImage],
+        Date.now() + selectedImage.name.toLowerCase().split(" ").join("-"),
+        {
+          type: selectedImage.type,
+        }
+      );
+
+      const formImage = new FormData();
+      e.preventDefault();
+      formImage.append("filename", newSelectedImage);
 
       axios
-        .post(`${process.env.REACT_APP_SERVER_URL}/api/signup`, user)
-        .then((response) => {
-          if (response.status === 200) {
-            navigate("/login");
-          }
-        })
-        .catch((error) => {
-          if (
-            error.response.status === 400 &&
-            error.response.data.errors.email
-          ) {
-            setEmailError(error.response.data.errors.email);
-          }
-          flag = false;
+        .post(
+          "https://uploadresume.azurewebsites.net/api/uploadImage",
+          formImage
+        )
+        .then((imageResponse) => {
+          let user = {
+            name: formData.fullName,
+            phone: formData.mobileNum,
+            email: formData.emailID,
+            password: formData.pass,
+            role_id: 3,
+            gender: formData.gender,
+            bio: "",
+            image: imageResponse.data.name,
+          };
+          axios
+            .post(`${process.env.REACT_APP_SERVER_URL}/api/signup`, user)
+            .then((response) => {
+              if (response.status === 200) {
+                navigate("/login");
+              }
+            })
+            .catch((error) => {
+              if (
+                error.response.status === 400 &&
+                error.response.data.errors.email
+              ) {
+                setEmailError(error.response.data.errors.email);
+              }
+              flag = false;
+            });
         });
     }
   };
@@ -132,7 +158,7 @@ const StudentSignUp = () => {
   return (
     <>
       <div className="container rounded bg-white mt-4 mb-5 shadow">
-        <form>
+        <form encType="multipart/form-data">
           <div className="row">
             <div className="d-flex justify-content-between align-items-center mt-4">
               <h3 className="text-right offset-5" style={{ marginBottom: 0 }}>
@@ -165,7 +191,7 @@ const StudentSignUp = () => {
                     alt="DefaultImage"
                   />
                 )}
-                <label className="font-weight-bold text-blue-70 upload mt-3">
+                <label className="font-weight-bold text-blue-70 upload mt-2">
                   <input
                     type="file"
                     name="myImage"
@@ -175,8 +201,17 @@ const StudentSignUp = () => {
                   />
                   Upload Your
                   <br />
-                  Recent Image
+                  Recent Image<span style={{ color: "Red" }}>*</span>
                 </label>
+                <span
+                  style={{
+                    fontWeight: "bold",
+                    color: "red",
+                    fontSize: "13px",
+                  }}
+                >
+                  {ImageError}
+                </span>
                 {removeSelectedImg && (
                   <label className="remove mt-3" onClick={removeImg}>
                     Remove Image
